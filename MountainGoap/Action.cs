@@ -8,6 +8,11 @@ namespace MountainGoap {
     /// </summary>
     public abstract class Action {
         /// <summary>
+        /// Cost of the action.
+        /// </summary>
+        public readonly float Cost;
+
+        /// <summary>
         /// The permutation selector callback for the action.
         /// </summary>
         private readonly Dictionary<string, PermutationSelectorCallback> permutationSelectors;
@@ -16,11 +21,6 @@ namespace MountainGoap {
         /// The executor callback for the action.
         /// </summary>
         private readonly ExecutorCallback executor;
-
-        /// <summary>
-        /// Cost of the action.
-        /// </summary>
-        private readonly float cost;
 
         /// <summary>
         /// Parameters to be passed to the action.
@@ -50,7 +50,7 @@ namespace MountainGoap {
             else this.permutationSelectors = permutationSelectors;
             if (executor == null) this.executor = DefaultExecutorCallback;
             else this.executor = executor;
-            this.cost = cost;
+            this.Cost = cost;
             if (preconditions != null) this.preconditions = preconditions;
             if (postconditions != null) this.postconditions = postconditions;
         }
@@ -84,7 +84,7 @@ namespace MountainGoap {
         /// </summary>
         /// <param name="agent">Agent executing the action.</param>
         internal void Execute(Agent agent) {
-            if (ActionPossible(agent.State)) {
+            if (IsPossible(agent.State)) {
                 var newState = executor(agent, this);
                 if (newState == ExecutionStatus.Succeeded) ApplyEffects(agent.State);
                 ExecutionStatus = newState;
@@ -96,7 +96,7 @@ namespace MountainGoap {
         /// </summary>
         /// <param name="state">The current world state.</param>
         /// <returns>True if the action is possible, otherwise false.</returns>
-        internal bool ActionPossible(Dictionary<string, object> state) {
+        internal bool IsPossible(Dictionary<string, object> state) {
             foreach (var kvp in preconditions) {
                 if (!state.ContainsKey(kvp.Key)) return false;
                 if (state[kvp.Key] != kvp.Value) return false;
@@ -129,6 +129,14 @@ namespace MountainGoap {
             }
         }
 
+        /// <summary>
+        /// Applies the effects of the action.
+        /// </summary>
+        /// <param name="state">World state to which to apply effects.</param>
+        internal void ApplyEffects(Dictionary<string, object> state) {
+            foreach (var kvp in postconditions) state[kvp.Key] = kvp.Value;
+        }
+
         private static bool IndicesAtMaximum(List<int> indices, List<int> counts) {
             for (int i = 0; i < indices.Count; i++) if (indices[i] < counts[i] - 1) return false;
             return true;
@@ -149,20 +157,10 @@ namespace MountainGoap {
         /// Default executor callback to be used if no callback is passed in.
         /// </summary>
         /// <param name="agent">Agent executing the action.</param>
-        /// <param name="action">Action to be executed</param>
+        /// <param name="action">Action to be executed.</param>
         /// <returns>A Failed status, since the action cannot execute without a callback.</returns>
-#pragma warning disable IDE0060 // Remove unused parameter
         private static ExecutionStatus DefaultExecutorCallback(Agent agent, Action action) {
             return ExecutionStatus.Failed;
-        }
-#pragma warning restore IDE0060 // Remove unused parameter
-
-        /// <summary>
-        /// Applies the effects of the action.
-        /// </summary>
-        /// <param name="state">World state to which to apply effects.</param>
-        private void ApplyEffects(Dictionary<string, object> state) {
-            foreach (var kvp in postconditions) state[kvp.Key] = kvp.Value;
         }
     }
 }
