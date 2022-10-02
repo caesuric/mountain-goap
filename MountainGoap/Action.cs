@@ -6,7 +6,7 @@ namespace MountainGoap {
     /// <summary>
     /// Represents an action in a GOAP system.
     /// </summary>
-    public abstract class Action {
+    public class Action {
         /// <summary>
         /// Cost of the action.
         /// </summary>
@@ -50,7 +50,7 @@ namespace MountainGoap {
             else this.permutationSelectors = permutationSelectors;
             if (executor == null) this.executor = DefaultExecutorCallback;
             else this.executor = executor;
-            this.Cost = cost;
+            Cost = cost;
             if (preconditions != null) this.preconditions = preconditions;
             if (postconditions != null) this.postconditions = postconditions;
         }

@@ -6,12 +6,12 @@ namespace MountainGoap {
     /// <summary>
     /// Planner for an agent.
     /// </summary>
-    public class Planner {
+    internal class Planner {
         /// <summary>
         /// Makes a plan to achieve the agent's goals.
         /// </summary>
         /// <param name="agent">Agent using the planner.</param>
-        public static void Plan(Agent agent) {
+        internal static void Plan(Agent agent) {
             float bestPlanUtility = 0;
             ActionAStar? astar;
             ActionAStar? bestAstar = null;
