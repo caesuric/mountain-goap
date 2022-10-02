@@ -21,7 +21,7 @@ namespace MountainGoap {
             foreach (var otherNode in ActionNodes) {
                 if (otherNode.Action.IsPossible(node.State)) {
                     var instancedNode = new ActionNode(otherNode.Action, node.State.Copy());
-                    if (otherNode != null) otherNode.Action.ApplyEffects(instancedNode.State);
+                    otherNode.Action.ApplyEffects(instancedNode.State);
                     yield return instancedNode;
                 }
             }
