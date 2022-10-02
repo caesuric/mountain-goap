@@ -13,19 +13,19 @@ namespace MountainGoap {
         internal readonly ActionNode? FinalPoint = null;
 
         /// <summary>
-        /// Goal state that AStar is trying to achieve.
+        /// Cost so far to get to each node.
         /// </summary>
-        private readonly Dictionary<string, object> goal;
+        internal readonly Dictionary<ActionNode, float> CostSoFar = new();
 
         /// <summary>
         /// Dictionary giving the path from start to goal.
         /// </summary>
-        private readonly Dictionary<ActionNode, ActionNode> cameFrom = new ();
+        internal readonly Dictionary<ActionNode, ActionNode> CameFrom = new();
 
         /// <summary>
-        /// Cost so far to get to each node.
+        /// Goal state that AStar is trying to achieve.
         /// </summary>
-        private readonly Dictionary<ActionNode, float> costSoFar = new();
+        private readonly Dictionary<string, object> goal;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActionAStar"/> class.
@@ -35,10 +35,10 @@ namespace MountainGoap {
         /// <param name="goal">Goal state to be achieved.</param>
         internal ActionAStar(ActionGraph graph, ActionNode start, Dictionary<string, object> goal) {
             this.goal = goal;
-            PriorityQueue<ActionNode, float> frontier = new ();
+            PriorityQueue<ActionNode, float> frontier = new();
             frontier.Enqueue(start, 0);
-            cameFrom[start] = start;
-            costSoFar[start] = 0;
+            CameFrom[start] = start;
+            CostSoFar[start] = 0;
             while (frontier.Count > 0) {
                 var current = frontier.Dequeue();
                 if (MeetsGoal(current)) {
@@ -46,12 +46,12 @@ namespace MountainGoap {
                     break;
                 }
                 foreach (var next in graph.Neighbors(current)) {
-                    float newCost = costSoFar[current] + next.Cost();
-                    if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next]) {
-                        costSoFar[next] = newCost;
+                    float newCost = CostSoFar[current] + next.Cost();
+                    if (!CostSoFar.ContainsKey(next) || newCost < CostSoFar[next]) {
+                        CostSoFar[next] = newCost;
                         float priority = newCost + Heuristic(next, goal);
                         frontier.Enqueue(next, priority);
-                        cameFrom[next] = current;
+                        CameFrom[next] = current;
                     }
                 }
             }

@@ -25,17 +25,17 @@ namespace MountainGoap {
         /// <summary>
         /// Parameters to be passed to the action.
         /// </summary>
-        private readonly Dictionary<string, object> parameters = new ();
+        private readonly Dictionary<string, object> parameters = new();
 
         /// <summary>
         /// Preconditions for the action. These things are required for the action to execute.
         /// </summary>
-        private readonly Dictionary<string, object> preconditions = new ();
+        private readonly Dictionary<string, object> preconditions = new();
 
         /// <summary>
         /// Postconditions for the actions. These will be set when the action has executed.
         /// </summary>
-        private readonly Dictionary<string, object> postconditions = new ();
+        private readonly Dictionary<string, object> postconditions = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Action"/> class.
@@ -46,7 +46,7 @@ namespace MountainGoap {
         /// <param name="preconditions">Preconditions required in the world state in order for the action to occur.</param>
         /// <param name="postconditions">Postconditions applied after the action is successfully executed.</param>
         public Action(Dictionary<string, PermutationSelectorCallback>? permutationSelectors = null, ExecutorCallback? executor = null, float cost = 1f, Dictionary<string, object>? preconditions = null, Dictionary<string, object>? postconditions = null) {
-            if (permutationSelectors == null) this.permutationSelectors = new ();
+            if (permutationSelectors == null) this.permutationSelectors = new();
             else this.permutationSelectors = permutationSelectors;
             if (executor == null) this.executor = DefaultExecutorCallback;
             else this.executor = executor;
@@ -110,11 +110,11 @@ namespace MountainGoap {
         /// <param name="agent">Agent for which the action would be performed.</param>
         /// <returns>A list of possible parameter dictionaries that could be used.</returns>
         internal List<Dictionary<string, object>> GetPermutations(Agent agent) {
-            List<Dictionary<string, object>> combinedOutputs = new ();
-            Dictionary<string, List<object>> outputs = new ();
+            List<Dictionary<string, object>> combinedOutputs = new();
+            Dictionary<string, List<object>> outputs = new();
             foreach (var kvp in permutationSelectors) outputs[kvp.Key] = kvp.Value(agent.State);
             var parameters = outputs.Keys.ToList();
-            List<int> indices = new ();
+            List<int> indices = new();
             List<int> counts = new();
             foreach (var parameter in parameters) {
                 indices.Add(0);

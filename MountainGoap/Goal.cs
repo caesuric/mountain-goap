@@ -10,7 +10,7 @@ namespace MountainGoap {
         /// <summary>
         /// Desired world state to be achieved.
         /// </summary>
-        internal readonly Dictionary<string, object>? DesiredState = null;
+        internal readonly Dictionary<string, object> DesiredState = new();
 
         /// <summary>
         /// Weight to give the goal.
@@ -24,7 +24,7 @@ namespace MountainGoap {
         /// <param name="desiredState">Desired end state of the goal.</param>
         public Goal(float weight = 1f, Dictionary<string, object>? desiredState = null) {
             Weight = weight;
-            DesiredState = desiredState;
+            if (desiredState != null) DesiredState = desiredState;
         }
     }
 }

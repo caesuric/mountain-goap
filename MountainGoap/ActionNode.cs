@@ -10,38 +10,35 @@ namespace MountainGoap {
         /// <summary>
         /// The state of the world for this action node.
         /// </summary>
-        internal Dictionary<string, object> State = new ();
+        internal Dictionary<string, object> State = new();
 
         /// <summary>
         /// The action to be executed when the world is in the defined <see cref="State"/>.
         /// </summary>
-        internal Action Action;
+        internal Action? Action;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActionNode"/> class.
         /// </summary>
         /// <param name="action">Action to be assigned to the node.</param>
         /// <param name="state">State to be assigned to the node.</param>
-        internal ActionNode(Action action, Dictionary<string, object> state) {
+        internal ActionNode(Action? action, Dictionary<string, object> state) {
             Action = action;
-            State = state;
+            State = state.Copy();
         }
 
-        public static bool operator ==(ActionNode node1, ActionNode node2) {
+        public static bool operator ==(ActionNode? node1, ActionNode? node2) {
             if (node1 is null) return node2 is null;
             if (node2 is null) return node1 is null;
             if (node1.Action == null || node2.Action == null) return (node1.Action == node2.Action) && node1.StateMatches(node2);
             return node1.Action.Equals(node2.Action) && node1.StateMatches(node2);
         }
 
-        public static bool operator !=(ActionNode node1, ActionNode node2) {
-            if (node1 is null) {
-                return node2 is not null;
-            }
-            if (node2 is null) {
-                return node1 is not null;
-            }
-            return !node1.Action.Equals(node2.Action) || !node1.StateMatches(node2);
+        public static bool operator !=(ActionNode? node1, ActionNode? node2) {
+            if (node1 is null) return node2 is not null;
+            if (node2 is null) return node1 is not null;
+            if (node1.Action is not null) return !node1.Action.Equals(node2.Action) || !node1.StateMatches(node2);
+            return node2.Action is null;
         }
 
         /// <inheritdoc/>
@@ -60,6 +57,7 @@ namespace MountainGoap {
         /// </summary>
         /// <returns>The cost of the action to be executed.</returns>
         internal float Cost() {
+            if (Action == null) return float.MaxValue;
             return Action.Cost;
         }
 

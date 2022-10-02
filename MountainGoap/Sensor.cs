@@ -8,22 +8,21 @@ namespace MountainGoap {
     /// </summary>
     public class Sensor {
         private readonly SensorRunCallback runCallback;
-        private readonly Agent agent;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Sensor"/> class.
         /// </summary>
         /// <param name="agent">Agent using the sensor.</param>
         /// <param name="runCallback">Callback to be executed when the sensor runs.</param>
-        public Sensor(Agent agent, SensorRunCallback runCallback) {
-            this.agent = agent;
+        public Sensor(SensorRunCallback runCallback) {
             this.runCallback = runCallback;
         }
 
         /// <summary>
         /// Runs the sensor during a game loop.
         /// </summary>
-        public void Run() {
+        /// <param name="agent">Agent for which the sensor is being run.</param>
+        public void Run(Agent agent) {
             runCallback(agent);
         }
     }
