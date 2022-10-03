@@ -35,5 +35,19 @@ namespace MountainGoap {
                 return output;
             };
         }
+
+        /// <summary>
+        /// Generates a permutation selector that returns all integer elements in a range.
+        /// </summary>
+        /// <param name="lowerBound">Lower bound from which to start.</param>
+        /// <param name="upperBound">Upper bound, non-inclusive.</param>
+        /// <returns>A lambda function that returns all elements in the range given.</returns>
+        public static PermutationSelectorCallback SelectFromIntegerRange(int lowerBound, int upperBound) {
+            return (Dictionary<string, object> state) => {
+                List<object> output = new();
+                for (int i = lowerBound; i < upperBound; i++) output.Add(i);
+                return output;
+            };
+        }
     }
 }
