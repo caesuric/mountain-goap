@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MountainGoap", "MountainGoap\MountainGoap.csproj", "{3EBEB82D-FD0F-4194-B8C0-0C276203536F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MountainGoap", "MountainGoap\MountainGoap.csproj", "{3EBEB82D-FD0F-4194-B8C0-0C276203536F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples", "Examples\Examples.csproj", "{22E10E1F-2DA6-4E69-9252-EE653D90A1C4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{3EBEB82D-FD0F-4194-B8C0-0C276203536F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3EBEB82D-FD0F-4194-B8C0-0C276203536F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3EBEB82D-FD0F-4194-B8C0-0C276203536F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22E10E1F-2DA6-4E69-9252-EE653D90A1C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22E10E1F-2DA6-4E69-9252-EE653D90A1C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22E10E1F-2DA6-4E69-9252-EE653D90A1C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22E10E1F-2DA6-4E69-9252-EE653D90A1C4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
