@@ -1,4 +1,4 @@
-﻿// <copyright file="Demo1.cs" company="Chris Muller">
+﻿// <copyright file="HappinessIncrementer.cs" company="Chris Muller">
 // Copyright (c) Chris Muller. All rights reserved.
 // </copyright>
 
@@ -6,9 +6,9 @@ namespace Examples {
     using MountainGoap;
 
     /// <summary>
-    /// First demo for the examples.
+    /// Simple goal to maximize happiness.
     /// </summary>
-    internal static class Demo1 {
+    internal static class HappinessIncrementer {
         /// <summary>
         /// Runs the demo.
         /// </summary>

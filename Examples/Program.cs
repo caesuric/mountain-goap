@@ -15,9 +15,9 @@
         /// <param name="args">Arguments to the application.</param>
         /// <returns>An exit code.</returns>
         public static async Task<int> Main(string[] args) {
-            var demo1Command = new Command("demo1", "Run the first demo.");
+            var demo1Command = new Command("happiness", "Run the happiness incrementer demo.");
             demo1Command.SetHandler(() => {
-                RunDemo1();
+                RunHappinessIncrementer();
             });
             var cmd = new RootCommand {
                 demo1Command
@@ -25,8 +25,8 @@
             return await cmd.InvokeAsync(args);
         }
 
-        private static void RunDemo1() {
-            Demo1.Run();
+        private static void RunHappinessIncrementer() {
+            HappinessIncrementer.Run();
         }
     }
 }
