@@ -19,6 +19,10 @@
             happinessIncrementerCommand.SetHandler(() => {
                 RunHappinessIncrementer();
             });
+            var rpgCommand = new Command("rpg", "Run the RPG enemy demo.");
+            happinessIncrementerCommand.SetHandler(() => {
+                RunRpgEnemyDemo();
+            });
             var cmd = new RootCommand {
                 happinessIncrementerCommand
             };
@@ -27,6 +31,10 @@
 
         private static void RunHappinessIncrementer() {
             HappinessIncrementer.Run();
+        }
+
+        private static void RunRpgEnemyDemo() {
+            RpgEnemy.Run();
         }
     }
 }
