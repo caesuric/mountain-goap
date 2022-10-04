@@ -10,8 +10,16 @@ TO DO
 
 TO DO
 
+## Examples
+
+TO DO
+
+## Project Structure
+
+TO DO
+
 ## Roadmap
 
-* Examples - normal and Unity
+* Examples - general and Unity
 * Tests
 * Distributables
