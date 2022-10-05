@@ -1,8 +1,8 @@
 # Mountain GOAP
 
-![Mountain GOAP Logo](logo.png)
-
 Generic C# GOAP (Goal Oriented Action Planning) library.
+
+![Mountain GOAP Logo](logo.png)
 
 ## Quickstart
 
