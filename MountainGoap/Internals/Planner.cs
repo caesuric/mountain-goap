@@ -14,20 +14,20 @@ namespace MountainGoap {
         internal static void Plan(Agent agent) {
             float bestPlanUtility = 0;
             ActionAStar? astar;
+            ActionNode? cursor;
             ActionAStar? bestAstar = null;
-            ActionNode? cursor = null;
             foreach (var goal in agent.Goals) {
                 ActionGraph graph = new(agent.Actions, agent.State);
                 ActionNode start = new(null, agent.State);
                 astar = new(graph, start, goal.DesiredState);
                 cursor = astar.FinalPoint;
                 if (cursor != null && cursor.Action != null && astar.CostSoFar.ContainsKey(cursor) && goal.Weight / astar.CostSoFar[cursor] > bestPlanUtility) {
-                    bestPlanUtility = astar.CostSoFar[cursor];
+                    bestPlanUtility = goal.Weight / astar.CostSoFar[cursor];
                     bestAstar = astar;
                 }
             }
-            if (bestPlanUtility > 0 && cursor is not null && bestAstar is not null) {
-                UpdateAgentActionList(cursor, bestAstar, agent);
+            if (bestPlanUtility > 0 && bestAstar is not null && bestAstar.FinalPoint is not null) {
+                UpdateAgentActionList(bestAstar.FinalPoint, bestAstar, agent);
                 agent.IsBusy = true;
             }
             agent.IsPlanning = false;
