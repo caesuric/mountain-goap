@@ -20,11 +20,12 @@
                 RunHappinessIncrementer();
             });
             var rpgCommand = new Command("rpg", "Run the RPG enemy demo.");
-            happinessIncrementerCommand.SetHandler(() => {
+            rpgCommand.SetHandler(() => {
                 RunRpgEnemyDemo();
             });
             var cmd = new RootCommand {
-                happinessIncrementerCommand
+                happinessIncrementerCommand,
+                rpgCommand
             };
             return await cmd.InvokeAsync(args);
         }
@@ -34,7 +35,7 @@
         }
 
         private static void RunRpgEnemyDemo() {
-            RpgEnemy.Run();
+            RpgExample.Run();
         }
     }
 }
