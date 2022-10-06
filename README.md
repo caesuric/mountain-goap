@@ -4,6 +4,21 @@ Generic C# GOAP (Goal Oriented Action Planning) library.
 
 ![Mountain GOAP Logo](logo.png)
 
+1. [Quickstart](#quickstart)
+    1. [Using the code directly](#using-the-code-directly)
+    2. [Using distributable](#using-distributable)
+    3. [Using as a Unity package](#using-as-a-unity-package)
+2. [Concepts & API](#concepts--api)
+    1. [Agents](#agents)
+        1. [Agent state](#agent-state)
+    2. [Goals](#goals)
+    3. [Actions](#actions)
+    4. [Sensors](#sensors)
+    5. [Future features - permutation selectors](#future-feature---permutation-selectors)
+3. [Examples](#examples)
+4. [Project structure](#project-structure)
+5. [Roadmap](#roadmap)
+
 ## Quickstart
 
 ### Using the code directly

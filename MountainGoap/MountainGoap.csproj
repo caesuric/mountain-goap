@@ -4,6 +4,18 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+	<VersionPrefix>0.1.1</VersionPrefix>
+	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	<Description>A simple GOAP (Goal Oriented Action Planning) library.</Description>
+	<Copyright>MIT licensed 2022</Copyright>
+	<PackageProjectUrl>https://github.com/caesuric/mountain-goap</PackageProjectUrl>
+	<PackageIcon>logo.png</PackageIcon>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
+	<RepositoryUrl>https://github.com/caesuric/mountain-goap</RepositoryUrl>
+	<PackageTags>goap;ai;games;simulation;sim</PackageTags>
+	<PackageReleaseNotes>Initial release.</PackageReleaseNotes>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -20,6 +32,17 @@
 
   <ItemGroup>
     <AdditionalFiles Include="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\logo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

@@ -37,8 +37,7 @@ namespace Examples {
             Action killNearbyEnemy = new(
                 executor: KillNearbyEnemyExecutor,
                 preconditions: new() {
-                    { "nearEnemy", true },
-
+                    { "nearEnemy", true }
                 },
                 postconditions: new() {
                    { "canSeeEnemies", false },
