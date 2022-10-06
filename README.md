@@ -1,3 +1,5 @@
+<img src="https://github.com/caesuric/mountain-goap/raw/main/logo.png" alt="Mountain GOAP logo" title="Mountain GOAP" align="right" height="120" />
+
 # Mountain GOAP
 
 Generic C# GOAP (Goal Oriented Action Planning) library.
