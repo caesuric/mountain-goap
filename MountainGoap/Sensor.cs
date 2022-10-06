@@ -12,7 +12,6 @@ namespace MountainGoap {
         /// <summary>
         /// Initializes a new instance of the <see cref="Sensor"/> class.
         /// </summary>
-        /// <param name="agent">Agent using the sensor.</param>
         /// <param name="runCallback">Callback to be executed when the sensor runs.</param>
         public Sensor(SensorRunCallback runCallback) {
             this.runCallback = runCallback;
