@@ -64,7 +64,7 @@ What kind of timeframe is represented by a "step" will vary based on your engine
 The agent stores a dictionary of objects called its **state**. This state can include anything, but simple values work best with goals and actions. If you need to reference complex game state, however, this is not a problem -- "sensors," covered below, can be used to translate complex values like map states into simpler ones, like booleans. More on that below.
 
 State can be passed into the agent constructor, like so:
-```
+```csharp
 Agent agent = new Agent(
     state: new Dictionary<string, object> {
         { "nearOtherAgent", false },
@@ -78,7 +78,7 @@ Agent agent = new Agent(
 **Goals** dictate the state values that the agent is trying to achieve. Goals have relatively simple constructors, taking just a dictionary of keys and values the agent wants to see in its state and a weight that indicates how important the goal is. The higher the weight, the more important the goal.
 
 Goals can be passed into the agent constructor, like so:
-```
+```csharp
 Goal goal = new Goal(
     desiredState: new Dictionary<string, object> {
         { "nearOtherAgent", true }
@@ -99,7 +99,7 @@ Agent agent = new Agent(
 Actions return an `ExecutionStatus` enum to say if they succeeded or not. If they succeed, the postconditions will automatically be set to the values passed to the action constructor.
 
 Actions can be passed into the agent constructor, like so:
-```
+```csharp
 Action giveHugAction = new Action(
     executor: (Agent agent, Action action) => {
         Console.WriteLine("hugged someone");
@@ -123,7 +123,7 @@ Agent agent = new Agent(
 ### Sensors
 
 **Sensors** allow an agent to distill information into their state, often derived from other state values. Sensors execute on every `Step()` call, and use a **sensor handler** to execute code. Sensors can be passed into the agent constructor, like so:
-```
+```csharp
 Sensor agentProximitySensor = new Sensor(
     (Agent agent) => {
         if (AgentNearOtherAgent(agent)) agent.State["nearOtherAgent"] = true;
@@ -141,7 +141,7 @@ Agent agent = new Agent(
 
 Finally, actions can be constructed with **permutation selectors**, which will instantiate multiple copies of the action with different parameters for purposes such as target selection. The library comes with some default permutation selectors, or you can write your own as callbacks. For instance, if you want an action to be evaluated separately with each member of a list as a potential parameter, you would construct the action as so:
 
-```
+```csharp
 Action myAction = new Action(
     permutationSelectors: new Dictionary<string, PermutationSelectorCallback> {
         { "target1", PermutationSelectorGenerators.SelectFromCollectionInState<Agent>("otherAgents") },
