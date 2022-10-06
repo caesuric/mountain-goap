@@ -6,9 +6,10 @@ Generic C# GOAP (Goal Oriented Action Planning) library.
 
 1. [Quickstart](#quickstart)
     1. [Using distributable](#using-distributable)
-    2. [Using NuGet package](#using-nuget-package)
-    3. [Using as a Unity package](#using-as-a-unity-package)
-    4. [Using the code directly](#using-the-code-directly)
+    2. [Using distributable in Unity](#using-distributable-in-unity)
+    3. [Using NuGet package](#using-nuget-package)
+    4. [Using as a Unity package](#using-as-a-unity-package)
+    5. [Using the code directly](#using-the-code-directly)
 2. [Concepts & API](#concepts--api)
     1. [Agents](#agents)
         1. [Agent state](#agent-state)
@@ -25,6 +26,10 @@ Generic C# GOAP (Goal Oriented Action Planning) library.
 ### Using distributable
 
 Download the [release](https://github.com/caesuric/mountain-goap/releases), unzip, and include the DLL in your project. In Visual Studio, you can do this by right-clicking on "Dependencies" in the Solution Explorer, then clicking "Add COM Reference," clicking "Browse," and browsing to the DLL.
+
+### Using distributable in Unity
+
+Download the [release](https://github.com/caesuric/mountain-goap/releases), unzip to a folder, and drag the folder into your Unity project.
 
 ### Using NuGet package
 
