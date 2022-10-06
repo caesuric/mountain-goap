@@ -5,9 +5,10 @@ Generic C# GOAP (Goal Oriented Action Planning) library.
 ![Mountain GOAP Logo](logo.png)
 
 1. [Quickstart](#quickstart)
-    1. [Using the code directly](#using-the-code-directly)
-    2. [Using distributable](#using-distributable)
+    1. [Using distributable](#using-distributable)
+    2. [Using NuGet package](#using-nuget-package)
     3. [Using as a Unity package](#using-as-a-unity-package)
+    4. [Using the code directly](#using-the-code-directly)
 2. [Concepts & API](#concepts--api)
     1. [Agents](#agents)
         1. [Agent state](#agent-state)
@@ -21,17 +22,23 @@ Generic C# GOAP (Goal Oriented Action Planning) library.
 
 ## Quickstart
 
-### Using the code directly
-
-Clone the repo and copy the code in the MountainGoap folder to your repo. All classes provided can be found in the MountainGoap namespace.
-
 ### Using distributable
 
-TO DO
+Download the [release](https://github.com/caesuric/mountain-goap/releases), unzip, and include the DLL in your project. In Visual Studio, you can do this by right-clicking on "Dependencies" in the Solution Explorer, then clicking "Add COM Reference," clicking "Browse," and browsing to the DLL.
+
+### Using NuGet package
+
+If you are not using Unity, you can download and use MountainGoap as a NuGet package.
+
+Right click your package and click "Manage NuGet Packages," then search for "MountainGoap" and install the package.
 
 ### Using as a Unity package
 
 TO DO
+
+### Using the code directly
+
+Clone the repo and copy the code in the MountainGoap folder to your repo. All classes provided can be found in the MountainGoap namespace.
 
 ## Concepts & API
 
@@ -155,7 +162,6 @@ TO DO
 
 ## Roadmap
 
-* Distributables
 * Custom action cost override based on parameters
 * Examples - general and Unity
 * Tests
