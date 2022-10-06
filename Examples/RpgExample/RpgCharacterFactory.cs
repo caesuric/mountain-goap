@@ -70,45 +70,27 @@ namespace Examples {
 
         private static void SeeEnemiesSensorHandler(Agent agent) {
             if (agent.State["agents"] is List<Agent> agents) {
-                foreach (var agent2 in agents) {
-                    if (agent == agent2) continue;
-                    if (agent.State["position"] is Vector2 pos1 && agent2.State["position"] is Vector2 pos2 && InDistance(pos1, pos2, 5f) && agent.State["faction"] != agent2.State["faction"]) {
-                        agent.State["canSeeEnemies"] = true;
-                        return;
-                    }
-                }
+                var agent2 = RpgUtils.GetEnemyInRange(agent, agents, 5f);
+                if (agent2 != null) agent.State["canSeeEnemies"] = true;
+                else agent.State["canSeeEnemies"] = false;
             }
-            agent.State["canSeeEnemies"] = false;
-        }
-
-        private static bool InDistance(Vector2 pos1, Vector2 pos2, float maxDistance) {
-            var distance = Math.Sqrt(Math.Pow(Math.Abs(pos2.X - pos1.X), 2) + Math.Pow(Math.Abs(pos2.Y - pos1.Y), 2));
-            if (distance <= maxDistance) return true;
-            return false;
         }
 
         private static void EnemyProximitySensorHandler(Agent agent) {
             if (agent.State["agents"] is List<Agent> agents) {
-                foreach (var agent2 in agents) {
-                    if (agent == agent2) continue;
-                    if (agent.State["position"] is Vector2 pos1 && agent2.State["position"] is Vector2 pos2 && InDistance(pos1, pos2, 1f) && agent.State["faction"] != agent2.State["faction"]) {
-                        agent.State["nearEnemy"] = true;
-                        return;
-                    }
-                }
+                var agent2 = RpgUtils.GetEnemyInRange(agent, agents, 1f);
+                if (agent2 != null) agent.State["nearEnemy"] = true;
+                else agent.State["nearEnemy"] = false;
             }
         }
 
         private static ExecutionStatus KillNearbyEnemyExecutor(Agent agent, Action action) {
             if (agent.State["agents"] is List<Agent> agents) {
-                foreach (var agent2 in agents) {
-                    if (agent == agent2) continue;
-                    if (agent.State["position"] is Vector2 pos1 && agent2.State["position"] is Vector2 pos2 && InDistance(pos1, pos2, 1f) && agent.State["faction"] != agent2.State["faction"] && agent2.State["hp"] is int hp) {
-                        hp--;
-                        agent2.State["hp"] = hp;
-                        if (hp <= 0) return ExecutionStatus.Succeeded;
-                        return ExecutionStatus.Failed;
-                    }
+                var agent2 = RpgUtils.GetEnemyInRange(agent, agents, 1f);
+                if (agent2 != null && agent2.State["hp"] is int hp) {
+                    hp--;
+                    agent2.State["hp"] = hp;
+                    if (hp <= 0) return ExecutionStatus.Succeeded;
                 }
             }
             return ExecutionStatus.Failed;
@@ -116,17 +98,10 @@ namespace Examples {
 
         private static ExecutionStatus GoToNearestEnemyExecutor(Agent agent, Action action) {
             if (agent.State["agents"] is List<Agent> agents) {
-                foreach (var agent2 in agents) {
-                    if (agent == agent2) continue;
-                    if (agent.State["position"] is Vector2 pos1 && agent2.State["position"] is Vector2 pos2 && InDistance(pos1, pos2, 5f) && agent.State["faction"] != agent2.State["faction"]) {
-                        var xSign = Math.Sign(pos2.X - pos1.X);
-                        var ySign = Math.Sign(pos2.Y - pos1.Y);
-                        if (xSign != 0) pos1.X += xSign;
-                        else pos1.Y += ySign;
-                        agent.State["position"] = pos1;
-                        if (InDistance(pos1, pos2, 1f)) return ExecutionStatus.Succeeded;
-                        return ExecutionStatus.Failed;
-                    }
+                var agent2 = RpgUtils.GetEnemyInRange(agent, agents, 5f);
+                if (agent2 != null && agent.State["position"] is Vector2 pos1 && agent2.State["position"] is Vector2 pos2) {
+                    agent.State["position"] = RpgUtils.MoveTowardsOtherPosition(pos1, pos2);
+                    if (RpgUtils.InDistance(pos1, pos2, 1f)) return ExecutionStatus.Succeeded;
                 }
             }
             return ExecutionStatus.Failed;

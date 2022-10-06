@@ -72,36 +72,31 @@ namespace Examples {
             return agent;
         }
 
-        private static bool InDistance(Vector2 pos1, Vector2 pos2, float maxDistance) {
-            var distance = Math.Sqrt(Math.Pow(Math.Abs(pos2.X - pos1.X), 2) + Math.Pow(Math.Abs(pos2.Y - pos1.Y), 2));
-            if (distance <= maxDistance) return true;
-            return false;
+        private static Vector2? GetFoodInRange(Vector2 source, List<Vector2> foodPositions, float range) {
+            foreach (var position in foodPositions) if (RpgUtils.InDistance(source, position, range)) return position;
+            return null;
         }
 
         private static void SeeFoodSensorHandler(Agent agent) {
-            if (agent.State["foodPositions"] is List<Vector2> foodPositions) {
-                foreach (var position in foodPositions) {
-                    if (agent.State["position"] is Vector2 agentPosition && InDistance(agentPosition, position, 5f)) {
-                        agent.State["canSeeFood"] = true;
-                        return;
-                    }
+            if (agent.State["position"] is Vector2 agentPosition && agent.State["foodPositions"] is List<Vector2> foodPositions) {
+                var foodPosition = GetFoodInRange(agentPosition, foodPositions, 5f);
+                if (foodPosition != null) agent.State["canSeeFood"] = true;
+                else {
+                    agent.State["canSeeFood"] = false;
+                    agent.State["eatingFood"] = false;
                 }
             }
-            agent.State["canSeeFood"] = false;
-            agent.State["eatingFood"] = false;
         }
 
         private static void FoodProximitySensorHandler(Agent agent) {
-            if (agent.State["foodPositions"] is List<Vector2> foodPositions) {
-                foreach (var position in foodPositions) {
-                    if (agent.State["position"] is Vector2 agentPosition && InDistance(agentPosition, position, 1f)) {
-                        agent.State["nearFood"] = true;
-                        return;
-                    }
+            if (agent.State["position"] is Vector2 agentPosition && agent.State["foodPositions"] is List<Vector2> foodPositions) {
+                var foodPosition = GetFoodInRange(agentPosition, foodPositions, 1f);
+                if (foodPosition != null) agent.State["nearFood"] = true;
+                else {
+                    agent.State["nearFood"] = false;
+                    agent.State["eatingFood"] = false;
                 }
             }
-            agent.State["nearFood"] = false;
-            agent.State["eatingFood"] = false;
         }
 
         private static ExecutionStatus LookForFoodExecutor(Agent agent, Action action) {
@@ -118,16 +113,10 @@ namespace Examples {
 
         private static ExecutionStatus GoToFoodExecutor(Agent agent, Action action) {
             if (agent.State["foodPositions"] is List<Vector2> foodPositions && agent.State["position"] is Vector2 position) {
-                foreach (var foodPosition in foodPositions) {
-                    if (InDistance(position, foodPosition, 5f)) {
-                        var xSign = Math.Sign(foodPosition.X - position.X);
-                        var ySign = Math.Sign(foodPosition.Y - position.Y);
-                        if (xSign != 0) position.X += xSign;
-                        else position.Y += ySign;
-                        agent.State["position"] = position;
-                        if (InDistance(position, foodPosition, 1f)) return ExecutionStatus.Succeeded;
-                        return ExecutionStatus.Failed;
-                    }
+                var foodPosition = GetFoodInRange(position, foodPositions, 5f);
+                if (foodPosition != null) {
+                    agent.State["position"] = RpgUtils.MoveTowardsOtherPosition(position, (Vector2)foodPosition);
+                    if (RpgUtils.InDistance(position, (Vector2)foodPosition, 1f)) return ExecutionStatus.Succeeded;
                 }
             }
             return ExecutionStatus.Failed;
@@ -135,11 +124,10 @@ namespace Examples {
 
         private static ExecutionStatus EatExecutor(Agent agent, Action action) {
             if (agent.State["foodPositions"] is List<Vector2> foodPositions && agent.State["position"] is Vector2 position) {
-                foreach (var foodPosition in foodPositions) {
-                    if (InDistance(position, foodPosition, 1f)) {
-                        foodPositions.Remove(foodPosition);
-                        return ExecutionStatus.Succeeded;
-                    }
+                var foodPosition = GetFoodInRange(position, foodPositions, 1f);
+                if (foodPosition != null) {
+                    foodPositions.Remove((Vector2)foodPosition);
+                    return ExecutionStatus.Succeeded;
                 }
             }
             return ExecutionStatus.Failed;
