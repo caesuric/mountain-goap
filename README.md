@@ -208,6 +208,7 @@ The code above will create an action that when evaluated for execution in an age
 
 ## Roadmap
 
+* Logging
 * Tests
 * Custom action cost override based on parameters
 * Examples - general and Unity
