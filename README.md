@@ -177,13 +177,40 @@ The code above will create an action that when evaluated for execution in an age
 
 ## Project Structure
 
-TO DO
+| File or folder | Description |
+| -------------- | ----------- |
+| `/Examples/` | Examples of how to use the library |
+| `/Examples/RpgExample/` | RPG grid-based example. |
+| `/Examples/RpgExample/RpgCharacterFactory.cs` | Static methods for creating character agents. |
+| `/Examples/RpgExample/RpgExample.cs` | Main RPG example entrypoint. |
+| `/Examples/RpgExample/RpgMonsterFactory.cs` | Static methods for creating enemy agents derived from the base character agent. |
+| `/Examples/RpgExample/Utils.cs` | RPG example utility functions. |
+| `/Examples/examples.md` | Examples documentation. |
+| `/Examples/HappinessIncrementer.cs` | Happiness incrementer example. |
+| `/Examples/Program.cs` | Examples entrypoint. |
+| `/MountainGoap/` | The main library folder |
+| `/MountainGoap/CallbackDelegates/` | Function signatures for callbacks. |
+| `/MountainGoap/CallbackDelegates/ExecutorCallback.cs` | Function signature for a callback that executes an action. |
+| `/MountainGoap/CallbackDelegates/PermutationSelectorCallbacks.cs` | Function signature for a callback that selects a list of options for an action parameter. |
+| `/MountainGoap/CallbackDelegates/SensorRunCallback.cs` | Function signature for a callback that runs a sensor. |
+| `/MountainGoap/Internals/` | Internal classes that external applications using the library will not need directly. |
+| `/MountainGoap/Internals/ActionAStar.cs` | Class that calculates AStar for an action graph. |
+| `/MountainGoap/Internals/ActionGraph.cs` | Class that represents an action graph. |
+| `/MountainGoap/Internals/ActionNode.cs` | Class that represents a node in an action graph. |
+| `/MountainGoap/Internals/CopyDictionaryExtensionMethod.cs` | Convenience extension method for copying a dictionary. |
+| `/MountainGoap/Internals/Planner.cs` | Planning class used by agents. |
+| `/MountainGoap/Action.cs` | An action that can be made available to agents. |
+| `/MountainGoap/Agent.cs` | An agent that can figure out plans to execute. |
+| `/MountainGoap/ExecutionStatus.cs` | An enum defining the execution status of an action. |
+| `/MountainGoap/Goal.cs` | A goal that agents can attempt to accomplish. |
+| `/MountainGoap/PermutationSelectorGenerators.cs` | Generators for lambda functions that return a list of options for an action parameter. |
+| `/MountainGoap/Sensor.cs` | A sensor that generates data for use by an agent. |
 
 ## Roadmap
 
+* Tests
 * Custom action cost override based on parameters
 * Examples - general and Unity
-* Tests
 
 ## Other open source GOAP projects
 
