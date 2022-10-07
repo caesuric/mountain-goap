@@ -2,15 +2,17 @@
 
 # Mountain GOAP
 
-Generic C# GOAP (Goal Oriented Action Planning) library.
+Generic C# GOAP (Goal Oriented Action Planning) library for creating AI agents to be used in games. GOAP is a type of an AI system for games popularized by [the F.E.A.R. AI paper](https://alumni.media.mit.edu/~jorkin/gdc2006_orkin_jeff_fear.pdf). GOAP agents use A* pathfinding to plan paths through a series of sequential actions, creating action sequences that allow the agent to achieve its goals.
+
+Mountain GOAP favors composition over inheritance, allowing you to create agents from a series of callbacks. In addition, Mountain GOAP's agents support multiple weighted goals and will attempt to find the greatest utility among a series of goals.
 
 1. [Quickstart](#quickstart)
-    1. [Quickstart general](#quickstart-general)
-    2. [Using distributable](#using-distributable)
-    3. [Using distributable in Unity](#using-distributable-in-unity)
-    4. [Using NuGet package](#using-nuget-package)
-    5. [Using as a Unity package](#using-as-a-unity-package)
-    6. [Using the code directly](#using-the-code-directly)
+    1. [Using distributable](#using-distributable)
+    2. [Using distributable in Unity](#using-distributable-in-unity)
+    3. [Using NuGet package](#using-nuget-package)
+    4. [Using as a Unity package](#using-as-a-unity-package)
+    5. [Using the code directly](#using-the-code-directly)
+    6. [Using the library after installation](#using-the-library-after-installation)
 2. [Concepts & API](#concepts--api)
     1. [Agents](#agents)
         1. [Agent state](#agent-state)
@@ -21,16 +23,9 @@ Generic C# GOAP (Goal Oriented Action Planning) library.
 3. [Examples](#examples)
 4. [Project structure](#project-structure)
 5. [Roadmap](#roadmap)
+6. [Other open source GOAP projects](#other-open-source-goap-projects)
 
 ## Quickstart
-
-### Quickstart general
-
-No matter which method you use, you can access MountainGoap by using the `MountainGoap` namespace as a prefix to the library classes, or by including the following line in your code:
-
-```csharp
-using MountainGoap;
-```
 
 ### Using distributable
 
@@ -48,11 +43,19 @@ Right click your package and click "Manage NuGet Packages," then search for "Mou
 
 ### Using as a Unity package
 
-TO DO
+In the works.
 
 ### Using the code directly
 
 Clone the repo and copy the code in the MountainGoap folder to your repo.
+
+### Using the library after installation
+
+No matter which method of installation you use, you can access MountainGoap by using the `MountainGoap` namespace as a prefix to the library classes, or by including the following line in your code:
+
+```csharp
+using MountainGoap;
+```
 
 ## Concepts & API
 
@@ -70,7 +73,7 @@ What kind of timeframe is represented by a "step" will vary based on your engine
 
 #### Agent state
 
-The agent stores a dictionary of objects called its **state**. This state can include anything, but simple values work best with goals and actions. If you need to reference complex game state, however, this is not a problem -- "sensors," covered below, can be used to translate complex values like map states into simpler ones, like booleans. More on that below.
+The agent stores a dictionary of objects called its **state**. This state can include anything, but simple values work best with [goals](#goals) and [actions](#actions). If you need to reference complex game state, however, this is not a problem -- [sensors](#sensors), covered below, can be used to translate complex values like map states into simpler ones, like booleans. More on that below.
 
 State can be passed into the agent constructor, like so:
 ```csharp
@@ -167,6 +170,8 @@ The code above will create an action that when evaluated for execution in an age
 
 ## Examples
 
+[Examples documentation](./Examples/examples.md).
+
 1. [Happiness Maximizer Example](./Examples/HappinessIncrementer.cs)
 2. [RPG Example](./Examples//RpgExample/RpgExample.cs)
 
@@ -179,3 +184,7 @@ TO DO
 * Custom action cost override based on parameters
 * Examples - general and Unity
 * Tests
+
+## Other open source GOAP projects
+
+* [ReGoap](https://github.com/luxkun/ReGoap) - C# GOAP library with more direct Unity support, providing Unity Components that can be attached to GameObjects.
