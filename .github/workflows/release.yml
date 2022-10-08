@@ -33,12 +33,16 @@ jobs:
           prerelease: true
           files: |
             mountain-goap-${{ github.ref_name }}.zip
-      - name: publish to nuget
-        id: publish_nuget
-        uses: brandedoutcast/publish-nuget@v2
-        with:
-          PROJECT_FILE_PATH: MountainGoap/MountainGoap.csproj
-          PACKAGE_NAME: MountainGoap
-          VERSION_REGEX: ^\s*<VersionPrefix>(.*)<\/VersionPrefix>\s*$
-          TAG_COMMIT: false
-          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+      # - name: publish to nuget
+      #   id: publish_nuget
+      #   uses: brandedoutcast/publish-nuget@v2
+      #   with:
+      #     PROJECT_FILE_PATH: MountainGoap/MountainGoap.csproj
+      #     PACKAGE_NAME: MountainGoap
+      #     VERSION_REGEX: ^\s*<VersionPrefix>(.*)<\/VersionPrefix>\s*$
+      #     TAG_COMMIT: false
+      #     NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+      - name: Package for NuGet
+        run: dotnet pack -c Release -o . MountainGoap/MountainGoap.csproj
+      - name: Publish to NuGet
+        run: dotnet nuget push *.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
