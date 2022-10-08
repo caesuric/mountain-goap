@@ -9,9 +9,16 @@ jobs:
   tagged-release:
     name: "Tagged Release"
     runs-on: "ubuntu-latest"
+    permissions:
+      contents: write
     environment: "Actions Environment"
 
     steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 6.0.x
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
