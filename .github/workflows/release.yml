@@ -1,0 +1,36 @@
+name: "tagged-release"
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  tagged-release:
+    name: "Tagged Release"
+    runs-on: "ubuntu-latest"
+    environment: "Actions Environment"
+
+    steps:
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
+      - name: Zip
+        run: zip mountain-goap-${{ github.ref_name }}.zip MountainGoap/bin/Release/net6.0/MountainGoap.*
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: true
+          files: |
+            mountain-goap-${{ github.ref_name }}.zip
+      - name: publish to nuget
+        id: publish_nuget
+        uses: brandedoutcast/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: MountainGoap/MountainGoap.csproj
+          PACKAGE_NAME: MountainGoap
+          TAG_COMMIT: false
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}}
