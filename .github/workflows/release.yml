@@ -26,7 +26,7 @@ jobs:
       - name: Test
         run: dotnet test --no-build --verbosity normal
       - name: Zip
-        run: zip mountain-goap-${{ github.ref_name }}.zip MountainGoap/bin/Release/net6.0/MountainGoap.*
+        run: zip -j mountain-goap-${{ github.ref_name }}.zip MountainGoap/bin/Release/net6.0/MountainGoap.*
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
