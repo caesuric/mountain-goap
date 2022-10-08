@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-	<VersionPrefix>0.1.1</VersionPrefix>
+	<VersionPrefix>0.1.2</VersionPrefix>
 	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	<Description>A simple GOAP (Goal Oriented Action Planning) library.</Description>
 	<Copyright>MIT licensed 2022</Copyright>
@@ -13,7 +13,7 @@
 	<PackageIcon>logo.png</PackageIcon>
 	<PackageReadmeFile>README.md</PackageReadmeFile>
 	<RepositoryUrl>https://github.com/caesuric/mountain-goap</RepositoryUrl>
-	<PackageTags>goap;ai;games;simulation;sim</PackageTags>
+	<PackageTags>goap;ai;games;simulation;sim;gamedev</PackageTags>
 	<PackageReleaseNotes>Initial release.</PackageReleaseNotes>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
