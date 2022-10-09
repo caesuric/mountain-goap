@@ -8,6 +8,11 @@ namespace MountainGoap {
     /// </summary>
     public class Agent {
         /// <summary>
+        /// Name of the agent.
+        /// </summary>
+        public readonly string Name;
+
+        /// <summary>
         /// The current world state from the agent perspective.
         /// </summary>
         public Dictionary<string, object> State = new();
@@ -50,12 +55,14 @@ namespace MountainGoap {
         /// <summary>
         /// Initializes a new instance of the <see cref="Agent"/> class.
         /// </summary>
+        /// <param name="name">Name of the agent.</param>
         /// <param name="state">Initial agent state.</param>
         /// <param name="memory">Initial agent memory.</param>
         /// <param name="goals">Initial agent goals.</param>
         /// <param name="actions">Actions available to the agent.</param>
         /// <param name="sensors">Sensors available to the agent.</param>
-        public Agent(Dictionary<string, object>? state = null, Dictionary<string, object>? memory = null, List<Goal>? goals = null, List<Action>? actions = null, List<Sensor>? sensors = null) {
+        public Agent(string? name = null, Dictionary<string, object>? state = null, Dictionary<string, object>? memory = null, List<Goal>? goals = null, List<Action>? actions = null, List<Sensor>? sensors = null) {
+            Name = name ?? $"Agent {Guid.NewGuid()}";
             if (state != null) State = state;
             if (memory != null) Memory = memory;
             if (goals != null) Goals = goals;

@@ -2,10 +2,17 @@
 // Copyright (c) Chris Muller. All rights reserved.
 // </copyright>
 namespace MountainGoap {
+    using System.Reflection;
+
     /// <summary>
     /// Represents an action in a GOAP system.
     /// </summary>
     public class Action {
+        /// <summary>
+        /// Name of the action.
+        /// </summary>
+        public readonly string Name;
+
         /// <summary>
         /// Cost of the action.
         /// </summary>
@@ -39,16 +46,18 @@ namespace MountainGoap {
         /// <summary>
         /// Initializes a new instance of the <see cref="Action"/> class.
         /// </summary>
+        /// <param name="name">Name for the action, for eventing and logging purposes.</param>
         /// <param name="permutationSelectors">The permutation selector callback for the action's parameters.</param>
         /// <param name="executor">The executor callback for the action.</param>
         /// <param name="cost">Cost of the action.</param>
         /// <param name="preconditions">Preconditions required in the world state in order for the action to occur.</param>
         /// <param name="postconditions">Postconditions applied after the action is successfully executed.</param>
-        public Action(Dictionary<string, PermutationSelectorCallback>? permutationSelectors = null, ExecutorCallback? executor = null, float cost = 1f, Dictionary<string, object>? preconditions = null, Dictionary<string, object>? postconditions = null) {
+        public Action(string? name = null, Dictionary<string, PermutationSelectorCallback>? permutationSelectors = null, ExecutorCallback? executor = null, float cost = 1f, Dictionary<string, object>? preconditions = null, Dictionary<string, object>? postconditions = null) {
             if (permutationSelectors == null) this.permutationSelectors = new();
             else this.permutationSelectors = permutationSelectors;
             if (executor == null) this.executor = DefaultExecutorCallback;
             else this.executor = executor;
+            Name = name ?? $"Action {Guid.NewGuid()} ({this.executor.GetMethodInfo().Name})";
             Cost = cost;
             if (preconditions != null) this.preconditions = preconditions;
             if (postconditions != null) this.postconditions = postconditions;
