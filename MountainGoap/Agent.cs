@@ -71,9 +71,15 @@ namespace MountainGoap {
         }
 
         /// <summary>
+        /// OnAgentStep event that fires when the agent executes a step of work.
+        /// </summary>
+        public static event AgentStepEvent OnAgentStep = (agent) => { };
+
+        /// <summary>
         /// You should call this every time your game scene updates.
         /// </summary>
         public void Step() {
+            OnAgentStep(this);
             foreach (var sensor in Sensors) sensor.Run(this);
             if (!IsBusy && !IsPlanning) {
                 IsPlanning = true;
