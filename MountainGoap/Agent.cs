@@ -71,14 +71,29 @@ namespace MountainGoap {
         }
 
         /// <summary>
-        /// OnAgentStep event that fires when the agent executes a step of work.
+        /// Event that fires when the agent executes a step of work.
         /// </summary>
         public static event AgentStepEvent OnAgentStep = (agent) => { };
 
         /// <summary>
-        /// OnAgentActionSequenceCompleted event that fires when an action sequence completes.
+        /// Event that fires when an action sequence completes.
         /// </summary>
         public static event AgentActionSequenceCompletedEvent OnAgentActionSequenceCompleted = (agent) => { };
+
+        /// <summary>
+        /// Event that fires when planning begins.
+        /// </summary>
+        public static event PlanningStartedEvent OnPlanningStarted = (agent) => { };
+
+        /// <summary>
+        /// Event that fires when planning for a single goal finishes.
+        /// </summary>
+        public static event PlanningFinishedForSingleGoalEvent OnPlanningFinishedForSingleGoal = (agent, goal, utility) => { };
+
+        /// <summary>
+        /// Event that fires when planning finishes.
+        /// </summary>
+        public static event PlanningFinishedEvent OnPlanningFinished = (agent, goal, utility) => { };
 
         /// <summary>
         /// You should call this every time your game scene updates.
@@ -91,6 +106,34 @@ namespace MountainGoap {
                 new Task(() => Planner.Plan(this)).Start();
             }
             else if (!IsPlanning) Execute();
+        }
+
+        /// <summary>
+        /// Triggers OnPlanningStarted event.
+        /// </summary>
+        /// <param name="agent">Agent that started planning.</param>
+        internal static void TriggerOnPlanningStarted(Agent agent) {
+            OnPlanningStarted(agent);
+        }
+
+        /// <summary>
+        /// Triggers OnPlanningFinishedForSingleGoal event.
+        /// </summary>
+        /// <param name="agent">Agent that finished planning.</param>
+        /// <param name="goal">Goal for which planning was completed.</param>
+        /// <param name="utility">Utility of the plan.</param>
+        internal static void TriggerOnPlanningFinishedForSingleGoal(Agent agent, Goal goal, float utility) {
+            OnPlanningFinishedForSingleGoal(agent, goal, utility);
+        }
+
+        /// <summary>
+        /// Triggers OnPlanningFinished event.
+        /// </summary>
+        /// <param name="agent">Agent that finished planning.</param>
+        /// <param name="goal">Goal that was selected.</param>
+        /// <param name="utility">Utility of the plan.</param>
+        internal static void TriggerOnPlanningFinished(Agent agent, Goal? goal, float utility) {
+            OnPlanningFinished(agent, goal, utility);
         }
 
         /// <summary>

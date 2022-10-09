@@ -64,12 +64,12 @@ namespace MountainGoap {
         }
 
         /// <summary>
-        /// OnBeginExecuteAction event that triggers when an action begins executing.
+        /// Event that triggers when an action begins executing.
         /// </summary>
         public static event BeginExecuteActionEvent OnBeginExecuteAction = (agent, action, parameters) => { };
 
         /// <summary>
-        /// OnFinishExecuteAction event that triggers when an action finishes executing.
+        /// Event that triggers when an action finishes executing.
         /// </summary>
         public static event FinishExecuteActionEvent OnFinishExecuteAction = (agent, action, status, parameters) => { };
 

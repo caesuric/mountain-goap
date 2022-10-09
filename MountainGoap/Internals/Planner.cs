@@ -12,24 +12,30 @@ namespace MountainGoap {
         /// </summary>
         /// <param name="agent">Agent using the planner.</param>
         internal static void Plan(Agent agent) {
+            Agent.TriggerOnPlanningStarted(agent);
             float bestPlanUtility = 0;
             ActionAStar? astar;
             ActionNode? cursor;
             ActionAStar? bestAstar = null;
+            Goal? bestGoal = null;
             foreach (var goal in agent.Goals) {
                 ActionGraph graph = new(agent.Actions, agent.State);
                 ActionNode start = new(null, agent.State);
                 astar = new(graph, start, goal.DesiredState);
                 cursor = astar.FinalPoint;
-                if (cursor != null && cursor.Action != null && astar.CostSoFar.ContainsKey(cursor) && goal.Weight / astar.CostSoFar[cursor] > bestPlanUtility) {
+                if (cursor is not null) Agent.TriggerOnPlanningFinishedForSingleGoal(agent, goal, goal.Weight / astar.CostSoFar[cursor]);
+                if (cursor is not null && cursor.Action is not null && astar.CostSoFar.ContainsKey(cursor) && goal.Weight / astar.CostSoFar[cursor] > bestPlanUtility) {
                     bestPlanUtility = goal.Weight / astar.CostSoFar[cursor];
                     bestAstar = astar;
+                    bestGoal = goal;
                 }
             }
-            if (bestPlanUtility > 0 && bestAstar is not null && bestAstar.FinalPoint is not null) {
+            if (bestPlanUtility > 0 && bestAstar is not null && bestGoal is not null && bestAstar.FinalPoint is not null) {
                 UpdateAgentActionList(bestAstar.FinalPoint, bestAstar, agent);
                 agent.IsBusy = true;
+                Agent.TriggerOnPlanningFinished(agent, bestGoal, bestPlanUtility);
             }
+            else Agent.TriggerOnPlanningFinished(agent, null, 0);
             agent.IsPlanning = false;
         }
 
