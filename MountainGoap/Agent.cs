@@ -76,6 +76,11 @@ namespace MountainGoap {
         public static event AgentStepEvent OnAgentStep = (agent) => { };
 
         /// <summary>
+        /// OnAgentActionSequenceCompleted event that fires when an action sequence completes.
+        /// </summary>
+        public static event AgentActionSequenceCompletedEvent OnAgentActionSequenceCompleted = (agent) => { };
+
+        /// <summary>
         /// You should call this every time your game scene updates.
         /// </summary>
         public void Step() {
@@ -101,7 +106,10 @@ namespace MountainGoap {
                     }
                     else cullableSequences.Add(sequence);
                 }
-                foreach (var sequence in cullableSequences) CurrentActionSequences.Remove(sequence);
+                foreach (var sequence in cullableSequences) {
+                    CurrentActionSequences.Remove(sequence);
+                    OnAgentActionSequenceCompleted(this);
+                }
             }
             else IsBusy = false;
         }
