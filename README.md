@@ -115,7 +115,7 @@ Actions can be passed into the agent constructor, like so:
 Action giveHugAction = new Action(
     executor: (Agent agent, Action action) => {
         Console.WriteLine("hugged someone");
-        return ExecutionStatus.Succeeded
+        return ExecutionStatus.Succeeded;
     },
     preconditions: new Dictionary<string, object> {
         { "nearOtherAgent", true }
