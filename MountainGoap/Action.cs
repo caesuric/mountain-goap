@@ -64,6 +64,16 @@ namespace MountainGoap {
         }
 
         /// <summary>
+        /// OnBeginExecuteAction event that triggers when an action begins executing.
+        /// </summary>
+        public static event BeginExecuteActionEvent OnBeginExecuteAction = (agent, action, parameters) => { };
+
+        /// <summary>
+        /// OnFinishExecuteAction event that triggers when an action finishes executing.
+        /// </summary>
+        public static event FinishExecuteActionEvent OnFinishExecuteAction = (agent, action, status, parameters) => { };
+
+        /// <summary>
         /// Gets or sets the execution status of the action.
         /// </summary>
         internal ExecutionStatus ExecutionStatus { get; set; } = ExecutionStatus.NotYetExecuted;
@@ -92,11 +102,14 @@ namespace MountainGoap {
         /// </summary>
         /// <param name="agent">Agent executing the action.</param>
         internal void Execute(Agent agent) {
+            OnBeginExecuteAction(agent, this, parameters);
             if (IsPossible(agent.State)) {
                 var newState = executor(agent, this);
                 if (newState == ExecutionStatus.Succeeded) ApplyEffects(agent.State);
                 ExecutionStatus = newState;
+                OnFinishExecuteAction(agent, this, ExecutionStatus, parameters);
             }
+            else OnFinishExecuteAction(agent, this, ExecutionStatus.NotPossible, parameters);
         }
 
         /// <summary>

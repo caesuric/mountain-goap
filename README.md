@@ -216,3 +216,17 @@ The code above will create an action that when evaluated for execution in an age
 ## Other open source GOAP projects
 
 * [ReGoap](https://github.com/luxkun/ReGoap) - C# GOAP library with more direct Unity support, providing Unity Components that can be attached to GameObjects.
+
+## Temp
+
+### Logging API
+
+1. ability to name actions, agents, goals, sensors, giving them UUIDs when not named
+2. event on action execution
+3. event on agent step
+4. event on agent action sequence completion
+5. event on agent planning start
+6. event on agent planning finish
+7. event on agent planner finishing planning a goal
+8. event on sensor execution
+9. default debug logger project using Serilog
