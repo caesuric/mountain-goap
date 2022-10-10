@@ -103,7 +103,8 @@ namespace MountainGoap {
             foreach (var sensor in Sensors) sensor.Run(this);
             if (!IsBusy && !IsPlanning) {
                 IsPlanning = true;
-                new Task(() => Planner.Plan(this)).Start();
+                var t = new Thread(new ThreadStart(() => { Planner.Plan(this); }));
+                t.Start();
             }
             else if (!IsPlanning) Execute();
         }

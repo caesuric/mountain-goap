@@ -50,9 +50,15 @@ namespace MountainGoap {
         }
 
         /// <inheritdoc/>
+#pragma warning disable IDE0070 // Use 'System.HashCode'
         public override int GetHashCode() {
-            return HashCode.Combine(Action, State);
+            var hashCode = 629302477;
+            if (Action != null) hashCode = (hashCode * -1521134295) + EqualityComparer<Action>.Default.GetHashCode(Action);
+            else hashCode *= -1521134295;
+            hashCode = (hashCode * -1521134295) + EqualityComparer<Dictionary<string, object>>.Default.GetHashCode(State);
+            return hashCode;
         }
+#pragma warning restore IDE0070 // Use 'System.HashCode'
 
         /// <summary>
         /// Cost to traverse this node.
