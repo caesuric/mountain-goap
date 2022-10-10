@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MountainGoap", "MountainGoa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Examples", "Examples\Examples.csproj", "{22E10E1F-2DA6-4E69-9252-EE653D90A1C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MountainGoapLogging", "MountainGoapLogging\MountainGoapLogging.csproj", "{6102C0D5-E087-4F6E-A477-03B3CDAC0FAC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MountainGoapLogging", "MountainGoapLogging\MountainGoapLogging.csproj", "{6102C0D5-E087-4F6E-A477-03B3CDAC0FAC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

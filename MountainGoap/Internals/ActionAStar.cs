@@ -3,6 +3,8 @@
 // </copyright>
 
 namespace MountainGoap {
+    using Priority_Queue;
+
     /// <summary>
     /// AStar calculator for an action graph.
     /// </summary>
@@ -35,7 +37,7 @@ namespace MountainGoap {
         /// <param name="goal">Goal state to be achieved.</param>
         internal ActionAStar(ActionGraph graph, ActionNode start, Dictionary<string, object> goal) {
             this.goal = goal;
-            PriorityQueue<ActionNode, float> frontier = new();
+            FastPriorityQueue<ActionNode> frontier = new(100000);
             frontier.Enqueue(start, 0);
             CameFrom[start] = start;
             CostSoFar[start] = 0;

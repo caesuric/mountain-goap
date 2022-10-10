@@ -3,10 +3,12 @@
 // </copyright>
 
 namespace MountainGoap {
+    using Priority_Queue;
+
     /// <summary>
     /// Represents an action node in an action graph.
     /// </summary>
-    internal class ActionNode {
+    internal class ActionNode : FastPriorityQueueNode {
         /// <summary>
         /// The state of the world for this action node.
         /// </summary>
