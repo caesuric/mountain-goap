@@ -20,6 +20,7 @@ Mountain GOAP favors composition over inheritance, allowing you to create agents
     3. [Actions](#actions)
     4. [Sensors](#sensors)
     5. [Future features - permutation selectors](#future-feature---permutation-selectors)
+    6. [Full API Docs](#full-api-docs)
 3. [Events](#events)
     1. [Agent events](#agent-events)
     2. [Action events](#action-events)
@@ -173,6 +174,10 @@ Action myAction = new Action(
 ```
 
 The code above will create an action that when evaluated for execution in an agent plan will be considered once for every pair combination of elements in the "otherAgents" collection of the agent state, one for `target1`, and one for `target2`. Note that while this feature has many potential uses down the road, it is not particularly helpful in agent planning until the utility of an action can be calculated via a custom callback function that can be based on action parameters.
+
+### Full API Docs
+
+Full API docs are available [here](./api-docs/index.md).
 
 ## Events
 
