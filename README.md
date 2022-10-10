@@ -20,10 +20,15 @@ Mountain GOAP favors composition over inheritance, allowing you to create agents
     3. [Actions](#actions)
     4. [Sensors](#sensors)
     5. [Future features - permutation selectors](#future-feature---permutation-selectors)
-3. [Examples](#examples)
-4. [Project structure](#project-structure)
-5. [Roadmap](#roadmap)
-6. [Other open source GOAP projects](#other-open-source-goap-projects)
+3. [Events](#events)
+    1. [Agent events](#agent-events)
+    2. [Action events](#action-events)
+    3. [Sensor events](#sensor-events)
+4. [Logger](#logger)
+5. [Examples](#examples)
+6. [Project structure](#project-structure)
+7. [Roadmap](#roadmap)
+8. [Other open source GOAP projects](#other-open-source-goap-projects)
 
 ## Quickstart
 
@@ -168,6 +173,52 @@ Action myAction = new Action(
 
 The code above will create an action that when evaluated for execution in an agent plan will be considered once for every pair combination of elements in the "otherAgents" collection of the agent state, one for `target1`, and one for `target2`. Note that while this feature has many potential uses down the road, it is not particularly helpful in agent planning until the utility of an action can be calculated via a custom callback function that can be based on action parameters.
 
+## Events
+
+Mountain GOAP features a simple event system that allows you to subscribe to events that occur during the agent's planning and execution process.
+
+### Agent events
+
+The following events are available on agents:
+
+* OnAgentActionSequenceCompleted: Called when the agent has finished executing its plan.
+    - Example usage: `Agent.OnAgentActionSequenceCompleted += (Agent agent) => { Console.WriteLine("Agent finished executing its plan."); };`
+* OnAgentStep: Called when the agent executes a step of work.
+    - Example usage: `Agent.OnAgentStep += (Agent agent) => { Console.WriteLine("Agent is working."); };`
+* OnPlanningStarted: Called when the agent begins planning.
+    - Example usage: `Agent.OnPlanningStarted += (Agent agent) => { Console.WriteLine("Agent started planning."); };`
+* OnPlanningFinished: Called when the agent finishes planning.
+    - Example usage: `Agent.OnPlanningFinished += (Agent agent, Goal? goal, float utility) => { Console.WriteLine("Agent finished planning."); };`
+* OnPlanningFinishedForSingleGoal: Called when the agent finishes planning for a single goal.
+    - Example usage: `Agent.OnPlanningFinishedForSingleGoal += (Agent agent, Goal goal, float utility) => { Console.WriteLine("Agent finished planning for a single goal."); };`
+
+### Action events
+
+The following events are available on actions:
+
+* OnBeginExecuteAction: Called when the agent begins executing an action.
+    - Example usage: `Action.OnBeginExecuteAction += (Agent agent, Action action, Dictionary<string, object> parameters) => { Console.WriteLine("Agent started executing an action."); };`
+* OnFinishExecuteAction: Called when the agent finishes executing an action.
+    - Example usage: `Action.OnFinishExecuteAction += (Agent agent, Action action, ExecutionStatus status, Dictionary<string, object> parameters) => { Console.WriteLine("Agent finished executing an action."); };`
+
+### Sensor events
+
+The following events are available on sensors:
+
+* OnSensorRun: Called when the agent runs a sensor.
+    - Example usage: `Sensor.OnSensorRun += (Agent agent, Sensor sensor) => { Console.WriteLine("Agent ran a sensor."); };`
+
+## Logger
+
+Mountain GOAP contains a default logger implementation that can be used to examine agent behavior. After including the MountainGoapLogger code, you can enable the logger using the following code:
+
+```csharp
+_ = new MountainGoapLogger.DefaultLogger(
+    logToConsole: true,
+    loggingFile: "agents.log"
+);
+```
+
 ## Examples
 
 [Examples documentation](./Examples/examples.md).
@@ -205,6 +256,7 @@ The code above will create an action that when evaluated for execution in an age
 | `/MountainGoap/Goal.cs` | A goal that agents can attempt to accomplish. |
 | `/MountainGoap/PermutationSelectorGenerators.cs` | Generators for lambda functions that return a list of options for an action parameter. |
 | `/MountainGoap/Sensor.cs` | A sensor that generates data for use by an agent. |
+| `/MountainGoapLogging/DefaultLogger.cs` | Example logger implementation that can be used to inspect agent behavior. |
 
 ## Roadmap
 
