@@ -260,7 +260,6 @@ _ = new MountainGoapLogger.DefaultLogger(
 
 ## Roadmap
 
-* Logging
 * full API documentation (auto gen if possible)
 * Tests
 * Custom action cost override based on parameters
