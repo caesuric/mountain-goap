@@ -23,7 +23,8 @@ namespace MountainGoap {
                 ActionNode start = new(null, agent.State);
                 astar = new(graph, start, goal.DesiredState);
                 cursor = astar.FinalPoint;
-                if (cursor is not null) Agent.TriggerOnPlanningFinishedForSingleGoal(agent, goal, goal.Weight / astar.CostSoFar[cursor]);
+                if (cursor is not null && astar.CostSoFar[cursor] == 0) Agent.TriggerOnPlanningFinishedForSingleGoal(agent, goal, 0);
+                else if (cursor is not null) Agent.TriggerOnPlanningFinishedForSingleGoal(agent, goal, goal.Weight / astar.CostSoFar[cursor]);
                 if (cursor is not null && cursor.Action is not null && astar.CostSoFar.ContainsKey(cursor) && goal.Weight / astar.CostSoFar[cursor] > bestPlanUtility) {
                     bestPlanUtility = goal.Weight / astar.CostSoFar[cursor];
                     bestAstar = astar;

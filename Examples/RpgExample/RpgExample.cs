@@ -5,6 +5,7 @@
 namespace Examples {
     using System.Numerics;
     using MountainGoap;
+    using MountainGoapLogging;
 
     /// <summary>
     /// RPG example demo.
@@ -24,6 +25,7 @@ namespace Examples {
         /// Runs the demo.
         /// </summary>
         internal static void Run() {
+            _ = new DefaultLogger(logToConsole: false, loggingFile: "rpg-example.log");
             Random random = new();
             List<Agent> agents = new();
             List<Vector2> foodPositions = new();

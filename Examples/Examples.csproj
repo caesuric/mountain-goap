@@ -32,6 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MountainGoapLogging\MountainGoapLogging.csproj" />
     <ProjectReference Include="..\MountainGoap\MountainGoap.csproj" />
   </ItemGroup>
 

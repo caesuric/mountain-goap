@@ -5,7 +5,9 @@ VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MountainGoap", "MountainGoap\MountainGoap.csproj", "{3EBEB82D-FD0F-4194-B8C0-0C276203536F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples", "Examples\Examples.csproj", "{22E10E1F-2DA6-4E69-9252-EE653D90A1C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Examples", "Examples\Examples.csproj", "{22E10E1F-2DA6-4E69-9252-EE653D90A1C4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MountainGoapLogging", "MountainGoapLogging\MountainGoapLogging.csproj", "{6102C0D5-E087-4F6E-A477-03B3CDAC0FAC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{22E10E1F-2DA6-4E69-9252-EE653D90A1C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22E10E1F-2DA6-4E69-9252-EE653D90A1C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{22E10E1F-2DA6-4E69-9252-EE653D90A1C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6102C0D5-E087-4F6E-A477-03B3CDAC0FAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6102C0D5-E087-4F6E-A477-03B3CDAC0FAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6102C0D5-E087-4F6E-A477-03B3CDAC0FAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6102C0D5-E087-4F6E-A477-03B3CDAC0FAC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
