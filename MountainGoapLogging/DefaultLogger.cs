@@ -26,7 +26,7 @@
         }
 
         private void OnAgentStep(Agent agent) {
-            logger.Information("Agent {agent} began a step.", agent.Name);
+            logger.Information("Agent {agent} is working.", agent.Name);
         }
 
         private void OnBeginExecuteAction(Agent agent, Action action, Dictionary<string, object> parameters) {
