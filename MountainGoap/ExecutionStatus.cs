@@ -25,6 +25,11 @@ namespace MountainGoap {
         /// <summary>
         /// Indicates that the action has failed.
         /// </summary>
-        Failed = 4
+        Failed = 4,
+
+        /// <summary>
+        /// Indicates that the action is not possible due to preconditions.
+        /// </summary>
+        NotPossible = 5
     }
 }

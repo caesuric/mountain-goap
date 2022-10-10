@@ -4,6 +4,7 @@
 
 namespace Examples {
     using MountainGoap;
+    using MountainGoapLogging;
 
     /// <summary>
     /// Simple goal to maximize happiness.
@@ -13,23 +14,27 @@ namespace Examples {
         /// Runs the demo.
         /// </summary>
         internal static void Run() {
+            _ = new DefaultLogger();
             Agent agent = new(
+                name: "Happiness Agent",
                 state: new() {
                     { "happiness", 0 },
                     { "happinessRecentlyIncreased", false }
                 },
                 goals: new() {
                     new(
+                        name: "Maximize Happiness",
                         desiredState: new() {
                             { "happinessRecentlyIncreased", true }
                         }
                     )
                 },
                 sensors: new() {
-                    new(EnnuiSensorHandler)
+                    new(EnnuiSensorHandler, "Ennui Sensor")
                 },
                 actions: new() {
                     new(
+                        name: "Seek Happiness",
                         executor: SeekHappinessAction,
                         preconditions: new() {
                             { "happinessRecentlyIncreased", false }

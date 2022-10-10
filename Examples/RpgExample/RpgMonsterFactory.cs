@@ -11,6 +11,7 @@ namespace Examples {
     /// </summary>
     internal static class RpgMonsterFactory {
         private static readonly Random Rng = new();
+        private static int counter = 1;
 
         /// <summary>
         /// Returns an RPG monster agent.
@@ -19,16 +20,18 @@ namespace Examples {
         /// <param name="foodPositions">List of positions for food in the world state.</param>
         /// <returns>An RPG character agent.</returns>
         internal static Agent Create(List<Agent> agents, List<Vector2> foodPositions) {
-            var agent = RpgCharacterFactory.Create(agents);
+            var agent = RpgCharacterFactory.Create(agents, $"Monster {counter++}");
             Goal eatFood = new(
+                name: "Eat Food",
                 weight: 0.1f,
                 desiredState: new() {
                     { "eatingFood", true }
                 }
             );
-            Sensor seeFoodSensor = new(SeeFoodSensorHandler);
-            Sensor foodProximitySensor = new(FoodProximitySensorHandler);
+            Sensor seeFoodSensor = new(SeeFoodSensorHandler, "Food Sight Sensor");
+            Sensor foodProximitySensor = new(FoodProximitySensorHandler, "Food Proximity Sensor");
             Action lookForFood = new(
+                name: "Look For Food",
                 executor: LookForFoodExecutor,
                 preconditions: new() {
                     { "canSeeFood", false },
@@ -39,6 +42,7 @@ namespace Examples {
                 }
             );
             Action goToFood = new(
+                name: "Go To Food",
                 executor: GoToFoodExecutor,
                 preconditions: new() {
                     { "canSeeFood", true },
@@ -49,6 +53,7 @@ namespace Examples {
                 }
             );
             Action eat = new(
+                name: "Eat",
                 executor: EatExecutor,
                 preconditions: new() {
                     { "nearFood", true },

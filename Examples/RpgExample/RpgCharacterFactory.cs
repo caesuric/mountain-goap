@@ -14,17 +14,20 @@ namespace Examples {
         /// Returns an RPG character agent.
         /// </summary>
         /// <param name="agents">List of agents included in the world state.</param>
+        /// <param name="name">Name of the character.</param>
         /// <returns>An RPG character agent.</returns>
-        internal static Agent Create(List<Agent> agents) {
+        internal static Agent Create(List<Agent> agents, string name = "Player") {
             Goal removeEnemies = new(
+                name: "Remove Enemies",
                 weight: 1f,
                 desiredState: new() {
                     { "canSeeEnemies", false }
                 }
             );
-            Sensor seeEnemiesSensor = new(SeeEnemiesSensorHandler);
-            Sensor enemyProximitySensor = new(EnemyProximitySensorHandler);
+            Sensor seeEnemiesSensor = new(SeeEnemiesSensorHandler, "Enemy Sight Sensor");
+            Sensor enemyProximitySensor = new(EnemyProximitySensorHandler, "Enemy Proximity Sensor");
             Action goToNearestEnemy = new(
+                name: "Go To Nearest Enemy",
                 executor: GoToNearestEnemyExecutor,
                 preconditions: new() {
                     { "canSeeEnemies", true },
@@ -35,6 +38,7 @@ namespace Examples {
                 }
             );
             Action killNearbyEnemy = new(
+                name: "Kill Nearby Enemy",
                 executor: KillNearbyEnemyExecutor,
                 preconditions: new() {
                     { "nearEnemy", true }
@@ -46,6 +50,7 @@ namespace Examples {
             );
 
             Agent agent = new(
+                name: name,
                 state: new() {
                     { "canSeeEnemies", false },
                     { "nearEnemy", false },
