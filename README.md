@@ -266,7 +266,6 @@ _ = new MountainGoapLogger.DefaultLogger(
 
 ## Roadmap
 
-* full API documentation (auto gen if possible)
 * Tests
 * Custom action cost override based on parameters
 * Examples - general and Unity
