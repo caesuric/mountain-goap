@@ -50,7 +50,6 @@ namespace MountainGoap {
         }
 
         /// <inheritdoc/>
-#pragma warning disable IDE0070 // Use 'System.HashCode'
         public override int GetHashCode() {
             var hashCode = 629302477;
             if (Action != null) hashCode = (hashCode * -1521134295) + EqualityComparer<Action>.Default.GetHashCode(Action);
@@ -58,7 +57,6 @@ namespace MountainGoap {
             hashCode = (hashCode * -1521134295) + EqualityComparer<Dictionary<string, object>>.Default.GetHashCode(State);
             return hashCode;
         }
-#pragma warning restore IDE0070 // Use 'System.HashCode'
 
         /// <summary>
         /// Cost to traverse this node.
@@ -66,7 +64,7 @@ namespace MountainGoap {
         /// <returns>The cost of the action to be executed.</returns>
         internal float Cost() {
             if (Action == null) return float.MaxValue;
-            return Action.Cost;
+            return Action.GetCost();
         }
 
         private bool StateMatches(ActionNode otherNode) {

@@ -16,7 +16,7 @@ namespace MountainGoap {
         /// <summary>
         /// Cost of the action.
         /// </summary>
-        public readonly float Cost;
+        private readonly float cost;
 
         /// <summary>
         /// The permutation selector callback for the action.
@@ -27,6 +27,11 @@ namespace MountainGoap {
         /// The executor callback for the action.
         /// </summary>
         private readonly ExecutorCallback executor;
+
+        /// <summary>
+        /// The cost callback for the action.
+        /// </summary>
+        private readonly CostCallback costCallback;
 
         /// <summary>
         /// Parameters to be passed to the action.
@@ -50,15 +55,17 @@ namespace MountainGoap {
         /// <param name="permutationSelectors">The permutation selector callback for the action's parameters.</param>
         /// <param name="executor">The executor callback for the action.</param>
         /// <param name="cost">Cost of the action.</param>
+        /// <param name="costCallback">Callback for determining the cost of the action.</param>
         /// <param name="preconditions">Preconditions required in the world state in order for the action to occur.</param>
         /// <param name="postconditions">Postconditions applied after the action is successfully executed.</param>
-        public Action(string? name = null, Dictionary<string, PermutationSelectorCallback>? permutationSelectors = null, ExecutorCallback? executor = null, float cost = 1f, Dictionary<string, object>? preconditions = null, Dictionary<string, object>? postconditions = null) {
+        public Action(string? name = null, Dictionary<string, PermutationSelectorCallback>? permutationSelectors = null, ExecutorCallback? executor = null, float cost = 1f, CostCallback? costCallback = null, Dictionary<string, object>? preconditions = null, Dictionary<string, object>? postconditions = null) {
             if (permutationSelectors == null) this.permutationSelectors = new();
             else this.permutationSelectors = permutationSelectors;
             if (executor == null) this.executor = DefaultExecutorCallback;
             else this.executor = executor;
             Name = name ?? $"Action {Guid.NewGuid()} ({this.executor.GetMethodInfo().Name})";
-            Cost = cost;
+            this.cost = cost;
+            this.costCallback = costCallback ?? DefaultCostCallback;
             if (preconditions != null) this.preconditions = preconditions;
             if (postconditions != null) this.postconditions = postconditions;
         }
@@ -95,6 +102,14 @@ namespace MountainGoap {
         public object? GetParameter(string key) {
             if (parameters.ContainsKey(key)) return parameters[key];
             return null;
+        }
+
+        /// <summary>
+        /// Gets the cost of the action.
+        /// </summary>
+        /// <returns>The cost of the action.</returns>
+        public float GetCost() {
+            return costCallback(this);
         }
 
         /// <summary>
@@ -182,6 +197,10 @@ namespace MountainGoap {
         /// <returns>A Failed status, since the action cannot execute without a callback.</returns>
         private static ExecutionStatus DefaultExecutorCallback(Agent agent, Action action) {
             return ExecutionStatus.Failed;
+        }
+
+        private static float DefaultCostCallback(Action action) {
+            return action.cost;
         }
     }
 }
