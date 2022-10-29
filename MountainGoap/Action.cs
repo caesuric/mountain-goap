@@ -19,7 +19,7 @@ namespace MountainGoap {
         private readonly float cost;
 
         /// <summary>
-        /// The permutation selector callback for the action.
+        /// The permutation selector callbacks for the action.
         /// </summary>
         private readonly Dictionary<string, PermutationSelectorCallback> permutationSelectors;
 
