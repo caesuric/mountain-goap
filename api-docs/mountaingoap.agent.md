@@ -108,13 +108,18 @@ Sensors available to the agent.
 
 ## Methods
 
-### **Step()**
+### **Step(StepMode)**
 
-You should call this every time your game scene updates.
+You should call this every time your game state updates.
 
 ```csharp
-public void Step()
+public void Step(StepMode mode)
 ```
+
+#### Parameters
+
+`mode` [StepMode](./mountaingoap.stepmode.md)<br>
+Mode to be used for executing the step of work.
 
 ### **TriggerOnPlanningStarted(Agent)**
 

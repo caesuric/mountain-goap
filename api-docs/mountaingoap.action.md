@@ -20,22 +20,14 @@ Name of the action.
 public string Name;
 ```
 
-### **Cost**
-
-Cost of the action.
-
-```csharp
-public float Cost;
-```
-
 ## Constructors
 
-### **Action(String, Dictionary&lt;String, PermutationSelectorCallback&gt;, ExecutorCallback, Single, Dictionary&lt;String, Object&gt;, Dictionary&lt;String, Object&gt;)**
+### **Action(String, Dictionary&lt;String, PermutationSelectorCallback&gt;, ExecutorCallback, Single, CostCallback, Dictionary&lt;String, Object&gt;, Dictionary&lt;String, Object&gt;)**
 
 Initializes a new instance of the [Action](./mountaingoap.action.md) class.
 
 ```csharp
-public Action(string name, Dictionary<string, PermutationSelectorCallback> permutationSelectors, ExecutorCallback executor, float cost, Dictionary<string, object> preconditions, Dictionary<string, object> postconditions)
+public Action(string name, Dictionary<string, PermutationSelectorCallback> permutationSelectors, ExecutorCallback executor, float cost, CostCallback costCallback, Dictionary<string, object> preconditions, Dictionary<string, object> postconditions)
 ```
 
 #### Parameters
@@ -52,6 +44,9 @@ The executor callback for the action.
 `cost` [Single](https://docs.microsoft.com/en-us/dotnet/api/system.single)<br>
 Cost of the action.
 
+`costCallback` [CostCallback](./mountaingoap.costcallback.md)<br>
+Callback for determining the cost of the action.
+
 `preconditions` [Dictionary&lt;String, Object&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2)<br>
 Preconditions required in the world state in order for the action to occur.
 
@@ -59,6 +54,19 @@ Preconditions required in the world state in order for the action to occur.
 Postconditions applied after the action is successfully executed.
 
 ## Methods
+
+### **Copy()**
+
+Makes a copy of the action.
+
+```csharp
+public Action Copy()
+```
+
+#### Returns
+
+[Action](./mountaingoap.action.md)<br>
+A copy of the action.
 
 ### **SetParameter(String, Object)**
 
@@ -94,6 +102,19 @@ Key for the value to be retrieved.
 [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object)<br>
 The value stored at the key specified.
 
+### **GetCost()**
+
+Gets the cost of the action.
+
+```csharp
+public float GetCost()
+```
+
+#### Returns
+
+[Single](https://docs.microsoft.com/en-us/dotnet/api/system.single)<br>
+The cost of the action.
+
 ### **Execute(Agent)**
 
 Executes a step of work for the agent.
@@ -125,18 +146,18 @@ The current world state.
 [Boolean](https://docs.microsoft.com/en-us/dotnet/api/system.boolean)<br>
 True if the action is possible, otherwise false.
 
-### **GetPermutations(Agent)**
+### **GetPermutations(Dictionary&lt;String, Object&gt;)**
 
 Gets all permutations of parameters possible for an action.
 
 ```csharp
-internal List<Dictionary<string, object>> GetPermutations(Agent agent)
+internal List<Dictionary<string, object>> GetPermutations(Dictionary<string, object> state)
 ```
 
 #### Parameters
 
-`agent` [Agent](./mountaingoap.agent.md)<br>
-Agent for which the action would be performed.
+`state` [Dictionary&lt;String, Object&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2)<br>
+World state when the action would be performed.
 
 #### Returns
 
@@ -155,6 +176,19 @@ internal void ApplyEffects(Dictionary<string, object> state)
 
 `state` [Dictionary&lt;String, Object&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2)<br>
 World state to which to apply effects.
+
+### **SetParameters(Dictionary&lt;String, Object&gt;)**
+
+Sets all parameters to the action.
+
+```csharp
+internal void SetParameters(Dictionary<string, object> parameters)
+```
+
+#### Parameters
+
+`parameters` [Dictionary&lt;String, Object&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2)<br>
+Dictionary of parameters to be passed to the action.
 
 ## Events
 
