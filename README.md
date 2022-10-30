@@ -276,6 +276,8 @@ _ = new MountainGoapLogger.DefaultLogger(
 
 ## License Acknowledgements
 
+Project is MIT licensed, and the main license file can be found [here](./LICENSE.txt).
+
 ### Priority Queue Implementation
 
 The MIT License (MIT)
