@@ -108,7 +108,7 @@ namespace MountainGoap {
             }
             if (!IsBusy) Planner.Plan(this);
             if (mode == StepMode.OneAction) Execute();
-            else if (mode == StepMode.AllActions) while (CurrentActionSequences.Count > 0) Execute();
+            else if (mode == StepMode.AllActions) while (IsBusy) Execute();
         }
 
         /// <summary>
