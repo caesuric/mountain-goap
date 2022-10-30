@@ -34,11 +34,6 @@ namespace MountainGoap {
         private readonly CostCallback costCallback;
 
         /// <summary>
-        /// Parameters to be passed to the action.
-        /// </summary>
-        private readonly Dictionary<string, object> parameters = new();
-
-        /// <summary>
         /// Preconditions for the action. These things are required for the action to execute.
         /// </summary>
         private readonly Dictionary<string, object> preconditions = new();
@@ -47,6 +42,11 @@ namespace MountainGoap {
         /// Postconditions for the actions. These will be set when the action has executed.
         /// </summary>
         private readonly Dictionary<string, object> postconditions = new();
+
+        /// <summary>
+        /// Parameters to be passed to the action.
+        /// </summary>
+        private Dictionary<string, object> parameters = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Action"/> class.
@@ -143,12 +143,12 @@ namespace MountainGoap {
         /// <summary>
         /// Gets all permutations of parameters possible for an action.
         /// </summary>
-        /// <param name="agent">Agent for which the action would be performed.</param>
+        /// <param name="state">World state when the action would be performed.</param>
         /// <returns>A list of possible parameter dictionaries that could be used.</returns>
-        internal List<Dictionary<string, object>> GetPermutations(Agent agent) {
+        internal List<Dictionary<string, object>> GetPermutations(Dictionary<string, object> state) {
             List<Dictionary<string, object>> combinedOutputs = new();
             Dictionary<string, List<object>> outputs = new();
-            foreach (var kvp in permutationSelectors) outputs[kvp.Key] = kvp.Value(agent.State);
+            foreach (var kvp in permutationSelectors) outputs[kvp.Key] = kvp.Value(state);
             var parameters = outputs.Keys.ToList();
             List<int> indices = new();
             List<int> counts = new();
@@ -171,6 +171,14 @@ namespace MountainGoap {
         /// <param name="state">World state to which to apply effects.</param>
         internal void ApplyEffects(Dictionary<string, object> state) {
             foreach (var kvp in postconditions) state[kvp.Key] = kvp.Value;
+        }
+
+        /// <summary>
+        /// Sets all parameters to the action.
+        /// </summary>
+        /// <param name="parameters">Dictionary of parameters to be passed to the action.</param>
+        internal void SetParameters(Dictionary<string, object> parameters) {
+            this.parameters = parameters;
         }
 
         private static bool IndicesAtMaximum(List<int> indices, List<int> counts) {

@@ -15,6 +15,11 @@ namespace MountainGoap {
         internal Dictionary<string, object> State = new();
 
         /// <summary>
+        /// Parameters to be passed to the action.
+        /// </summary>
+        internal Dictionary<string, object> Parameters = new();
+
+        /// <summary>
         /// The action to be executed when the world is in the defined <see cref="State"/>.
         /// </summary>
         internal Action? Action;
@@ -24,9 +29,11 @@ namespace MountainGoap {
         /// </summary>
         /// <param name="action">Action to be assigned to the node.</param>
         /// <param name="state">State to be assigned to the node.</param>
-        internal ActionNode(Action? action, Dictionary<string, object> state) {
+        /// <param name="parameters">Paramters to be passed to the action in the node.</param>
+        internal ActionNode(Action? action, Dictionary<string, object> state, Dictionary<string, object> parameters) {
             Action = action;
             State = state.Copy();
+            Parameters = parameters.Copy();
         }
 
         public static bool operator ==(ActionNode? node1, ActionNode? node2) {
@@ -64,6 +71,7 @@ namespace MountainGoap {
         /// <returns>The cost of the action to be executed.</returns>
         internal float Cost() {
             if (Action == null) return float.MaxValue;
+            Action.SetParameters(Parameters);
             return Action.GetCost();
         }
 

@@ -18,7 +18,10 @@ namespace MountainGoap {
         /// <param name="actions">List of actions to include in the graph.</param>
         /// <param name="state">Initial state to be used.</param>
         internal ActionGraph(List<Action> actions, Dictionary<string, object> state) {
-            foreach (var action in actions) ActionNodes.Add(new(action, state.Copy()));
+            foreach (var action in actions) {
+                var permutations = action.GetPermutations(state);
+                foreach (var permutation in permutations) ActionNodes.Add(new(action, state, permutation));
+            }
         }
 
         /// <summary>
@@ -29,7 +32,7 @@ namespace MountainGoap {
         internal IEnumerable<ActionNode> Neighbors(ActionNode node) {
             foreach (var otherNode in ActionNodes) {
                 if (otherNode.Action is not null && otherNode.Action.IsPossible(node.State)) {
-                    var instancedNode = new ActionNode(otherNode.Action, node.State.Copy());
+                    var instancedNode = new ActionNode(otherNode.Action, node.State.Copy(), node.Parameters.Copy());
                     otherNode.Action.ApplyEffects(instancedNode.State);
                     yield return instancedNode;
                 }
