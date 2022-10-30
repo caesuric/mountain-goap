@@ -76,7 +76,7 @@ In practice, you will want to pass the agent constructor various things it needs
 When you want your agent to act, just call the following:
 `agent.Step();`
 
-What kind of timeframe is represented by a "step" will vary based on your engine. In a turn based game, a step might be one turn. In a realtime engine like Unity, you might call `agent.Step()` on every `Update()` cycle.
+What kind of timeframe is represented by a "step" will vary based on your engine. In a turn based game, a step might be one turn. In a realtime engine like Unity, you might call `agent.Step()` on every `Update()` cycle. In a turn-based game you will probably want to call `agent.Step()` on every turn. In the case of turn-based games, you can force at least one action to be taken per turn by calling `agent.Step(mode: StepMode.OneAction)`. If you want the entire action sequence to be completed in one turn, you can call `agent.Step(mode: StepMode.AllActions)`.
 
 #### Agent state
 
