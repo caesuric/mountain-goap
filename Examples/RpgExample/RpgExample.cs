@@ -39,7 +39,7 @@ namespace Examples {
                 agents.Add(monster);
             }
             for (int i = 0; i < 600; i++) {
-                foreach (var agent in agents) agent.Step();
+                foreach (var agent in agents) agent.Step(mode: StepMode.OneAction);
                 ProcessDeaths(agents);
                 PrintGrid(agents, foodPositions);
                 Thread.Sleep(200);
