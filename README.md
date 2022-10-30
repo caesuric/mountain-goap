@@ -19,7 +19,7 @@ Mountain GOAP favors composition over inheritance, allowing you to create agents
     2. [Goals](#goals)
     3. [Actions](#actions)
     4. [Sensors](#sensors)
-    5. [Future features - permutation selectors](#future-feature---permutation-selectors)
+    5. [Permutation selectors](#permutation-selectors)
     6. [Full API Docs](#full-api-docs)
 3. [Events](#events)
     1. [Agent events](#agent-events)
@@ -156,9 +156,9 @@ Agent agent = new Agent(
 );
 ```
 
-### Future Feature - Permutation Selectors
+### Permutation Selectors
 
-Finally, actions can be constructed with **permutation selectors**, which will instantiate multiple copies of the action with different parameters for purposes such as target selection. The library comes with some default permutation selectors, or you can write your own as callbacks. For instance, if you want an action to be evaluated separately with each member of a list as a potential parameter, you would construct the action as so:
+Finally, actions can be constructed with **permutation selectors**, which will instantiate multiple copies of the action with different parameters for purposes such as target selection. The library comes with some default permutation selector generators, or you can write your own as callbacks. For instance, if you want an action to be evaluated separately with each member of a list as a potential parameter, you would construct the action as so:
 
 ```csharp
 Action myAction = new Action(
@@ -173,7 +173,7 @@ Action myAction = new Action(
 );
 ```
 
-The code above will create an action that when evaluated for execution in an agent plan will be considered once for every pair combination of elements in the "otherAgents" collection of the agent state, one for `target1`, and one for `target2`. Note that while this feature has many potential uses down the road, it is not particularly helpful in agent planning until the utility of an action can be calculated via a custom callback function that can be based on action parameters.
+The code above will create an action that when evaluated for execution in an agent plan will be considered once for every pair combination of elements in the "otherAgents" collection of the agent state, one for `target1`, and one for `target2`. In order to take advantage of this feature, you can also calculate variable costs based on action parameters using the `costCallback` argument in the `Action` constructor.
 
 ### Full API Docs
 
@@ -266,8 +266,8 @@ _ = new MountainGoapLogger.DefaultLogger(
 
 ## Roadmap
 
+* Improved API for turn-based games.
 * Tests
-* Custom action cost override based on parameters
 * Examples - general and Unity
 
 ## Other open source GOAP projects
