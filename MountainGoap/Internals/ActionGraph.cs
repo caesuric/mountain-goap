@@ -32,9 +32,11 @@ namespace MountainGoap {
         internal IEnumerable<ActionNode> Neighbors(ActionNode node) {
             foreach (var otherNode in ActionNodes) {
                 if (otherNode.Action is not null && otherNode.Action.IsPossible(node.State)) {
-                    var instancedNode = new ActionNode(otherNode.Action, node.State.Copy(), node.Parameters.Copy());
-                    otherNode.Action.ApplyEffects(instancedNode.State);
-                    yield return instancedNode;
+                    foreach (var permutation in otherNode.Action.GetPermutations(node.State.Copy())) {
+                        var instancedNode = new ActionNode(otherNode.Action, node.State.Copy(), permutation.Copy());
+                        otherNode.Action.ApplyEffects(instancedNode.State);
+                        yield return instancedNode;
+                    }
                 }
             }
         }

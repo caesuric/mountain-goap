@@ -50,7 +50,12 @@ namespace Examples {
                 },
                 postconditions: new() {
                     { "nearFood", true }
-                }
+                },
+                permutationSelectors: new() {
+                    { "target", RpgUtils.FoodPermutations },
+                    { "startingPosition", RpgUtils.StartingPositionPermutations }
+                },
+                costCallback: RpgUtils.GoToFoodCost
             );
             Action eat = new(
                 name: "Eat",
@@ -117,12 +122,10 @@ namespace Examples {
         }
 
         private static ExecutionStatus GoToFoodExecutor(Agent agent, Action action) {
-            if (agent.State["foodPositions"] is List<Vector2> foodPositions && agent.State["position"] is Vector2 position) {
-                var foodPosition = GetFoodInRange(position, foodPositions, 5f);
-                if (foodPosition != null) {
-                    agent.State["position"] = RpgUtils.MoveTowardsOtherPosition(position, (Vector2)foodPosition);
-                    if (RpgUtils.InDistance(position, (Vector2)foodPosition, 1f)) return ExecutionStatus.Succeeded;
-                }
+            if (action.GetParameter("target") is Vector2 foodPosition && agent.State["position"] is Vector2 position) {
+                position = RpgUtils.MoveTowardsOtherPosition(position, foodPosition);
+                agent.State["position"] = position;
+                if (RpgUtils.InDistance(position, foodPosition, 1f)) return ExecutionStatus.Succeeded;
             }
             return ExecutionStatus.Failed;
         }

@@ -31,9 +31,10 @@ namespace MountainGoap {
         /// <param name="state">State to be assigned to the node.</param>
         /// <param name="parameters">Paramters to be passed to the action in the node.</param>
         internal ActionNode(Action? action, Dictionary<string, object> state, Dictionary<string, object> parameters) {
-            Action = action;
+            if (action != null) Action = action.Copy();
             State = state.Copy();
             Parameters = parameters.Copy();
+            if (Action != null) Action.SetParameters(Parameters);
         }
 
         public static bool operator ==(ActionNode? node1, ActionNode? node2) {
@@ -71,7 +72,6 @@ namespace MountainGoap {
         /// <returns>The cost of the action to be executed.</returns>
         internal float Cost() {
             if (Action == null) return float.MaxValue;
-            Action.SetParameters(Parameters);
             return Action.GetCost();
         }
 

@@ -18,7 +18,7 @@ namespace Examples {
         /// <param name="maxDistance">Maximum acceptable distance.</param>
         /// <returns>True if the positions are within the given distance, otherwise false.</returns>
         internal static bool InDistance(Vector2 pos1, Vector2 pos2, float maxDistance) {
-            var distance = Math.Sqrt(Math.Pow(Math.Abs(pos2.X - pos1.X), 2) + Math.Pow(Math.Abs(pos2.Y - pos1.Y), 2));
+            var distance = Distance(pos1, pos2);
             if (distance <= maxDistance) return true;
             return false;
         }
@@ -50,6 +50,67 @@ namespace Examples {
             if (xSign != 0) pos1.X += xSign;
             else pos1.Y += ySign;
             return pos1;
+        }
+
+        /// <summary>
+        /// Permutation selector to grab all enemies.
+        /// </summary>
+        /// <param name="state">State for the agent running the selector.</param>
+        /// <returns>List of all enemies on the map.</returns>
+        internal static List<object> EnemyPermutations(Dictionary<string, object> state) {
+            var enemies = new List<object>();
+            if (state["agents"] is not List<Agent> agents || state["faction"] is not string faction) return enemies;
+            foreach (var agent in agents) if ((string)agent.State["faction"] != faction) enemies.Add(agent);
+            return enemies;
+        }
+
+        /// <summary>
+        /// Permutation selector to grab all food positions.
+        /// </summary>
+        /// <param name="state">State for the agent running the selector.</param>
+        /// <returns>List of all food positions on the map.</returns>
+        internal static List<object> FoodPermutations(Dictionary<string, object> state) {
+            var foodPositions = new List<object>();
+            if (state["foodPositions"] is not List<Vector2> sourcePositions) return foodPositions;
+            foreach (var position in sourcePositions) foodPositions.Add(position);
+            return foodPositions;
+        }
+
+        /// <summary>
+        /// Gets a list of all possible starting positions for a move action.
+        /// </summary>
+        /// <param name="state">Current agent state.</param>
+        /// <returns>List of all possible starting positions for a move action.</returns>
+        internal static List<object> StartingPositionPermutations(Dictionary<string, object> state) {
+            var startingPositions = new List<object>();
+            if (state["position"] is not Vector2 position) return startingPositions;
+            startingPositions.Add(position);
+            return startingPositions;
+        }
+
+        /// <summary>
+        /// Gets the cost of moving to an enemy.
+        /// </summary>
+        /// <param name="action">Action for which cost is being calculated.</param>
+        /// <returns>The cost of the action.</returns>
+        internal static float GoToEnemyCost(Action action) {
+            if (action.GetParameter("startingPosition") is not Vector2 startingPosition || action.GetParameter("target") is not Agent target) return float.MaxValue;
+            if (target.State["position"] is not Vector2 targetPosition) return float.MaxValue;
+            return Distance(startingPosition, targetPosition);
+        }
+
+        /// <summary>
+        /// Gets the cost of moving to food.
+        /// </summary>
+        /// <param name="action">Action for which the cost is being calculated.</param>
+        /// <returns>The cost of the action.</returns>
+        internal static float GoToFoodCost(Action action) {
+            if (action.GetParameter("startingPosition") is not Vector2 startingPosition || action.GetParameter("target") is not Vector2 targetPosition) return float.MaxValue;
+            return Distance(startingPosition, targetPosition);
+        }
+
+        private static float Distance(Vector2 pos1, Vector2 pos2) {
+            return (float)Math.Sqrt(Math.Pow(Math.Abs(pos2.X - pos1.X), 2) + Math.Pow(Math.Abs(pos2.Y - pos1.Y), 2));
         }
     }
 }

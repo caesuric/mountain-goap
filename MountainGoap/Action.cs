@@ -86,6 +86,14 @@ namespace MountainGoap {
         internal ExecutionStatus ExecutionStatus { get; set; } = ExecutionStatus.NotYetExecuted;
 
         /// <summary>
+        /// Makes a copy of the action.
+        /// </summary>
+        /// <returns>A copy of the action.</returns>
+        public Action Copy() {
+            return new Action(Name, permutationSelectors, executor, cost, costCallback, preconditions.Copy(), postconditions.Copy());
+        }
+
+        /// <summary>
         /// Sets a parameter to the action.
         /// </summary>
         /// <param name="key">Key to be set.</param>
@@ -158,7 +166,10 @@ namespace MountainGoap {
             }
             while (true) {
                 var singleOutput = new Dictionary<string, object>();
-                for (int i = 0; i < indices.Count; i++) singleOutput[parameters[i]] = outputs[parameters[i]][indices[i]];
+                for (int i = 0; i < indices.Count; i++) {
+                    if (indices[i] >= outputs[parameters[i]].Count) continue;
+                    singleOutput[parameters[i]] = outputs[parameters[i]][indices[i]];
+                }
                 combinedOutputs.Add(singleOutput);
                 if (IndicesAtMaximum(indices, counts)) return combinedOutputs;
                 IncrementIndices(indices, counts);
