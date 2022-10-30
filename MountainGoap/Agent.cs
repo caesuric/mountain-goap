@@ -96,17 +96,19 @@ namespace MountainGoap {
         public static event PlanningFinishedEvent OnPlanningFinished = (agent, goal, utility) => { };
 
         /// <summary>
-        /// You should call this every time your game scene updates.
+        /// You should call this every time your game state updates.
         /// </summary>
-        public void Step() {
+        /// <param name="mode">Mode to be used for executing the step of work.</param>
+        public void Step(StepMode mode = StepMode.Default) {
             OnAgentStep(this);
             foreach (var sensor in Sensors) sensor.Run(this);
-            if (!IsBusy && !IsPlanning) {
-                IsPlanning = true;
-                var t = new Thread(new ThreadStart(() => { Planner.Plan(this); }));
-                t.Start();
+            if (mode == StepMode.Default) {
+                StepAsync();
+                return;
             }
-            else if (!IsPlanning) Execute();
+            if (!IsBusy) Planner.Plan(this);
+            if (mode == StepMode.OneAction) Execute();
+            else if (mode == StepMode.AllActions) while (CurrentActionSequences.Count > 0) Execute();
         }
 
         /// <summary>
@@ -135,6 +137,18 @@ namespace MountainGoap {
         /// <param name="utility">Utility of the plan.</param>
         internal static void TriggerOnPlanningFinished(Agent agent, Goal? goal, float utility) {
             OnPlanningFinished(agent, goal, utility);
+        }
+
+        /// <summary>
+        /// Executes an asynchronous step of agent work.
+        /// </summary>
+        private void StepAsync() {
+            if (!IsBusy && !IsPlanning) {
+                IsPlanning = true;
+                var t = new Thread(new ThreadStart(() => { Planner.Plan(this); }));
+                t.Start();
+            }
+            else if (!IsPlanning) Execute();
         }
 
         /// <summary>
