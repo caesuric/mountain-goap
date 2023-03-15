@@ -25,7 +25,7 @@ namespace MountainGoap {
         /// <summary>
         /// List of active goals for the agent.
         /// </summary>
-        public List<Goal> Goals = new();
+        public List<BaseGoal> Goals = new();
 
         /// <summary>
         /// Actions available to the agent.
@@ -61,7 +61,7 @@ namespace MountainGoap {
         /// <param name="goals">Initial agent goals.</param>
         /// <param name="actions">Actions available to the agent.</param>
         /// <param name="sensors">Sensors available to the agent.</param>
-        public Agent(string? name = null, Dictionary<string, object>? state = null, Dictionary<string, object>? memory = null, List<Goal>? goals = null, List<Action>? actions = null, List<Sensor>? sensors = null) {
+        public Agent(string? name = null, Dictionary<string, object>? state = null, Dictionary<string, object>? memory = null, List<BaseGoal>? goals = null, List<Action>? actions = null, List<Sensor>? sensors = null) {
             Name = name ?? $"Agent {Guid.NewGuid()}";
             if (state != null) State = state;
             if (memory != null) Memory = memory;
@@ -125,7 +125,7 @@ namespace MountainGoap {
         /// <param name="agent">Agent that finished planning.</param>
         /// <param name="goal">Goal for which planning was completed.</param>
         /// <param name="utility">Utility of the plan.</param>
-        internal static void TriggerOnPlanningFinishedForSingleGoal(Agent agent, Goal goal, float utility) {
+        internal static void TriggerOnPlanningFinishedForSingleGoal(Agent agent, BaseGoal goal, float utility) {
             OnPlanningFinishedForSingleGoal(agent, goal, utility);
         }
 
@@ -135,7 +135,7 @@ namespace MountainGoap {
         /// <param name="agent">Agent that finished planning.</param>
         /// <param name="goal">Goal that was selected.</param>
         /// <param name="utility">Utility of the plan.</param>
-        internal static void TriggerOnPlanningFinished(Agent agent, Goal? goal, float utility) {
+        internal static void TriggerOnPlanningFinished(Agent agent, BaseGoal? goal, float utility) {
             OnPlanningFinished(agent, goal, utility);
         }
 

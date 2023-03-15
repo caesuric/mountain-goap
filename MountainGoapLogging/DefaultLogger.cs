@@ -40,12 +40,12 @@
             logger.Information("Agent {agent} finished executing action {action} with status {status}.", agent.Name, action.Name, status);
         }
 
-        private void OnPlanningFinished(Agent agent, Goal? goal, float utility) {
+        private void OnPlanningFinished(Agent agent, BaseGoal? goal, float utility) {
             if (goal is null) logger.Warning("Agent {agent} finished planning and found no possible goal.", agent.Name);
             else logger.Information("Agent {agent} finished planning with goal {goal}, utility value {utility}.", agent.Name, goal.Name, utility);
         }
 
-        private void OnPlanningFinishedForSingleGoal(Agent agent, Goal goal, float utility) {
+        private void OnPlanningFinishedForSingleGoal(Agent agent, BaseGoal goal, float utility) {
             logger.Information("Agent {agent} finished planning for goal {goal}, utility value {utility}.", agent.Name, goal.Name, utility);
         }
 
