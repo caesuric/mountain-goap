@@ -17,7 +17,10 @@ Mountain GOAP favors composition over inheritance, allowing you to create agents
     1. [Agents](#agents)
         1. [Agent state](#agent-state)
     2. [Goals](#goals)
+        1. [Extreme Goals](#extreme-goals)
+        2. [Comparative Goals](#comparative-goals)
     3. [Actions](#actions)
+        1. [Arithmetic Postconditions](#arithmetic-postconditions)
     4. [Sensors](#sensors)
     5. [Permutation selectors](#permutation-selectors)
     6. [Full API Docs](#full-api-docs)
@@ -113,6 +116,39 @@ Agent agent = new Agent(
 );
 ```
 
+#### Extreme Goals
+
+**Extreme goals** attempt to maximize or minimize a numeric state value. They take similar parameters to normal goals, but the values in the dictionary must be booleans. If the boolean is true, the goal will attempt to maximize the value. If the boolean is false, the goal will attempt to minimize the value. The state value must be a numeric type for this to work correctly.
+
+Example that will try to maximize the agent's health:
+
+```csharp
+ExtremeGoal goal = new ExtremeGoal(
+    desiredState: new Dictionary<string, object> {
+        { "health", true }
+    },
+    weight: 2f
+);
+```
+
+#### Comparative Goals
+
+**Comparative goals** attempt to make a numeric state value compare in a certain way to a base value. They take similar parameters to normal goals, but the values in the dictionary must be ComparisonValuePair objects. The ComparisonValuePair object specifies a value to use for comparison and a comparison operator to use. The state value must be a numeric type and the same type as the comparison value for this to work correctly.
+
+Example that will try to make the agent's health greater than 50:
+
+```csharp
+ComparativeGoal goal = new ComparativeGoal(
+    desiredState: new Dictionary<string, object> {
+        { "health", new ComparisonValuePair {
+            Value: 50,
+            Operator: ComparisonOperator.GreaterThan
+         } }
+    },
+    weight: 2f
+);
+```
+
 ### Actions
 
 **Actions** dictate arbitrary code the agent can execute to affect the world and achieve its goals. Each action, when it runs, will execute the code passed to it, which is called the action **executor**. Actions can also have **preconditions**, state values required before the agent is allowed to execute the action, and **postconditions**, which are values the state is expected to hold if the action is successful. Finally, each action has a **cost**, which is used in calculating the best plan for the agent.
@@ -130,7 +166,7 @@ Action giveHugAction = new Action(
     preconditions: new Dictionary<string, object> {
         { "nearOtherAgent", true }
     },
-    postConditions: new Dictionary<string, object> {
+    postconditions: new Dictionary<string, object> {
         { "wasHugged", true }
     },
     cost: 0.5f
@@ -139,6 +175,25 @@ Agent agent = new Agent(
     actions: new List<Action> {
         giveHugAction
     }
+);
+```
+
+#### Arithmetic Postconditions
+
+**Arithmetic postconditions** are postconditions that are calculated by performing arithmetic on other state values. They take similar parameters to normal postconditions, but the values in the dictionary are added to the existing state value instead of replacing it. Note that the state value and the postcondition value must be of the same numeric type for this to work correctly.
+
+Example that will add 10 to the agent's health as a postcondition:
+
+```csharp
+Action heal = new Action(
+    executor: (Agent agent, Action action) => {
+        Console.WriteLine("healed for 10 hp");
+        return ExecutionStatus.Succeeded;
+    },
+    arithmeticPostconditions: new Dictionary<string, object> {
+        { "health", 10 }
+    },
+    cost: 0.5f
 );
 ```
 
