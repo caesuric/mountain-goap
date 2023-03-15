@@ -5,10 +5,10 @@ Namespace: MountainGoap
 Represents a goal to be achieved for an agent.
 
 ```csharp
-public class Goal
+public class Goal : BaseGoal
 ```
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [Goal](./mountaingoap.goal.md)
+Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [BaseGoal](./mountaingoap.basegoal.md) → [Goal](./mountaingoap.goal.md)
 
 ## Fields
 

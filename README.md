@@ -317,7 +317,12 @@ _ = new MountainGoapLogger.DefaultLogger(
 | `/MountainGoap/Internals/Planner.cs`                              | Planning class used by agents.                                                            |
 | `/MountainGoap/Action.cs`                                         | An action that can be made available to agents.                                           |
 | `/MountainGoap/Agent.cs`                                          | An agent that can figure out plans to execute.                                            |
+| `/MountainGoap/BaseGoal.cs`                                       | A base class for all goal types.                                                          |
+| `/MountainGoap/ComparativeGoal.cs`                                | A goal that compares a value to a pre-existing value                                      |
+| `/MountainGoap/ComparisonOperator.cs`                             | An enum defining the comparison operators that can be used with ComparativeGoal.          |
+| `/MountainGoap/ComparisonValuePair.cs`                            | A class that represents a comparison value pair.                                          |
 | `/MountainGoap/ExecutionStatus.cs`                                | An enum defining the execution status of an action.                                       |
+| `/MountainGoap/ExtremeGoal.cs`                                    | A goal that attempts to minimize or maximize a state value.                               |
 | `/MountainGoap/Goal.cs`                                           | A goal that agents can attempt to accomplish.                                             |
 | `/MountainGoap/PermutationSelectorGenerators.cs`                  | Generators for lambda functions that return a list of options for an action parameter.    |
 | `/MountainGoap/Sensor.cs`                                         | A sensor that generates data for use by an agent.                                         |

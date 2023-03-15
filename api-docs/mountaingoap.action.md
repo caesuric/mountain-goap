@@ -22,12 +22,12 @@ public string Name;
 
 ## Constructors
 
-### **Action(String, Dictionary&lt;String, PermutationSelectorCallback&gt;, ExecutorCallback, Single, CostCallback, Dictionary&lt;String, Object&gt;, Dictionary&lt;String, Object&gt;)**
+### **Action(String, Dictionary&lt;String, PermutationSelectorCallback&gt;, ExecutorCallback, Single, CostCallback, Dictionary&lt;String, Object&gt;, Dictionary&lt;String, Object&gt;, Dictionary&lt;String, Object&gt;)**
 
 Initializes a new instance of the [Action](./mountaingoap.action.md) class.
 
 ```csharp
-public Action(string name, Dictionary<string, PermutationSelectorCallback> permutationSelectors, ExecutorCallback executor, float cost, CostCallback costCallback, Dictionary<string, object> preconditions, Dictionary<string, object> postconditions)
+public Action(string name, Dictionary<string, PermutationSelectorCallback> permutationSelectors, ExecutorCallback executor, float cost, CostCallback costCallback, Dictionary<string, object> preconditions, Dictionary<string, object> postconditions, Dictionary<string, object> arithmeticPostconditions)
 ```
 
 #### Parameters
@@ -52,6 +52,9 @@ Preconditions required in the world state in order for the action to occur.
 
 `postconditions` [Dictionary&lt;String, Object&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2)<br>
 Postconditions applied after the action is successfully executed.
+
+`arithmeticPostconditions` [Dictionary&lt;String, Object&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2)<br>
+Arithmetic postconditions added to state after the action is successfully executed.
 
 ## Methods
 

@@ -41,7 +41,7 @@ public Dictionary<string, object> Memory;
 List of active goals for the agent.
 
 ```csharp
-public List<Goal> Goals;
+public List<BaseGoal> Goals;
 ```
 
 ### **Actions**
@@ -78,12 +78,12 @@ public bool IsPlanning;
 
 ## Constructors
 
-### **Agent(String, Dictionary&lt;String, Object&gt;, Dictionary&lt;String, Object&gt;, List&lt;Goal&gt;, List&lt;Action&gt;, List&lt;Sensor&gt;)**
+### **Agent(String, Dictionary&lt;String, Object&gt;, Dictionary&lt;String, Object&gt;, List&lt;BaseGoal&gt;, List&lt;Action&gt;, List&lt;Sensor&gt;)**
 
 Initializes a new instance of the [Agent](./mountaingoap.agent.md) class.
 
 ```csharp
-public Agent(string name, Dictionary<string, object> state, Dictionary<string, object> memory, List<Goal> goals, List<Action> actions, List<Sensor> sensors)
+public Agent(string name, Dictionary<string, object> state, Dictionary<string, object> memory, List<BaseGoal> goals, List<Action> actions, List<Sensor> sensors)
 ```
 
 #### Parameters
@@ -97,7 +97,7 @@ Initial agent state.
 `memory` [Dictionary&lt;String, Object&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2)<br>
 Initial agent memory.
 
-`goals` [List&lt;Goal&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1)<br>
+`goals` [List&lt;BaseGoal&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1)<br>
 Initial agent goals.
 
 `actions` [List&lt;Action&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1)<br>
@@ -134,12 +134,12 @@ internal static void TriggerOnPlanningStarted(Agent agent)
 `agent` [Agent](./mountaingoap.agent.md)<br>
 Agent that started planning.
 
-### **TriggerOnPlanningFinishedForSingleGoal(Agent, Goal, Single)**
+### **TriggerOnPlanningFinishedForSingleGoal(Agent, BaseGoal, Single)**
 
 Triggers OnPlanningFinishedForSingleGoal event.
 
 ```csharp
-internal static void TriggerOnPlanningFinishedForSingleGoal(Agent agent, Goal goal, float utility)
+internal static void TriggerOnPlanningFinishedForSingleGoal(Agent agent, BaseGoal goal, float utility)
 ```
 
 #### Parameters
@@ -147,18 +147,18 @@ internal static void TriggerOnPlanningFinishedForSingleGoal(Agent agent, Goal go
 `agent` [Agent](./mountaingoap.agent.md)<br>
 Agent that finished planning.
 
-`goal` [Goal](./mountaingoap.goal.md)<br>
+`goal` [BaseGoal](./mountaingoap.basegoal.md)<br>
 Goal for which planning was completed.
 
 `utility` [Single](https://docs.microsoft.com/en-us/dotnet/api/system.single)<br>
 Utility of the plan.
 
-### **TriggerOnPlanningFinished(Agent, Goal, Single)**
+### **TriggerOnPlanningFinished(Agent, BaseGoal, Single)**
 
 Triggers OnPlanningFinished event.
 
 ```csharp
-internal static void TriggerOnPlanningFinished(Agent agent, Goal goal, float utility)
+internal static void TriggerOnPlanningFinished(Agent agent, BaseGoal goal, float utility)
 ```
 
 #### Parameters
@@ -166,7 +166,7 @@ internal static void TriggerOnPlanningFinished(Agent agent, Goal goal, float uti
 `agent` [Agent](./mountaingoap.agent.md)<br>
 Agent that finished planning.
 
-`goal` [Goal](./mountaingoap.goal.md)<br>
+`goal` [BaseGoal](./mountaingoap.basegoal.md)<br>
 Goal that was selected.
 
 `utility` [Single](https://docs.microsoft.com/en-us/dotnet/api/system.single)<br>

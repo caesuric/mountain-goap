@@ -6,7 +6,17 @@
 
 [Agent](./mountaingoap.agent.md)
 
+[BaseGoal](./mountaingoap.basegoal.md)
+
+[ComparativeGoal](./mountaingoap.comparativegoal.md)
+
+[ComparisonOperator](./mountaingoap.comparisonoperator.md)
+
+[ComparisonValuePair](./mountaingoap.comparisonvaluepair.md)
+
 [ExecutionStatus](./mountaingoap.executionstatus.md)
+
+[ExtremeGoal](./mountaingoap.extremegoal.md)
 
 [Goal](./mountaingoap.goal.md)
 
