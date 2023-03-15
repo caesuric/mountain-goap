@@ -141,8 +141,8 @@ Example that will try to make the agent's health greater than 50:
 ComparativeGoal goal = new ComparativeGoal(
     desiredState: new Dictionary<string, object> {
         { "health", new ComparisonValuePair {
-            Value: 50,
-            Operator: ComparisonOperator.GreaterThan
+            Value = 50,
+            Operator = ComparisonOperator.GreaterThan
          } }
     },
     weight: 2f
