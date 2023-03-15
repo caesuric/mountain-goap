@@ -26,8 +26,7 @@ namespace Examples {
                         name: "Maximize Happiness",
                         desiredState: new() {
                             { "happinessRecentlyIncreased", true }
-                        }
-                    )
+                        })
                 },
                 sensors: new() {
                     new(EnnuiSensorHandler, "Ennui Sensor")

@@ -23,9 +23,14 @@
             rpgCommand.SetHandler(() => {
                 RunRpgEnemyDemo();
             });
+            var arithmeticHappinessIncrementerCommand = new Command("arithmeticHappiness", "Run the arithmetic happiness incrementer demo.");
+            arithmeticHappinessIncrementerCommand.SetHandler(() => {
+                RunArithmeticHappinessIncrementer();
+            });
             var cmd = new RootCommand {
                 happinessIncrementerCommand,
-                rpgCommand
+                rpgCommand,
+                arithmeticHappinessIncrementerCommand
             };
             return await cmd.InvokeAsync(args);
         }
@@ -36,6 +41,10 @@
 
         private static void RunRpgEnemyDemo() {
             RpgExample.Run();
+        }
+
+        private static void RunArithmeticHappinessIncrementer() {
+            ArithmeticHappinessIncrementer.Run();
         }
     }
 }
