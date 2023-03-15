@@ -39,9 +39,14 @@ namespace MountainGoap {
         private readonly Dictionary<string, object> preconditions = new();
 
         /// <summary>
-        /// Postconditions for the actions. These will be set when the action has executed.
+        /// Postconditions for the action. These will be set when the action has executed.
         /// </summary>
         private readonly Dictionary<string, object> postconditions = new();
+
+        /// <summary>
+        /// Arithmetic postconditions for the action. These will be added to the current value when the action has executed.
+        /// </summary>
+        private readonly Dictionary<string, object> arithmeticPostconditions = new();
 
         /// <summary>
         /// Parameters to be passed to the action.
@@ -58,7 +63,8 @@ namespace MountainGoap {
         /// <param name="costCallback">Callback for determining the cost of the action.</param>
         /// <param name="preconditions">Preconditions required in the world state in order for the action to occur.</param>
         /// <param name="postconditions">Postconditions applied after the action is successfully executed.</param>
-        public Action(string? name = null, Dictionary<string, PermutationSelectorCallback>? permutationSelectors = null, ExecutorCallback? executor = null, float cost = 1f, CostCallback? costCallback = null, Dictionary<string, object>? preconditions = null, Dictionary<string, object>? postconditions = null) {
+        /// <param name="arithmeticPostconditions">Arithmetic postconditions added to state after the action is successfully executed.</param>
+        public Action(string? name = null, Dictionary<string, PermutationSelectorCallback>? permutationSelectors = null, ExecutorCallback? executor = null, float cost = 1f, CostCallback? costCallback = null, Dictionary<string, object>? preconditions = null, Dictionary<string, object>? postconditions = null, Dictionary<string, object>? arithmeticPostconditions = null) {
             if (permutationSelectors == null) this.permutationSelectors = new();
             else this.permutationSelectors = permutationSelectors;
             if (executor == null) this.executor = DefaultExecutorCallback;
@@ -68,6 +74,7 @@ namespace MountainGoap {
             this.costCallback = costCallback ?? DefaultCostCallback;
             if (preconditions != null) this.preconditions = preconditions;
             if (postconditions != null) this.postconditions = postconditions;
+            if (arithmeticPostconditions != null) this.arithmeticPostconditions = arithmeticPostconditions;
         }
 
         /// <summary>
@@ -90,7 +97,7 @@ namespace MountainGoap {
         /// </summary>
         /// <returns>A copy of the action.</returns>
         public Action Copy() {
-            return new Action(Name, permutationSelectors, executor, cost, costCallback, preconditions.Copy(), postconditions.Copy());
+            return new Action(Name, permutationSelectors, executor, cost, costCallback, preconditions.Copy(), postconditions.Copy(), arithmeticPostconditions.Copy());
         }
 
         /// <summary>
@@ -182,6 +189,15 @@ namespace MountainGoap {
         /// <param name="state">World state to which to apply effects.</param>
         internal void ApplyEffects(Dictionary<string, object> state) {
             foreach (var kvp in postconditions) state[kvp.Key] = kvp.Value;
+            foreach (var kvp in arithmeticPostconditions) {
+                if (!state.ContainsKey(kvp.Key)) continue;
+                else if (state[kvp.Key] is int stateInt && kvp.Value is int conditionInt) state[kvp.Key] = stateInt + conditionInt;
+                else if (state[kvp.Key] is float stateFloat && kvp.Value is float conditionFloat) state[kvp.Key] = stateFloat + conditionFloat;
+                else if (state[kvp.Key] is double stateDouble && kvp.Value is double conditionDouble) state[kvp.Key] = stateDouble + conditionDouble;
+                else if (state[kvp.Key] is long stateLong && kvp.Value is long conditionLong) state[kvp.Key] = stateLong + conditionLong;
+                else if (state[kvp.Key] is decimal stateDecimal && kvp.Value is decimal conditionDecimal) state[kvp.Key] = stateDecimal + conditionDecimal;
+                else if (state[kvp.Key] is DateTime stateDateTime && kvp.Value is TimeSpan conditionTimeSpan) state[kvp.Key] = stateDateTime + conditionTimeSpan;
+            }
         }
 
         /// <summary>
