@@ -27,7 +27,7 @@ public string Name;
 Initializes a new instance of the [ExtremeGoal](./mountaingoap.extremegoal.md) class.
 
 ```csharp
-public ExtremeGoal(string name, float weight, Dictionary<string, bool> states)
+public ExtremeGoal(string name, float weight, Dictionary<string, bool> desiredState)
 ```
 
 #### Parameters
@@ -38,5 +38,5 @@ Name of the goal.
 `weight` [Single](https://docs.microsoft.com/en-us/dotnet/api/system.single)<br>
 Weight to give the goal.
 
-`states` [Dictionary&lt;String, Boolean&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2)<br>
+`desiredState` [Dictionary&lt;String, Boolean&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2)<br>
 States to be maximized or minimized.
