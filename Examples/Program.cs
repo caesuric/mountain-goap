@@ -27,10 +27,20 @@
             arithmeticHappinessIncrementerCommand.SetHandler(() => {
                 RunArithmeticHappinessIncrementer();
             });
+            var extremeHappinessIncrementerCommand = new Command("extremeHappiness", "Run the extreme happiness incrementer demo.");
+            extremeHappinessIncrementerCommand.SetHandler(() => {
+                RunExtremeHappinessIncrementer();
+            });
+            var comparativeHappinessIncrementerCommand = new Command("comparativeHappiness", "Run the comparative happiness incrementer demo.");
+            comparativeHappinessIncrementerCommand.SetHandler(() => {
+                RunComparativeHappinessIncrementer();
+            });
             var cmd = new RootCommand {
                 happinessIncrementerCommand,
                 rpgCommand,
-                arithmeticHappinessIncrementerCommand
+                arithmeticHappinessIncrementerCommand,
+                extremeHappinessIncrementerCommand,
+                comparativeHappinessIncrementerCommand
             };
             return await cmd.InvokeAsync(args);
         }
@@ -45,6 +55,14 @@
 
         private static void RunArithmeticHappinessIncrementer() {
             ArithmeticHappinessIncrementer.Run();
+        }
+
+        private static void RunExtremeHappinessIncrementer() {
+            ExtremeHappinessIncrementer.Run();
+        }
+
+        private static void RunComparativeHappinessIncrementer() {
+            ComparativeHappinessIncrementer.Run();
         }
     }
 }

@@ -124,7 +124,7 @@ Example that will try to maximize the agent's health:
 
 ```csharp
 ExtremeGoal goal = new ExtremeGoal(
-    states: new Dictionary<string, object> {
+    desiredState: new Dictionary<string, object> {
         { "health", true }
     },
     weight: 2f
