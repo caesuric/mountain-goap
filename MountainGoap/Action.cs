@@ -169,6 +169,7 @@ namespace MountainGoap {
             List<int> counts = new();
             foreach (var parameter in parameters) {
                 indices.Add(0);
+                if (outputs[parameter].Count == 0) return combinedOutputs;
                 counts.Add(outputs[parameter].Count);
             }
             while (true) {
