@@ -3,6 +3,7 @@
 // </copyright>
 
 namespace MountainGoap {
+    using System;
     using System.Reflection;
 
     /// <summary>

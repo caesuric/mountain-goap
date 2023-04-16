@@ -2,6 +2,8 @@
 // Copyright (c) Chris Muller. All rights reserved.
 // </copyright>
 
+using System.Collections.Generic;
+
 namespace MountainGoap {
     /// <summary>
     /// Represents a traversable action graph.

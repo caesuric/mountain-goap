@@ -2,6 +2,8 @@
 // Copyright (c) Chris Muller. All rights reserved.
 // </copyright>
 
+using System.Collections.Generic;
+
 namespace MountainGoap {
     /// <summary>
     /// Delegate type for a listener to the event that fires when an action begins executing.

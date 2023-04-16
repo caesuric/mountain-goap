@@ -2,6 +2,8 @@
 // Copyright (c) Chris Muller. All rights reserved.
 // </copyright>
 
+using System.Collections.Generic;
+
 namespace MountainGoap {
     /// <summary>
     /// Delegate type for a callback that defines a list of all possible parameter states for the given state.

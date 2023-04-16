@@ -2,6 +2,10 @@
 // Copyright (c) Chris Muller. All rights reserved.
 // </copyright>
 
+using System;
+using System.Collections.Generic;
+using System.Threading;
+
 namespace MountainGoap {
     /// <summary>
     /// GOAP agent.

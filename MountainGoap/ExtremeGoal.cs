@@ -2,6 +2,8 @@
 // Copyright (c) Chris Muller. All rights reserved.
 // </copyright>
 
+using System.Collections.Generic;
+
 namespace MountainGoap {
     /// <summary>
     /// Represents a goal requiring an extreme value to be achieved for an agent.

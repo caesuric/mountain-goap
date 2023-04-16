@@ -2,6 +2,9 @@
 // Copyright (c) Chris Muller. All rights reserved.
 // </copyright>
 
+using System.Collections.Generic;
+using System.Linq;
+
 namespace MountainGoap {
     /// <summary>
     /// Extension method to copy a dictionary of strings and objects.
