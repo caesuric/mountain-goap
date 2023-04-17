@@ -3,6 +3,8 @@
 // </copyright>
 
 namespace MountainGoap {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Represents a traversable action graph.
     /// </summary>

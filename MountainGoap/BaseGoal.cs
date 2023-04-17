@@ -3,6 +3,8 @@
 // </copyright>
 
 namespace MountainGoap {
+    using System;
+
     /// <summary>
     /// Represents an abstract class for a goal to be achieved for an agent.
     /// </summary>

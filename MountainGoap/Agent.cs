@@ -3,6 +3,10 @@
 // </copyright>
 
 namespace MountainGoap {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading;
+
     /// <summary>
     /// GOAP agent.
     /// </summary>

@@ -4,6 +4,8 @@
 
 namespace MountainGoap {
     using Priority_Queue;
+    using System;
+    using System.Collections.Generic;
 
     /// <summary>
     /// AStar calculator for an action graph.

@@ -4,6 +4,7 @@
 
 namespace MountainGoap {
     using Priority_Queue;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Represents an action node in an action graph.

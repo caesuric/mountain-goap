@@ -3,6 +3,9 @@
 // </copyright>
 
 namespace MountainGoap {
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
     /// Extension method to copy a dictionary of strings and objects.
     /// </summary>
