@@ -2,9 +2,9 @@
 // Copyright (c) Chris Muller. All rights reserved.
 // </copyright>
 
-using System;
-
 namespace MountainGoap {
+    using System;
+
     /// <summary>
     /// Represents an abstract class for a goal to be achieved for an agent.
     /// </summary>

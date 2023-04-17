@@ -2,9 +2,9 @@
 // Copyright (c) Chris Muller. All rights reserved.
 // </copyright>
 
-using System.Collections.Generic;
-
 namespace MountainGoap {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Delegate type for a listener to the event that fires when an action finishes executing.
     /// </summary>

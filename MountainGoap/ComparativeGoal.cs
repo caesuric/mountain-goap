@@ -2,9 +2,9 @@
 // Copyright (c) Chris Muller. All rights reserved.
 // </copyright>
 
-using System.Collections.Generic;
-
 namespace MountainGoap {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Represents a goal to be achieved for an agent.
     /// </summary>
