@@ -24,7 +24,7 @@ jobs:
       - name: Build
         run: dotnet build -c Release --no-restore
       - name: Test
-        run: dotnet test --no-build --verbosity normal
+        run: dotnet test --verbosity normal
       - name: Zip
         run: zip -j mountain-goap-${{ github.ref_name }}.zip MountainGoap/bin/Release/netstandard2.1/MountainGoap.*
       - uses: "marvinpinto/action-automatic-releases@latest"
