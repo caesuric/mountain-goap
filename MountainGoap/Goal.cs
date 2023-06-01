@@ -12,7 +12,7 @@ namespace MountainGoap {
         /// <summary>
         /// Desired world state to be achieved.
         /// </summary>
-        internal readonly Dictionary<string, object> DesiredState;
+        internal readonly Dictionary<string, object?> DesiredState;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Goal"/> class.

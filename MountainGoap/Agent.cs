@@ -19,12 +19,12 @@ namespace MountainGoap {
         /// <summary>
         /// The current world state from the agent perspective.
         /// </summary>
-        public Dictionary<string, object> State = new();
+        public Dictionary<string, object?> State = new();
 
         /// <summary>
         /// Memory storage object for the agent.
         /// </summary>
-        public Dictionary<string, object> Memory = new();
+        public Dictionary<string, object?> Memory = new();
 
         /// <summary>
         /// List of active goals for the agent.
