@@ -79,10 +79,14 @@ namespace MountainGoap {
         private bool StateMatches(ActionNode otherNode) {
             foreach (var kvp in State) {
                 if (!otherNode.State.ContainsKey(kvp.Key)) return false;
+                if (otherNode.State[kvp.Key] == null && otherNode.State[kvp.Key] != kvp.Value) return false;
+                if (otherNode.State[kvp.Key] == null && otherNode.State[kvp.Key] == kvp.Value) continue;
                 if (!otherNode.State[kvp.Key].Equals(kvp.Value)) return false;
             }
             foreach (var kvp in otherNode.State) {
                 if (!State.ContainsKey(kvp.Key)) return false;
+                if (State[kvp.Key] == null && State[kvp.Key] != kvp.Value) return false;
+                if (State[kvp.Key] == null && State[kvp.Key] == kvp.Value) continue;
                 if (!State[kvp.Key].Equals(kvp.Value)) return false;
             }
             return true;

@@ -1,27 +1,61 @@
 ﻿namespace MountainGoapTest {
     using System.Collections.Generic;
 
-    public class ActionNodeTests {
+    public class AgentTests {
         [Fact]
-        public void ItHandlesNullStateValuesCorrectly() {
+        public void ItHandlesInitialNullStateValuesCorrectly() {
             var agent = new Agent(
-                state: new Dictionary<string, object> {
+                state: new() {
                     { "key", null }
                 },
                 goals: new List<BaseGoal> {
                     new Goal(
-                        desiredState: new Dictionary<string, object> {
+                        desiredState: new() {
                             { "key", "non-null value" }
                         }
                     )
                 },
                 actions: new List<Action> {
                     new Action(
-                        preconditions: new Dictionary<string, object> {
+                        preconditions: new() {
+                            { "key", null }
+                        },
+                        postconditions: new() {
                             { "key", "non-null value" }
                         },
-                        postconditions: new Dictionary<string, object> {
+                        executor: (Agent agent, Action action) => {
+                            return ExecutionStatus.Succeeded;
+                        }
+                    )
+                }
+            );
+            agent.Step(StepMode.OneAction);
+            Assert.NotNull(agent.State["key"]);
+        }
+
+        [Fact]
+        public void ItHandlesNullGoalsCorrectly() {
+            var agent = new Agent(
+                state: new() {
+                    { "key", "non-null value" }
+                },
+                goals: new List<BaseGoal> {
+                    new Goal(
+                        desiredState: new() {
                             { "key", null }
+                        }
+                    )
+                },
+                actions: new List<Action> {
+                    new Action(
+                        preconditions: new() {
+                            { "key", "non-null value" }
+                        },
+                        postconditions: new() {
+                            { "key", null }
+                        },
+                        executor: (Agent agent, Action action) => {
+                            return ExecutionStatus.Succeeded;
                         }
                     )
                 }
@@ -33,29 +67,65 @@
         [Fact]
         public void ItHandlesNonNullStateValuesCorrectly() {
             var agent = new Agent(
-                state: new Dictionary<string, object> {
-                    { "key", "new value" }
+                state: new() {
+                    { "key", "value" }
                 },
                 goals: new List<BaseGoal> {
                     new Goal(
-                        desiredState: new Dictionary<string, object> {
-                            { "key", "non-null value" }
+                        desiredState: new() {
+                            { "key", "new value" }
                         }
                     )
                 },
                 actions: new List<Action> {
                     new Action(
-                        preconditions: new Dictionary<string, object> {
-                            { "key", "non-null value" }
+                        preconditions: new() {
+                            { "key", "value" }
                         },
-                        postconditions: new Dictionary<string, object> {
+                        postconditions: new() {
                             { "key", "new value" }
+                        },
+                        executor: (Agent agent, Action action) => {
+                            return ExecutionStatus.Succeeded;
                         }
                     )
                 }
             );
             agent.Step(StepMode.OneAction);
             Assert.Equal("new value", (string)agent.State["key"]);
+        }
+
+        [Fact]
+        public void ItExecutesOneActionInOneActionStepMode() {
+            var actionCount = 0;
+            var agent = new Agent(
+                state: new() {
+                    { "key", "value" }
+                },
+                goals: new List<BaseGoal> {
+                    new Goal(
+                        desiredState: new() {
+                            { "key", "new value" }
+                        }
+                    )
+                },
+                actions: new List<Action> {
+                    new Action(
+                        preconditions: new() {
+                            { "key", "value" }
+                        },
+                        postconditions: new() {
+                            { "key", "new value" }
+                        },
+                        executor: (Agent agent, Action action) => {
+                            actionCount++;
+                            return ExecutionStatus.Succeeded;
+                        }
+                    )
+                }
+            );
+            agent.Step(StepMode.OneAction);
+            Assert.Equal(1, actionCount);
         }
     }
 }

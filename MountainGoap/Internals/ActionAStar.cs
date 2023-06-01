@@ -66,7 +66,8 @@ namespace MountainGoap {
             if (goal is Goal normalGoal) {
                 foreach (var kvp in normalGoal.DesiredState) {
                     if (!actionNode.State.ContainsKey(kvp.Key)) cost++;
-                    else if (!actionNode.State[kvp.Key].Equals(normalGoal.DesiredState[kvp.Key])) cost++;
+                    else if (actionNode.State[kvp.Key] == null && actionNode.State[kvp.Key] != normalGoal.DesiredState[kvp.Key]) cost++;
+                    else if (actionNode.State[kvp.Key] != null && !actionNode.State[kvp.Key].Equals(normalGoal.DesiredState[kvp.Key])) cost++;
                 }
             }
             else if (goal is ExtremeGoal extremeGoal) {

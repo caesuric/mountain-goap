@@ -39,12 +39,12 @@ namespace MountainGoap {
         /// <summary>
         /// Preconditions for the action. These things are required for the action to execute.
         /// </summary>
-        private readonly Dictionary<string, object> preconditions = new();
+        private readonly Dictionary<string, object?> preconditions = new();
 
         /// <summary>
         /// Postconditions for the action. These will be set when the action has executed.
         /// </summary>
-        private readonly Dictionary<string, object> postconditions = new();
+        private readonly Dictionary<string, object?> postconditions = new();
 
         /// <summary>
         /// Arithmetic postconditions for the action. These will be added to the current value when the action has executed.
@@ -67,7 +67,7 @@ namespace MountainGoap {
         /// <param name="preconditions">Preconditions required in the world state in order for the action to occur.</param>
         /// <param name="postconditions">Postconditions applied after the action is successfully executed.</param>
         /// <param name="arithmeticPostconditions">Arithmetic postconditions added to state after the action is successfully executed.</param>
-        public Action(string? name = null, Dictionary<string, PermutationSelectorCallback>? permutationSelectors = null, ExecutorCallback? executor = null, float cost = 1f, CostCallback? costCallback = null, Dictionary<string, object>? preconditions = null, Dictionary<string, object>? postconditions = null, Dictionary<string, object>? arithmeticPostconditions = null) {
+        public Action(string? name = null, Dictionary<string, PermutationSelectorCallback>? permutationSelectors = null, ExecutorCallback? executor = null, float cost = 1f, CostCallback? costCallback = null, Dictionary<string, object?>? preconditions = null, Dictionary<string, object?>? postconditions = null, Dictionary<string, object>? arithmeticPostconditions = null) {
             if (permutationSelectors == null) this.permutationSelectors = new();
             else this.permutationSelectors = permutationSelectors;
             if (executor == null) this.executor = DefaultExecutorCallback;
