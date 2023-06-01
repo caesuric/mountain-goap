@@ -127,5 +127,50 @@
             agent.Step(StepMode.OneAction);
             Assert.Equal(1, actionCount);
         }
+
+        [Fact]
+        public void ItExecutesAllActionsInAllActionsStepMode() {
+            var actionCount = 0;
+            var agent = new Agent(
+                state: new() {
+                    { "key", "value" }
+                },
+                goals: new List<BaseGoal> {
+                    new Goal(
+                        desiredState: new() {
+                            { "key", "new value" }
+                        }
+                    )
+                },
+                actions: new List<Action> {
+                    new Action(
+                        preconditions: new() {
+                            { "key", "value" }
+                        },
+                        postconditions: new() {
+                            { "key", "intermediate value" }
+                        },
+                        executor: (Agent agent, Action action) => {
+                            actionCount++;
+                            return ExecutionStatus.Succeeded;
+                        }
+                    ),
+                    new Action(
+                        preconditions: new() {
+                            { "key", "intermediate value" }
+                        },
+                        postconditions: new() {
+                            { "key", "new value" }
+                        },
+                        executor: (Agent agent, Action action) => {
+                            actionCount++;
+                            return ExecutionStatus.Succeeded;
+                        }
+                    )
+                }
+            );
+            agent.Step(StepMode.AllActions);
+            Assert.Equal(2, actionCount);
+        }
     }
 }
