@@ -57,7 +57,7 @@ namespace Examples {
         /// </summary>
         /// <param name="state">State for the agent running the selector.</param>
         /// <returns>List of all enemies on the map.</returns>
-        internal static List<object> EnemyPermutations(Dictionary<string, object> state) {
+        internal static List<object> EnemyPermutations(Dictionary<string, object?> state) {
             var enemies = new List<object>();
             if (state["agents"] is not List<Agent> agents || state["faction"] is not string faction) return enemies;
             return agents.Where((agent) => agent.State["faction"] is string faction2 && faction2 != faction).ToList<object>();
@@ -68,7 +68,7 @@ namespace Examples {
         /// </summary>
         /// <param name="state">State for the agent running the selector.</param>
         /// <returns>List of all food positions on the map.</returns>
-        internal static List<object> FoodPermutations(Dictionary<string, object> state) {
+        internal static List<object> FoodPermutations(Dictionary<string, object?> state) {
             var foodPositions = new List<object>();
             if (state["foodPositions"] is not List<Vector2> sourcePositions) return foodPositions;
             foreach (var position in sourcePositions) foodPositions.Add(position);
@@ -80,7 +80,7 @@ namespace Examples {
         /// </summary>
         /// <param name="state">Current agent state.</param>
         /// <returns>List of all possible starting positions for a move action.</returns>
-        internal static List<object> StartingPositionPermutations(Dictionary<string, object> state) {
+        internal static List<object> StartingPositionPermutations(Dictionary<string, object?> state) {
             var startingPositions = new List<object>();
             if (state["position"] is not Vector2 position) return startingPositions;
             startingPositions.Add(position);

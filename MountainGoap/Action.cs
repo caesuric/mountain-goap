@@ -165,7 +165,7 @@ namespace MountainGoap {
         /// </summary>
         /// <param name="state">World state when the action would be performed.</param>
         /// <returns>A list of possible parameter dictionaries that could be used.</returns>
-        internal List<Dictionary<string, object>> GetPermutations(Dictionary<string, object> state) {
+        internal List<Dictionary<string, object>> GetPermutations(Dictionary<string, object?> state) {
             List<Dictionary<string, object>> combinedOutputs = new();
             Dictionary<string, List<object>> outputs = new();
             foreach (var kvp in permutationSelectors) outputs[kvp.Key] = kvp.Value(state);
