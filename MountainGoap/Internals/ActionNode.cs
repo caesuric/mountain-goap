@@ -13,12 +13,12 @@ namespace MountainGoap {
         /// <summary>
         /// The state of the world for this action node.
         /// </summary>
-        internal Dictionary<string, object> State = new();
+        internal Dictionary<string, object?> State = new();
 
         /// <summary>
         /// Parameters to be passed to the action.
         /// </summary>
-        internal Dictionary<string, object> Parameters = new();
+        internal Dictionary<string, object?> Parameters = new();
 
         /// <summary>
         /// The action to be executed when the world is in the defined <see cref="State"/>.
@@ -31,7 +31,7 @@ namespace MountainGoap {
         /// <param name="action">Action to be assigned to the node.</param>
         /// <param name="state">State to be assigned to the node.</param>
         /// <param name="parameters">Paramters to be passed to the action in the node.</param>
-        internal ActionNode(Action? action, Dictionary<string, object> state, Dictionary<string, object> parameters) {
+        internal ActionNode(Action? action, Dictionary<string, object?> state, Dictionary<string, object?> parameters) {
             if (action != null) Action = action.Copy();
             State = state.Copy();
             Parameters = parameters.Copy();
