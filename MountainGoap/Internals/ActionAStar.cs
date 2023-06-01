@@ -3,9 +3,9 @@
 // </copyright>
 
 namespace MountainGoap {
-    using Priority_Queue;
     using System;
     using System.Collections.Generic;
+    using Priority_Queue;
 
     /// <summary>
     /// AStar calculator for an action graph.
@@ -64,11 +64,11 @@ namespace MountainGoap {
         private static float Heuristic(ActionNode actionNode, BaseGoal goal, ActionNode current) {
             var cost = 0f;
             if (goal is Goal normalGoal) {
-                foreach (var kvp in normalGoal.DesiredState) {
-                    if (!actionNode.State.ContainsKey(kvp.Key)) cost++;
-                    else if (actionNode.State[kvp.Key] == null && actionNode.State[kvp.Key] != normalGoal.DesiredState[kvp.Key]) cost++;
-                    else if (actionNode.State[kvp.Key] != null && !actionNode.State[kvp.Key].Equals(normalGoal.DesiredState[kvp.Key])) cost++;
-                }
+                normalGoal.DesiredState.Select(kvp => kvp.Key).ToList().ForEach(key => {
+                    if (!actionNode.State.ContainsKey(key)) cost++;
+                    else if (actionNode.State[key] == null && actionNode.State[key] != normalGoal.DesiredState[key]) cost++;
+                    else if (actionNode.State[key] != null && !actionNode.State[key].Equals(normalGoal.DesiredState[key])) cost++;
+                });
             }
             else if (goal is ExtremeGoal extremeGoal) {
                 foreach (var kvp in extremeGoal.DesiredState) {
@@ -143,11 +143,13 @@ namespace MountainGoap {
 
         private bool MeetsGoal(ActionNode actionNode, ActionNode current) {
             if (goal is Goal normalGoal) {
+#pragma warning disable S3267 // Loops should be simplified with "LINQ" expressions
                 foreach (var kvp in normalGoal.DesiredState) {
                     if (!actionNode.State.ContainsKey(kvp.Key)) return false;
                     else if (actionNode.State[kvp.Key] == null && actionNode.State[kvp.Key] != normalGoal.DesiredState[kvp.Key]) return false;
                     else if (actionNode.State[kvp.Key] != null && !actionNode.State[kvp.Key].Equals(normalGoal.DesiredState[kvp.Key])) return false;
                 }
+#pragma warning restore S3267 // Loops should be simplified with "LINQ" expressions
             }
             else if (goal is ExtremeGoal extremeGoal) {
                 if (actionNode.Action == null) return false;
