@@ -92,7 +92,9 @@
                 }
             );
             agent.Step(StepMode.OneAction);
-            Assert.Equal("new value", (string)agent.State["key"]);
+            object? value = agent.State["key"];
+            Assert.NotNull(value);
+            if (value is not null) Assert.Equal("new value", (string)value);
         }
 
         [Fact]
