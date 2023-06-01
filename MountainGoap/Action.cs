@@ -100,7 +100,7 @@ namespace MountainGoap {
         /// </summary>
         /// <returns>A copy of the action.</returns>
         public Action Copy() {
-            return new Action(Name, permutationSelectors, executor, cost, costCallback, preconditions.Copy(), postconditions.Copy(), arithmeticPostconditions.Copy());
+            return new Action(Name, permutationSelectors, executor, cost, costCallback, preconditions.Copy(), postconditions.Copy(), arithmeticPostconditions.CopyNonNullable());
         }
 
         /// <summary>
@@ -150,12 +150,12 @@ namespace MountainGoap {
         /// </summary>
         /// <param name="state">The current world state.</param>
         /// <returns>True if the action is possible, otherwise false.</returns>
-        internal bool IsPossible(Dictionary<string, object> state) {
+        internal bool IsPossible(Dictionary<string, object?> state) {
             foreach (var kvp in preconditions) {
                 if (!state.ContainsKey(kvp.Key)) return false;
                 if (state[kvp.Key] == null && state[kvp.Key] != kvp.Value) return false;
                 else if (state[kvp.Key] == null && state[kvp.Key] == kvp.Value) continue;
-                if (!state[kvp.Key].Equals(kvp.Value)) return false;
+                if (state[kvp.Key] is object obj && !obj.Equals(kvp.Value)) return false;
             }
             return true;
         }
@@ -169,10 +169,10 @@ namespace MountainGoap {
             List<Dictionary<string, object>> combinedOutputs = new();
             Dictionary<string, List<object>> outputs = new();
             foreach (var kvp in permutationSelectors) outputs[kvp.Key] = kvp.Value(state);
-            var parameters = outputs.Keys.ToList();
+            var permutationParameters = outputs.Keys.ToList();
             List<int> indices = new();
             List<int> counts = new();
-            foreach (var parameter in parameters) {
+            foreach (var parameter in permutationParameters) {
                 indices.Add(0);
                 if (outputs[parameter].Count == 0) return combinedOutputs;
                 counts.Add(outputs[parameter].Count);
@@ -180,8 +180,8 @@ namespace MountainGoap {
             while (true) {
                 var singleOutput = new Dictionary<string, object>();
                 for (int i = 0; i < indices.Count; i++) {
-                    if (indices[i] >= outputs[parameters[i]].Count) continue;
-                    singleOutput[parameters[i]] = outputs[parameters[i]][indices[i]];
+                    if (indices[i] >= outputs[permutationParameters[i]].Count) continue;
+                    singleOutput[permutationParameters[i]] = outputs[permutationParameters[i]][indices[i]];
                 }
                 combinedOutputs.Add(singleOutput);
                 if (IndicesAtMaximum(indices, counts)) return combinedOutputs;
@@ -193,11 +193,11 @@ namespace MountainGoap {
         /// Applies the effects of the action.
         /// </summary>
         /// <param name="state">World state to which to apply effects.</param>
-        internal void ApplyEffects(Dictionary<string, object> state) {
+        internal void ApplyEffects(Dictionary<string, object?> state) {
             foreach (var kvp in postconditions) state[kvp.Key] = kvp.Value;
             foreach (var kvp in arithmeticPostconditions) {
                 if (!state.ContainsKey(kvp.Key)) continue;
-                else if (state[kvp.Key] is int stateInt && kvp.Value is int conditionInt) state[kvp.Key] = stateInt + conditionInt;
+                if (state[kvp.Key] is int stateInt && kvp.Value is int conditionInt) state[kvp.Key] = stateInt + conditionInt;
                 else if (state[kvp.Key] is float stateFloat && kvp.Value is float conditionFloat) state[kvp.Key] = stateFloat + conditionFloat;
                 else if (state[kvp.Key] is double stateDouble && kvp.Value is double conditionDouble) state[kvp.Key] = stateDouble + conditionDouble;
                 else if (state[kvp.Key] is long stateLong && kvp.Value is long conditionLong) state[kvp.Key] = stateLong + conditionLong;
