@@ -60,8 +60,7 @@ namespace Examples {
         internal static List<object> EnemyPermutations(Dictionary<string, object> state) {
             var enemies = new List<object>();
             if (state["agents"] is not List<Agent> agents || state["faction"] is not string faction) return enemies;
-            foreach (var agent in agents) if ((string)agent.State["faction"] != faction) enemies.Add(agent);
-            return enemies;
+            return agents.Where((agent) => agent.State["faction"] is string faction2 && faction2 != faction).ToList<object>();
         }
 
         /// <summary>

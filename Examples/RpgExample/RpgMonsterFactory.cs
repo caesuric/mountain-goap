@@ -83,8 +83,9 @@ namespace Examples {
         }
 
         private static Vector2? GetFoodInRange(Vector2 source, List<Vector2> foodPositions, float range) {
-            foreach (var position in foodPositions) if (RpgUtils.InDistance(source, position, range)) return position;
-            return null;
+            var output = foodPositions.FirstOrDefault((position) => RpgUtils.InDistance(source, position, range), new Vector2(-1, -1));
+            if (output == new Vector2(-1, -1)) return null;
+            return output;
         }
 
         private static void SeeFoodSensorHandler(Agent agent) {
