@@ -154,6 +154,7 @@ namespace MountainGoap {
             foreach (var kvp in preconditions) {
                 if (!state.ContainsKey(kvp.Key)) return false;
                 if (state[kvp.Key] == null && state[kvp.Key] != kvp.Value) return false;
+                else if (state[kvp.Key] == null && state[kvp.Key] == kvp.Value) continue;
                 if (!state[kvp.Key].Equals(kvp.Value)) return false;
             }
             return true;
