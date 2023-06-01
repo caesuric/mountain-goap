@@ -44,7 +44,7 @@ namespace Examples {
                     )
                 }
             );
-            while ((int)agent.State["happiness"] != 10) agent.Step();
+            while (agent.State["happiness"] is int happiness && happiness != 10) agent.Step();
         }
 
         private static ExecutionStatus SeekHappinessAction(Agent agent, Action action) {

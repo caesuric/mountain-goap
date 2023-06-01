@@ -8,7 +8,7 @@
     /// <summary>
     /// Runs MountainGoap Demos.
     /// </summary>
-    public class Program {
+    public static class Program {
         /// <summary>
         /// The main program entry point.
         /// </summary>
