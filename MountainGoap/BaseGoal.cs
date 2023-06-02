@@ -24,7 +24,7 @@ namespace MountainGoap {
         /// </summary>
         /// <param name="name">Name of the goal.</param>
         /// <param name="weight">Weight to give the goal.</param>
-        public BaseGoal(string? name = null, float weight = 1f) {
+        protected BaseGoal(string? name = null, float weight = 1f) {
             Name = name ?? $"Goal {Guid.NewGuid()}";
             Weight = weight;
         }

@@ -68,7 +68,8 @@ namespace Examples {
                     removeEnemies
                 },
                 sensors: new() {
-                    seeEnemiesSensor
+                    seeEnemiesSensor,
+                    enemyProximitySensor
                 },
                 actions: new() {
                     goToEnemy,

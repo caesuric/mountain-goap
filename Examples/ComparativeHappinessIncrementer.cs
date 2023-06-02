@@ -50,7 +50,7 @@ namespace Examples {
                     )
                 }
             );
-            while ((int)agent.State["happiness"] < 10) {
+            while (agent.State["happiness"] is int happiness && happiness < 10) {
                 agent.Step();
                 Console.WriteLine($"NEW HAPPINESS IS {agent.State["happiness"]}");
             }

@@ -8,13 +8,13 @@ namespace MountainGoap {
     /// </summary>
     public class ComparisonValuePair {
         /// <summary>
-        /// Value to be compared against.
+        /// Gets or sets the value to be compared against.
         /// </summary>
-        public object? Value = null;
+        public object? Value { get; set; } = null;
 
         /// <summary>
-        /// Operator to be used for comparison.
+        /// Gets or sets the operator to be used for comparison.
         /// </summary>
-        public ComparisonOperator Operator = ComparisonOperator.Undefined;
+        public ComparisonOperator Operator { get; set; } = ComparisonOperator.Undefined;
     }
 }

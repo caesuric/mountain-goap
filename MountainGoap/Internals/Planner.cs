@@ -8,7 +8,7 @@ namespace MountainGoap {
     /// <summary>
     /// Planner for an agent.
     /// </summary>
-    internal class Planner {
+    internal static class Planner {
         /// <summary>
         /// Makes a plan to achieve the agent's goals.
         /// </summary>

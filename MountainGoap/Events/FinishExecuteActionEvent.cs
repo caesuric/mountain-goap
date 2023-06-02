@@ -12,5 +12,5 @@ namespace MountainGoap {
     /// <param name="action">Action being executed.</param>
     /// <param name="status">Execution status of the action.</param>
     /// <param name="parameters">Parameters to the action being executed.</param>
-    public delegate void FinishExecuteActionEvent(Agent agent, Action action, ExecutionStatus status, Dictionary<string, object> parameters);
+    public delegate void FinishExecuteActionEvent(Agent agent, Action action, ExecutionStatus status, Dictionary<string, object?> parameters);
 }

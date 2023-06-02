@@ -3,9 +3,9 @@
 // </copyright>
 
 namespace MountainGoap {
-    using Priority_Queue;
     using System;
     using System.Collections.Generic;
+    using Priority_Queue;
 
     /// <summary>
     /// AStar calculator for an action graph.
@@ -64,20 +64,24 @@ namespace MountainGoap {
         private static float Heuristic(ActionNode actionNode, BaseGoal goal, ActionNode current) {
             var cost = 0f;
             if (goal is Goal normalGoal) {
-                foreach (var kvp in normalGoal.DesiredState) {
-                    if (!actionNode.State.ContainsKey(kvp.Key)) cost++;
-                    else if (actionNode.State[kvp.Key] == null && actionNode.State[kvp.Key] != normalGoal.DesiredState[kvp.Key]) cost++;
-                    else if (actionNode.State[kvp.Key] != null && !actionNode.State[kvp.Key].Equals(normalGoal.DesiredState[kvp.Key])) cost++;
-                }
+                normalGoal.DesiredState.Select(kvp => kvp.Key).ToList().ForEach(key => {
+                    if (!actionNode.State.ContainsKey(key)) cost++;
+                    else if (actionNode.State[key] == null && actionNode.State[key] != normalGoal.DesiredState[key]) cost++;
+                    else if (actionNode.State[key] is object obj && !obj.Equals(normalGoal.DesiredState[key])) cost++;
+                });
             }
             else if (goal is ExtremeGoal extremeGoal) {
                 foreach (var kvp in extremeGoal.DesiredState) {
                     var valueDiff = 0f;
+                    if (actionNode.State.ContainsKey(kvp.Key) && actionNode.State[kvp.Key] == null) {
+                        cost += float.PositiveInfinity;
+                        continue;
+                    }
                     if (actionNode.State.ContainsKey(kvp.Key) && current.State.ContainsKey(kvp.Key)) valueDiff = Convert.ToSingle(actionNode.State[kvp.Key]) - Convert.ToSingle(current.State[kvp.Key]);
                     if (!actionNode.State.ContainsKey(kvp.Key)) cost += float.PositiveInfinity;
                     else if (!current.State.ContainsKey(kvp.Key)) cost += float.PositiveInfinity;
-                    else if (kvp.Value && IsHigherThan(actionNode.State[kvp.Key], current.State[kvp.Key])) cost += 1f / valueDiff;
-                    else if (!kvp.Value && IsLowerThan(actionNode.State[kvp.Key], current.State[kvp.Key])) cost += 1f / (1 - valueDiff);
+                    else if (kvp.Value && actionNode.State[kvp.Key] is object a && current.State[kvp.Key] is object b && IsHigherThan(a, b)) cost += 1f / valueDiff;
+                    else if (!kvp.Value && actionNode.State[kvp.Key] is object a2 && current.State[kvp.Key] is object b2 && IsLowerThan(a2, b2)) cost += 1f / (1 - valueDiff);
                 }
             }
             else if (goal is ComparativeGoal comparativeGoal) {
@@ -87,11 +91,11 @@ namespace MountainGoap {
                     if (!actionNode.State.ContainsKey(kvp.Key)) cost += float.PositiveInfinity;
                     else if (!current.State.ContainsKey(kvp.Key)) cost += float.PositiveInfinity;
                     else if (kvp.Value.Operator == ComparisonOperator.Undefined) cost += float.PositiveInfinity;
-                    else if (kvp.Value.Operator == ComparisonOperator.Equals && actionNode.State[kvp.Key].Equals(comparativeGoal.DesiredState[kvp.Key].Value)) cost += valueDiff2;
-                    else if (kvp.Value.Operator == ComparisonOperator.LessThan && IsLowerThan(actionNode.State[kvp.Key], current.State[kvp.Key])) cost += valueDiff2;
-                    else if (kvp.Value.Operator == ComparisonOperator.GreaterThan && IsHigherThan(actionNode.State[kvp.Key], current.State[kvp.Key])) cost += valueDiff2;
-                    else if (kvp.Value.Operator == ComparisonOperator.LessThanOrEquals && IsLowerThanOrEquals(actionNode.State[kvp.Key], current.State[kvp.Key])) cost += valueDiff2;
-                    else if (kvp.Value.Operator == ComparisonOperator.GreaterThanOrEquals && IsHigherThanOrEquals(actionNode.State[kvp.Key], current.State[kvp.Key])) cost += valueDiff2;
+                    else if (kvp.Value.Operator == ComparisonOperator.Equals && actionNode.State[kvp.Key] is object obj && obj.Equals(comparativeGoal.DesiredState[kvp.Key].Value)) cost += valueDiff2;
+                    else if (kvp.Value.Operator == ComparisonOperator.LessThan && actionNode.State[kvp.Key] is object a && current.State[kvp.Key] is object b && IsLowerThan(a, b)) cost += valueDiff2;
+                    else if (kvp.Value.Operator == ComparisonOperator.GreaterThan && actionNode.State[kvp.Key] is object a2 && current.State[kvp.Key] is object b2 && IsHigherThan(a2, b2)) cost += valueDiff2;
+                    else if (kvp.Value.Operator == ComparisonOperator.LessThanOrEquals && actionNode.State[kvp.Key] is object a3 && current.State[kvp.Key] is object b3 && IsLowerThanOrEquals(a3, b3)) cost += valueDiff2;
+                    else if (kvp.Value.Operator == ComparisonOperator.GreaterThanOrEquals && actionNode.State[kvp.Key] is object a4 && current.State[kvp.Key] is object b4 && IsHigherThanOrEquals(a4, b4)) cost += valueDiff2;
                 }
             }
             return cost;
@@ -143,19 +147,21 @@ namespace MountainGoap {
 
         private bool MeetsGoal(ActionNode actionNode, ActionNode current) {
             if (goal is Goal normalGoal) {
+#pragma warning disable S3267 // Loops should be simplified with "LINQ" expressions
                 foreach (var kvp in normalGoal.DesiredState) {
                     if (!actionNode.State.ContainsKey(kvp.Key)) return false;
                     else if (actionNode.State[kvp.Key] == null && actionNode.State[kvp.Key] != normalGoal.DesiredState[kvp.Key]) return false;
-                    else if (actionNode.State[kvp.Key] != null && !actionNode.State[kvp.Key].Equals(normalGoal.DesiredState[kvp.Key])) return false;
+                    else if (actionNode.State[kvp.Key] is object obj && obj != null && !obj.Equals(normalGoal.DesiredState[kvp.Key])) return false;
                 }
+#pragma warning restore S3267 // Loops should be simplified with "LINQ" expressions
             }
             else if (goal is ExtremeGoal extremeGoal) {
                 if (actionNode.Action == null) return false;
                 foreach (var kvp in extremeGoal.DesiredState) {
                     if (!actionNode.State.ContainsKey(kvp.Key)) return false;
                     else if (!current.State.ContainsKey(kvp.Key)) return false;
-                    else if (kvp.Value && IsLowerThan(actionNode.State[kvp.Key], current.State[kvp.Key])) return false;
-                    else if (!kvp.Value && IsHigherThan(actionNode.State[kvp.Key], current.State[kvp.Key])) return false;
+                    else if (kvp.Value && actionNode.State[kvp.Key] is object a && current.State[kvp.Key] is object b && IsLowerThan(a, b)) return false;
+                    else if (!kvp.Value && actionNode.State[kvp.Key] is object a2 && current.State[kvp.Key] is object b2 && IsHigherThan(a2, b2)) return false;
                 }
             }
             else if (goal is ComparativeGoal comparativeGoal) {
@@ -164,11 +170,11 @@ namespace MountainGoap {
                     if (!actionNode.State.ContainsKey(kvp.Key)) return false;
                     else if (!current.State.ContainsKey(kvp.Key)) return false;
                     else if (kvp.Value.Operator == ComparisonOperator.Undefined) return false;
-                    else if (kvp.Value.Operator == ComparisonOperator.Equals && !actionNode.State[kvp.Key].Equals(comparativeGoal.DesiredState[kvp.Key].Value)) return false;
-                    else if (kvp.Value.Operator == ComparisonOperator.LessThan && !IsLowerThan(actionNode.State[kvp.Key], current.State[kvp.Key])) return false;
-                    else if (kvp.Value.Operator == ComparisonOperator.GreaterThan && !IsHigherThan(actionNode.State[kvp.Key], current.State[kvp.Key])) return false;
-                    else if (kvp.Value.Operator == ComparisonOperator.LessThanOrEquals && !IsLowerThanOrEquals(actionNode.State[kvp.Key], current.State[kvp.Key])) return false;
-                    else if (kvp.Value.Operator == ComparisonOperator.GreaterThanOrEquals && !IsHigherThanOrEquals(actionNode.State[kvp.Key], current.State[kvp.Key])) return false;
+                    else if (kvp.Value.Operator == ComparisonOperator.Equals && actionNode.State[kvp.Key] is object obj && !obj.Equals(comparativeGoal.DesiredState[kvp.Key].Value)) return false;
+                    else if (kvp.Value.Operator == ComparisonOperator.LessThan && actionNode.State[kvp.Key] is object a && current.State[kvp.Key] is object b && !IsLowerThan(a, b)) return false;
+                    else if (kvp.Value.Operator == ComparisonOperator.GreaterThan && actionNode.State[kvp.Key] is object a2 && current.State[kvp.Key] is object b2 && !IsHigherThan(a2, b2)) return false;
+                    else if (kvp.Value.Operator == ComparisonOperator.LessThanOrEquals && actionNode.State[kvp.Key] is object a3 && current.State[kvp.Key] is object b3 && !IsLowerThanOrEquals(a3, b3)) return false;
+                    else if (kvp.Value.Operator == ComparisonOperator.GreaterThanOrEquals && actionNode.State[kvp.Key] is object a4 && current.State[kvp.Key] is object b4 && !IsHigherThanOrEquals(a4, b4)) return false;
                 }
             }
             return true;

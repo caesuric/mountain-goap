@@ -55,12 +55,12 @@ namespace Examples {
                 }
             }
             foreach (var position in foodPositions) grid[(int)position.X, (int)position.Y] = "f";
-            foreach (var agent in agents) {
+            agents.ForEach((agent) => {
                 if (agent.State["position"] is Vector2 position && agent.State["faction"] is string faction) {
                     if (faction == "player") grid[(int)position.X, (int)position.Y] = "@";
                     else grid[(int)position.X, (int)position.Y] = "g";
                 }
-            }
+            });
             for (int x = 0; x < MaxX; x++) {
                 for (int y = 0; y < MaxY; y++) Console.Write(grid[x, y]);
                 Console.WriteLine();

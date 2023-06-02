@@ -17,41 +17,6 @@ namespace MountainGoap {
         public readonly string Name;
 
         /// <summary>
-        /// The current world state from the agent perspective.
-        /// </summary>
-        public Dictionary<string, object?> State = new();
-
-        /// <summary>
-        /// Memory storage object for the agent.
-        /// </summary>
-        public Dictionary<string, object?> Memory = new();
-
-        /// <summary>
-        /// List of active goals for the agent.
-        /// </summary>
-        public List<BaseGoal> Goals = new();
-
-        /// <summary>
-        /// Actions available to the agent.
-        /// </summary>
-        public List<Action> Actions = new();
-
-        /// <summary>
-        /// Sensors available to the agent.
-        /// </summary>
-        public List<Sensor> Sensors = new();
-
-        /// <summary>
-        /// True if the agent is currently executing one or more actions, otherwise false.
-        /// </summary>
-        public bool IsBusy = false;
-
-        /// <summary>
-        /// True if the agent is currently planning, otherwise false.
-        /// </summary>
-        public bool IsPlanning = false;
-
-        /// <summary>
         /// Chains of actions currently being performed by the agent.
         /// </summary>
         internal List<List<Action>> CurrentActionSequences = new();
@@ -98,6 +63,41 @@ namespace MountainGoap {
         /// Event that fires when planning finishes.
         /// </summary>
         public static event PlanningFinishedEvent OnPlanningFinished = (agent, goal, utility) => { };
+
+        /// <summary>
+        /// Gets or sets the current world state from the agent perspective.
+        /// </summary>
+        public Dictionary<string, object?> State { get; set; } = new();
+
+        /// <summary>
+        /// Gets or sets the memory storage object for the agent.
+        /// </summary>
+        public Dictionary<string, object?> Memory { get; set; } = new();
+
+        /// <summary>
+        /// Gets or sets the list of active goals for the agent.
+        /// </summary>
+        public List<BaseGoal> Goals { get; set; } = new();
+
+        /// <summary>
+        /// Gets or sets the actions available to the agent.
+        /// </summary>
+        public List<Action> Actions { get; set; } = new();
+
+        /// <summary>
+        /// Gets or sets the sensors available to the agent.
+        /// </summary>
+        public List<Sensor> Sensors { get; set; } = new();
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the agent is currently executing one or more actions.
+        /// </summary>
+        public bool IsBusy { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the agent is currently planning.
+        /// </summary>
+        public bool IsPlanning { get; set; } = false;
 
         /// <summary>
         /// You should call this every time your game state updates.
