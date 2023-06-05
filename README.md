@@ -153,7 +153,7 @@ ComparativeGoal goal = new ComparativeGoal(
 
 **Actions** dictate arbitrary code the agent can execute to affect the world and achieve its goals. Each action, when it runs, will execute the code passed to it, which is called the action **executor**. Actions can also have **preconditions**, state values required before the agent is allowed to execute the action, and **postconditions**, which are values the state is expected to hold if the action is successful. Finally, each action has a **cost**, which is used in calculating the best plan for the agent.
 
-Actions return an `ExecutionStatus` enum to say if they succeeded or not. If they succeed, the postconditions will automatically be set to the values passed to the action constructor.
+Actions return an `ExecutionStatus` enum to say if they succeeded or not. If they succeed, the postconditions will automatically be set to the values passed to the action constructor. If the `ExecutionStatus` returned is `ExecutionStatus.Executing`, the action will be considered in progress, and the executor will be called again on the next Step command.
 
 Actions can be passed into the agent constructor, like so:
 
