@@ -163,8 +163,8 @@ namespace MountainGoap {
                 List<List<Action>> cullableSequences = new();
                 foreach (var sequence in CurrentActionSequences) {
                     if (sequence.Count > 0) {
-                        sequence[0].Execute(this);
-                        sequence.RemoveAt(0);
+                        var executionStatus = sequence[0].Execute(this);
+                        if (executionStatus != ExecutionStatus.Executing) sequence.RemoveAt(0);
                     }
                     else cullableSequences.Add(sequence);
                 }

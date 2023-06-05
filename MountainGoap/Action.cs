@@ -134,15 +134,20 @@ namespace MountainGoap {
         /// Executes a step of work for the agent.
         /// </summary>
         /// <param name="agent">Agent executing the action.</param>
-        internal void Execute(Agent agent) {
+        /// <returns>The execution status of the action.</returns>
+        internal ExecutionStatus Execute(Agent agent) {
             OnBeginExecuteAction(agent, this, parameters);
             if (IsPossible(agent.State)) {
                 var newState = executor(agent, this);
                 if (newState == ExecutionStatus.Succeeded) ApplyEffects(agent.State);
                 ExecutionStatus = newState;
                 OnFinishExecuteAction(agent, this, ExecutionStatus, parameters);
+                return newState;
             }
-            else OnFinishExecuteAction(agent, this, ExecutionStatus.NotPossible, parameters);
+            else {
+                OnFinishExecuteAction(agent, this, ExecutionStatus.NotPossible, parameters);
+                return ExecutionStatus.NotPossible;
+            }
         }
 
         /// <summary>
