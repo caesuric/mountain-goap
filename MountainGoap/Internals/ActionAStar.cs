@@ -72,30 +72,26 @@ namespace MountainGoap {
             }
             else if (goal is ExtremeGoal extremeGoal) {
                 foreach (var kvp in extremeGoal.DesiredState) {
-                    var valueDiff = 0f;
                     if (actionNode.State.ContainsKey(kvp.Key) && actionNode.State[kvp.Key] == null) {
                         cost += float.PositiveInfinity;
                         continue;
                     }
-                    if (actionNode.State.ContainsKey(kvp.Key) && current.State.ContainsKey(kvp.Key)) valueDiff = Convert.ToSingle(actionNode.State[kvp.Key]) - Convert.ToSingle(current.State[kvp.Key]);
                     if (!actionNode.State.ContainsKey(kvp.Key)) cost += float.PositiveInfinity;
                     else if (!current.State.ContainsKey(kvp.Key)) cost += float.PositiveInfinity;
-                    else if (kvp.Value && actionNode.State[kvp.Key] is object a && current.State[kvp.Key] is object b && IsHigherThan(a, b)) cost += 1f / valueDiff;
-                    else if (!kvp.Value && actionNode.State[kvp.Key] is object a2 && current.State[kvp.Key] is object b2 && IsLowerThan(a2, b2)) cost += 1f / (1 - valueDiff);
+                    else if (kvp.Value && actionNode.State[kvp.Key] is object a && current.State[kvp.Key] is object b && IsHigherThan(a, b)) cost++;
+                    else if (!kvp.Value && actionNode.State[kvp.Key] is object a2 && current.State[kvp.Key] is object b2 && IsLowerThan(a2, b2)) cost++;
                 }
             }
             else if (goal is ComparativeGoal comparativeGoal) {
                 foreach (var kvp in comparativeGoal.DesiredState) {
-                    var valueDiff2 = 0f;
-                    if (actionNode.State.ContainsKey(kvp.Key) && current.State.ContainsKey(kvp.Key)) valueDiff2 = Math.Abs(Convert.ToSingle(kvp.Value.Value) - Convert.ToSingle(actionNode.State[kvp.Key]));
                     if (!actionNode.State.ContainsKey(kvp.Key)) cost += float.PositiveInfinity;
                     else if (!current.State.ContainsKey(kvp.Key)) cost += float.PositiveInfinity;
                     else if (kvp.Value.Operator == ComparisonOperator.Undefined) cost += float.PositiveInfinity;
-                    else if (kvp.Value.Operator == ComparisonOperator.Equals && actionNode.State[kvp.Key] is object obj && obj.Equals(comparativeGoal.DesiredState[kvp.Key].Value)) cost += valueDiff2;
-                    else if (kvp.Value.Operator == ComparisonOperator.LessThan && actionNode.State[kvp.Key] is object a && current.State[kvp.Key] is object b && IsLowerThan(a, b)) cost += valueDiff2;
-                    else if (kvp.Value.Operator == ComparisonOperator.GreaterThan && actionNode.State[kvp.Key] is object a2 && current.State[kvp.Key] is object b2 && IsHigherThan(a2, b2)) cost += valueDiff2;
-                    else if (kvp.Value.Operator == ComparisonOperator.LessThanOrEquals && actionNode.State[kvp.Key] is object a3 && current.State[kvp.Key] is object b3 && IsLowerThanOrEquals(a3, b3)) cost += valueDiff2;
-                    else if (kvp.Value.Operator == ComparisonOperator.GreaterThanOrEquals && actionNode.State[kvp.Key] is object a4 && current.State[kvp.Key] is object b4 && IsHigherThanOrEquals(a4, b4)) cost += valueDiff2;
+                    else if (kvp.Value.Operator == ComparisonOperator.Equals && actionNode.State[kvp.Key] is object obj && obj.Equals(comparativeGoal.DesiredState[kvp.Key].Value)) cost++;
+                    else if (kvp.Value.Operator == ComparisonOperator.LessThan && actionNode.State[kvp.Key] is object a && current.State[kvp.Key] is object b && IsLowerThan(a, b)) cost++;
+                    else if (kvp.Value.Operator == ComparisonOperator.GreaterThan && actionNode.State[kvp.Key] is object a2 && current.State[kvp.Key] is object b2 && IsHigherThan(a2, b2)) cost++;
+                    else if (kvp.Value.Operator == ComparisonOperator.LessThanOrEquals && actionNode.State[kvp.Key] is object a3 && current.State[kvp.Key] is object b3 && IsLowerThanOrEquals(a3, b3)) cost++;
+                    else if (kvp.Value.Operator == ComparisonOperator.GreaterThanOrEquals && actionNode.State[kvp.Key] is object a4 && current.State[kvp.Key] is object b4 && IsHigherThanOrEquals(a4, b4)) cost++;
                 }
             }
             return cost;
