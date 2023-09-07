@@ -35,12 +35,17 @@
             comparativeHappinessIncrementerCommand.SetHandler(() => {
                 RunComparativeHappinessIncrementer();
             });
+            var carCommand = new Command("car", "Run the car demo.");
+            carCommand.SetHandler(() => {
+                RunCarDemo();
+            });
             var cmd = new RootCommand {
                 happinessIncrementerCommand,
                 rpgCommand,
                 arithmeticHappinessIncrementerCommand,
                 extremeHappinessIncrementerCommand,
-                comparativeHappinessIncrementerCommand
+                comparativeHappinessIncrementerCommand,
+                carCommand
             };
             return await cmd.InvokeAsync(args);
         }
@@ -63,6 +68,10 @@
 
         private static void RunComparativeHappinessIncrementer() {
             ComparativeHappinessIncrementer.Run();
+        }
+
+        private static void RunCarDemo() {
+            CarDemo.Run();
         }
     }
 }
