@@ -22,11 +22,6 @@ namespace Examples {
                     { "inCar", false }
                 },
                 goals: new() {
-                    //new Goal(
-                    //    name: "Travel 50 miles",
-                    //    desiredState: new() {
-                    //        { "distanceTraveled", 50 }
-                    //    })
                     new ComparativeGoal(
                         name: "Travel 50 miles",
                         desiredState: new() {
