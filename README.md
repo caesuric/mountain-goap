@@ -20,7 +20,9 @@ Mountain GOAP favors composition over inheritance, allowing you to create agents
         1. [Extreme Goals](#extreme-goals)
         2. [Comparative Goals](#comparative-goals)
     3. [Actions](#actions)
-        1. [Arithmetic Postconditions](#arithmetic-postconditions)
+        1. [Comparative Preconditions](#comparative-preconditions)
+        2. [Arithmetic Postconditions](#arithmetic-postconditions)
+        3. [Parameter Postconditions](#parameter-postconditions)
     4. [Sensors](#sensors)
     5. [Permutation selectors](#permutation-selectors)
     6. [Full API Docs](#full-api-docs)
@@ -178,6 +180,24 @@ Agent agent = new Agent(
 );
 ```
 
+#### Comparative Preconditions
+
+**Comparative preconditions** are preconditions that are calculated by comparing a state value to a target value. They take similar parameters to normal preconditions, but the values in the dictionary must be ComparisonValuePair objects.
+
+Example where energy must be greater than zero to walk:
+
+```csharp
+Action walk = new Action(
+    executor: (Agent agent, Action action) => {
+        Console.WriteLine("I'm walkin' here!");
+        return ExecutionStatus.Succeeded;
+    },
+    comparativePreconditions: new() {
+        { "energy", new() { Operator = ComparisonOperator.GreaterThan, Value = 0 } }
+    },
+);
+```
+
 #### Arithmetic Postconditions
 
 **Arithmetic postconditions** are postconditions that are calculated by performing arithmetic on other state values. They take similar parameters to normal postconditions, but the values in the dictionary are added to the existing state value instead of replacing it. Note that the state value and the postcondition value must be of the same numeric type for this to work correctly.
@@ -196,6 +216,31 @@ Action heal = new Action(
     cost: 0.5f
 );
 ```
+
+#### Parameter Postconditions
+
+**Parameter postconditions** are postconditions that copy one of the parameters passed to the action into the agent state. The structure uses a dictionary of string keys and string values, where the keys are the keys to the parameter value being copied and the values are the state key into which you are copying the value.
+
+Example that will copy the "target" parameter into the "target" state value:
+
+```csharp
+var targets = new List<string> { "target1", "target2" }
+Action setTarget = new Action(
+    executor: (Agent agent, Action action) => {
+        Console.WriteLine("set target");
+        return ExecutionStatus.Succeeded;
+    },
+    permutationSelectors: new() {
+        { "target", PermutationSelectorGenerators.SelectFromCollection(targets) }
+    },
+    parameterPostconditions: new Dictionary<string, string> {
+        { "target", "target" }
+    },
+    cost: 0.5f
+);
+```
+
+This example will create permutations of the action that either target `"target1"` or `"target2"`, and will copy the selected target into the `"target"` state value. See [permutation selectors](#permutation-selectors) for more information on permutation selectors.
 
 ### Sensors
 
