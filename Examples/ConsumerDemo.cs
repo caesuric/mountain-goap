@@ -39,7 +39,7 @@ namespace Examples {
                     //new Goal(
                     //    name: "Get 5 food",
                     //    desiredState: new() {
-                    //        { "food", 4 }
+                    //        { "food", 5 }
                     //    })
                     //new ExtremeGoal(
                     //    name: "Get food",
@@ -50,7 +50,7 @@ namespace Examples {
                 actions: new() {
                     new(
                         name: "Walk",
-                        cost: 60f,
+                        cost: 6f,
                         executor: GenericExecutor,
                         preconditions: new() {
                             { "inCar", false }
@@ -70,7 +70,7 @@ namespace Examples {
                     ),
                     new(
                         name: "Drive",
-                        cost: 10f,
+                        cost: 1f,
                         preconditions: new() {
                             { "inCar", true }
                         },
@@ -158,7 +158,7 @@ namespace Examples {
                     ),
                     new(
                         name: "Work",
-                        cost: 60f,
+                        cost: 1f,
                         preconditions: new() {
                             { "location", "work" },
                             { "inCar", false }
@@ -174,7 +174,7 @@ namespace Examples {
                     ),
                     new(
                         name: "Shop",
-                        cost: 12f,
+                        cost: 1f,
                         preconditions: new() {
                             { "location", "store" },
                             { "inCar", false }
