@@ -39,13 +39,18 @@
             carCommand.SetHandler(() => {
                 RunCarDemo();
             });
+            var consumerCommand = new Command("consumer", "Run the consumer demo.");
+            consumerCommand.SetHandler(() => {
+                RunConsumerDemo();
+            });
             var cmd = new RootCommand {
                 happinessIncrementerCommand,
                 rpgCommand,
                 arithmeticHappinessIncrementerCommand,
                 extremeHappinessIncrementerCommand,
                 comparativeHappinessIncrementerCommand,
-                carCommand
+                carCommand,
+                consumerCommand
             };
             return await cmd.InvokeAsync(args);
         }
@@ -72,6 +77,10 @@
 
         private static void RunCarDemo() {
             CarDemo.Run();
+        }
+
+        private static void RunConsumerDemo() {
+            ConsumerDemo.Run();
         }
     }
 }

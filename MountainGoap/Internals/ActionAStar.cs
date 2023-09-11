@@ -50,7 +50,7 @@ namespace MountainGoap {
                     break;
                 }
                 foreach (var next in graph.Neighbors(current)) {
-                    float newCost = CostSoFar[current] + next.Cost();
+                    float newCost = CostSoFar[current] + next.Cost(current.State);
                     if (!CostSoFar.ContainsKey(next) || newCost < CostSoFar[next]) {
                         CostSoFar[next] = newCost;
                         float priority = newCost + Heuristic(next, goal, current);
@@ -98,47 +98,19 @@ namespace MountainGoap {
         }
 
         private static bool IsLowerThan(object a, object b) {
-            if (a == null || b == null) return false;
-            if (a is int intA && b is int intB) return intA < intB;
-            if (a is long longA && b is long longB) return longA < longB;
-            if (a is float floatA && b is float floatB) return floatA < floatB;
-            if (a is double doubleA && b is double doubleB) return doubleA < doubleB;
-            if (a is decimal decimalA && b is decimal decimalB) return decimalA < decimalB;
-            if (a is DateTime dateTimeA && b is DateTime dateTimeB) return dateTimeA < dateTimeB;
-            return false;
+            return Utils.IsLowerThan(a, b);
         }
 
         private static bool IsHigherThan(object a, object b) {
-            if (a == null || b == null) return false;
-            if (a is int intA && b is int intB) return intA > intB;
-            if (a is long longA && b is long longB) return longA > longB;
-            if (a is float floatA && b is float floatB) return floatA > floatB;
-            if (a is double doubleA && b is double doubleB) return doubleA > doubleB;
-            if (a is decimal decimalA && b is decimal decimalB) return decimalA > decimalB;
-            if (a is DateTime dateTimeA && b is DateTime dateTimeB) return dateTimeA > dateTimeB;
-            return false;
+            return Utils.IsHigherThan(a, b);
         }
 
         private static bool IsLowerThanOrEquals(object a, object b) {
-            if (a == null || b == null) return false;
-            if (a is int intA && b is int intB) return intA <= intB;
-            if (a is long longA && b is long longB) return longA <= longB;
-            if (a is float floatA && b is float floatB) return floatA <= floatB;
-            if (a is double doubleA && b is double doubleB) return doubleA <= doubleB;
-            if (a is decimal decimalA && b is decimal decimalB) return decimalA <= decimalB;
-            if (a is DateTime dateTimeA && b is DateTime dateTimeB) return dateTimeA <= dateTimeB;
-            return false;
+            return Utils.IsLowerThanOrEquals(a, b);
         }
 
         private static bool IsHigherThanOrEquals(object a, object b) {
-            if (a == null || b == null) return false;
-            if (a is int intA && b is int intB) return intA >= intB;
-            if (a is long longA && b is long longB) return longA >= longB;
-            if (a is float floatA && b is float floatB) return floatA >= floatB;
-            if (a is double doubleA && b is double doubleB) return doubleA >= doubleB;
-            if (a is decimal decimalA && b is decimal decimalB) return decimalA >= decimalB;
-            if (a is DateTime dateTimeA && b is DateTime dateTimeB) return dateTimeA >= dateTimeB;
-            return false;
+            return Utils.IsHigherThanOrEquals(a, b);
         }
 
         private bool MeetsGoal(ActionNode actionNode, ActionNode current) {

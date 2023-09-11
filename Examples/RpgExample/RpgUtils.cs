@@ -91,22 +91,28 @@ namespace Examples {
         /// Gets the cost of moving to an enemy.
         /// </summary>
         /// <param name="action">Action for which cost is being calculated.</param>
+        /// <param name="state">State as it will be when cost is relevant.</param>
         /// <returns>The cost of the action.</returns>
-        internal static float GoToEnemyCost(Action action) {
+#pragma warning disable IDE0060 // Remove unused parameter
+        internal static float GoToEnemyCost(Action action, Dictionary<string, object?> state) {
             if (action.GetParameter("startingPosition") is not Vector2 startingPosition || action.GetParameter("target") is not Agent target) return float.MaxValue;
             if (target.State["position"] is not Vector2 targetPosition) return float.MaxValue;
             return Distance(startingPosition, targetPosition);
         }
+#pragma warning restore IDE0060 // Remove unused parameter
 
         /// <summary>
         /// Gets the cost of moving to food.
         /// </summary>
         /// <param name="action">Action for which the cost is being calculated.</param>
+        /// /// <param name="state">State as it will be when cost is relevant.</param>
         /// <returns>The cost of the action.</returns>
-        internal static float GoToFoodCost(Action action) {
+#pragma warning disable IDE0060 // Remove unused parameter
+        internal static float GoToFoodCost(Action action, Dictionary<string, object?> state) {
             if (action.GetParameter("startingPosition") is not Vector2 startingPosition || action.GetParameter("target") is not Vector2 targetPosition) return float.MaxValue;
             return Distance(startingPosition, targetPosition);
         }
+#pragma warning restore IDE0060 // Remove unused parameter
 
         private static float Distance(Vector2 pos1, Vector2 pos2) {
             return (float)Math.Sqrt(Math.Pow(Math.Abs(pos2.X - pos1.X), 2) + Math.Pow(Math.Abs(pos2.Y - pos1.Y), 2));

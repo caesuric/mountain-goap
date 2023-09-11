@@ -74,10 +74,11 @@ namespace MountainGoap {
         /// <summary>
         /// Cost to traverse this node.
         /// </summary>
+        /// <param name="currentState">Current state after previous node is executed.</param>
         /// <returns>The cost of the action to be executed.</returns>
-        internal float Cost() {
+        internal float Cost(Dictionary<string, object?> currentState) {
             if (Action == null) return float.MaxValue;
-            return Action.GetCost();
+            return Action.GetCost(currentState);
         }
 
         private bool StateMatches(ActionNode otherNode) {

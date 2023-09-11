@@ -42,6 +42,11 @@ namespace MountainGoap {
         private readonly Dictionary<string, object?> preconditions = new();
 
         /// <summary>
+        /// Comnparative preconditions for the action. Indicates that a value must be greater than or less than a certain value for the action to execute.
+        /// </summary>
+        private readonly Dictionary<string, ComparisonValuePair> comparativePreconditions = new();
+
+        /// <summary>
         /// Postconditions for the action. These will be set when the action has executed.
         /// </summary>
         private readonly Dictionary<string, object?> postconditions = new();
@@ -50,6 +55,11 @@ namespace MountainGoap {
         /// Arithmetic postconditions for the action. These will be added to the current value when the action has executed.
         /// </summary>
         private readonly Dictionary<string, object> arithmeticPostconditions = new();
+
+        /// <summary>
+        /// Parameter postconditions for the action. When the action has executed, the value of the parameter given in the key will be copied to the state with the name given in the value.
+        /// </summary>
+        private readonly Dictionary<string, string> parameterPostconditions = new();
 
         /// <summary>
         /// Parameters to be passed to the action.
@@ -65,9 +75,11 @@ namespace MountainGoap {
         /// <param name="cost">Cost of the action.</param>
         /// <param name="costCallback">Callback for determining the cost of the action.</param>
         /// <param name="preconditions">Preconditions required in the world state in order for the action to occur.</param>
+        /// <param name="comparativePreconditions">Preconditions indicating relative value requirements needed for the action to occur.</param>
         /// <param name="postconditions">Postconditions applied after the action is successfully executed.</param>
         /// <param name="arithmeticPostconditions">Arithmetic postconditions added to state after the action is successfully executed.</param>
-        public Action(string? name = null, Dictionary<string, PermutationSelectorCallback>? permutationSelectors = null, ExecutorCallback? executor = null, float cost = 1f, CostCallback? costCallback = null, Dictionary<string, object?>? preconditions = null, Dictionary<string, object?>? postconditions = null, Dictionary<string, object>? arithmeticPostconditions = null) {
+        /// <param name="parameterPostconditions">Parameter postconditions copied to state after the action is successfully executed.</param>
+        public Action(string? name = null, Dictionary<string, PermutationSelectorCallback>? permutationSelectors = null, ExecutorCallback? executor = null, float cost = 1f, CostCallback? costCallback = null, Dictionary<string, object?>? preconditions = null, Dictionary<string, ComparisonValuePair>? comparativePreconditions = null, Dictionary<string, object?>? postconditions = null, Dictionary<string, object>? arithmeticPostconditions = null, Dictionary<string, string>? parameterPostconditions = null) {
             if (permutationSelectors == null) this.permutationSelectors = new();
             else this.permutationSelectors = permutationSelectors;
             if (executor == null) this.executor = DefaultExecutorCallback;
@@ -76,8 +88,10 @@ namespace MountainGoap {
             this.cost = cost;
             this.costCallback = costCallback ?? DefaultCostCallback;
             if (preconditions != null) this.preconditions = preconditions;
+            if (comparativePreconditions != null) this.comparativePreconditions = comparativePreconditions;
             if (postconditions != null) this.postconditions = postconditions;
             if (arithmeticPostconditions != null) this.arithmeticPostconditions = arithmeticPostconditions;
+            if (parameterPostconditions != null) this.parameterPostconditions = parameterPostconditions;
         }
 
         /// <summary>
@@ -100,7 +114,10 @@ namespace MountainGoap {
         /// </summary>
         /// <returns>A copy of the action.</returns>
         public Action Copy() {
-            return new Action(Name, permutationSelectors, executor, cost, costCallback, preconditions.Copy(), postconditions.Copy(), arithmeticPostconditions.CopyNonNullable());
+            var newAction = new Action(Name, permutationSelectors, executor, cost, costCallback, preconditions.Copy(), comparativePreconditions.Copy(), postconditions.Copy(), arithmeticPostconditions.CopyNonNullable(), parameterPostconditions.Copy()) {
+                parameters = parameters.Copy()
+            };
+            return newAction;
         }
 
         /// <summary>
@@ -125,9 +142,10 @@ namespace MountainGoap {
         /// <summary>
         /// Gets the cost of the action.
         /// </summary>
+        /// <param name="currentState">State as it will be when cost is relevant.</param>
         /// <returns>The cost of the action.</returns>
-        public float GetCost() {
-            return costCallback(this);
+        public float GetCost(Dictionary<string, object?> currentState) {
+            return costCallback(this, currentState);
         }
 
         /// <summary>
@@ -161,6 +179,17 @@ namespace MountainGoap {
                 if (state[kvp.Key] == null && state[kvp.Key] != kvp.Value) return false;
                 else if (state[kvp.Key] == null && state[kvp.Key] == kvp.Value) continue;
                 if (state[kvp.Key] is object obj && !obj.Equals(kvp.Value)) return false;
+            }
+            foreach (var kvp in comparativePreconditions) {
+                if (!state.ContainsKey(kvp.Key)) return false;
+                if (state[kvp.Key] == null) return false;
+                if (state[kvp.Key] is object obj && kvp.Value.Value is object obj2) {
+                    if (kvp.Value.Operator == ComparisonOperator.LessThan && !Utils.IsLowerThan(obj, obj2)) return false;
+                    else if (kvp.Value.Operator == ComparisonOperator.GreaterThan && !Utils.IsHigherThan(obj, obj2)) return false;
+                    else if (kvp.Value.Operator == ComparisonOperator.LessThanOrEquals && !Utils.IsLowerThanOrEquals(obj, obj2)) return false;
+                    else if (kvp.Value.Operator == ComparisonOperator.GreaterThanOrEquals && !Utils.IsHigherThanOrEquals(obj, obj2)) return false;
+                }
+                else return false;
             }
             return true;
         }
@@ -209,6 +238,10 @@ namespace MountainGoap {
                 else if (state[kvp.Key] is decimal stateDecimal && kvp.Value is decimal conditionDecimal) state[kvp.Key] = stateDecimal + conditionDecimal;
                 else if (state[kvp.Key] is DateTime stateDateTime && kvp.Value is TimeSpan conditionTimeSpan) state[kvp.Key] = stateDateTime + conditionTimeSpan;
             }
+            foreach (var kvp in parameterPostconditions) {
+                if (!parameters.ContainsKey(kvp.Key)) continue;
+                state[kvp.Value] = parameters[kvp.Key];
+            }
         }
 
         /// <summary>
@@ -245,8 +278,10 @@ namespace MountainGoap {
             return ExecutionStatus.Failed;
         }
 
-        private static float DefaultCostCallback(Action action) {
+#pragma warning disable S1172 // Unused method parameters should be removed
+        private static float DefaultCostCallback(Action action, Dictionary<string, object?> currentState) {
             return action.cost;
         }
+#pragma warning restore S1172 // Unused method parameters should be removed
     }
 }

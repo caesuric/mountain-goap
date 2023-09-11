@@ -24,6 +24,24 @@ namespace MountainGoap {
         /// </summary>
         /// <param name="dictionary">Dictionary to be copied.</param>
         /// <returns>A shallow copy of the dictionary.</returns>
+        internal static Dictionary<string, ComparisonValuePair> Copy(this Dictionary<string, ComparisonValuePair> dictionary) {
+            return dictionary.ToDictionary(entry => entry.Key, entry => entry.Value);
+        }
+
+        /// <summary>
+        /// Copies the dictionary to a shallow clone.
+        /// </summary>
+        /// <param name="dictionary">Dictionary to be copied.</param>
+        /// <returns>A shallow copy of the dictionary.</returns>
+        internal static Dictionary<string, string> Copy(this Dictionary<string, string> dictionary) {
+            return dictionary.ToDictionary(entry => entry.Key, entry => entry.Value);
+        }
+
+        /// <summary>
+        /// Copies the dictionary to a shallow clone.
+        /// </summary>
+        /// <param name="dictionary">Dictionary to be copied.</param>
+        /// <returns>A shallow copy of the dictionary.</returns>
         internal static Dictionary<string, object> CopyNonNullable(this Dictionary<string, object> dictionary) {
             return dictionary.ToDictionary(entry => entry.Key, entry => entry.Value);
         }
