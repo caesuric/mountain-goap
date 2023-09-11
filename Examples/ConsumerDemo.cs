@@ -26,21 +26,21 @@ namespace Examples {
                     { "location", "home" }
                 },
                 goals: new() {
-                    //new ComparativeGoal(
-                    //    name: "Get at least 5 food",
-                    //    desiredState: new() {
-                    //        {
-                    //            "food", new() {
-                    //                Operator = ComparisonOperator.GreaterThanOrEquals,
-                    //                Value = 5
-                    //            }
-                    //        }
-                    //    })
-                    new Goal(
-                        name: "Get 5 food",
+                    new ComparativeGoal(
+                        name: "Get at least 5 food",
                         desiredState: new() {
-                            { "food", 1 }
+                            {
+                                "food", new() {
+                                    Operator = ComparisonOperator.GreaterThanOrEquals,
+                                    Value = 5
+                                }
+                            }
                         })
+                    //new Goal(
+                    //    name: "Get 5 food",
+                    //    desiredState: new() {
+                    //        { "food", 4 }
+                    //    })
                     //new ExtremeGoal(
                     //    name: "Get food",
                     //    desiredState: new() {
@@ -50,7 +50,7 @@ namespace Examples {
                 actions: new() {
                     new(
                         name: "Walk",
-                        cost: 6f,
+                        cost: 60f,
                         executor: GenericExecutor,
                         preconditions: new() {
                             { "inCar", false }
@@ -70,7 +70,7 @@ namespace Examples {
                     ),
                     new(
                         name: "Drive",
-                        cost: 1f,
+                        cost: 10f,
                         preconditions: new() {
                             { "inCar", true }
                         },
@@ -124,7 +124,7 @@ namespace Examples {
                     //),
                     new(
                         name: "Get in car",
-                        cost: 0.1f,
+                        cost: 1f,
                         preconditions: new() {
                             { "inCar", false }
                         },
@@ -141,7 +141,7 @@ namespace Examples {
                     ),
                     new(
                         name: "Get out of car",
-                        cost: 0.1f,
+                        cost: 1f,
                         preconditions: new() {
                             { "inCar", true }
                         },
@@ -158,7 +158,7 @@ namespace Examples {
                     ),
                     new(
                         name: "Work",
-                        cost: 6f,
+                        cost: 60f,
                         preconditions: new() {
                             { "location", "work" },
                             { "inCar", false }
@@ -174,7 +174,7 @@ namespace Examples {
                     ),
                     new(
                         name: "Shop",
-                        cost: 1.2f,
+                        cost: 12f,
                         preconditions: new() {
                             { "location", "store" },
                             { "inCar", false }
