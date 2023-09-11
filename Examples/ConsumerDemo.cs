@@ -19,7 +19,7 @@ namespace Examples {
             var agent = new Agent(
                 name: "Consumer Agent",
                 state: new() {
-                    { "food", 4 },
+                    { "food", 0 },
                     { "energy", 100 },
                     { "money", 0 },
                     { "inCar", false },
@@ -36,22 +36,25 @@ namespace Examples {
                     //            }
                     //        }
                     //    })
-                    //new Goal(
-                    //    name: "Get 5 food",
-                    //    desiredState: new() {
-                    //        { "food", 5 }
-                    //    })
-                    new ExtremeGoal(
-                        name: "Get food",
+                    new Goal(
+                        name: "Get 5 food",
                         desiredState: new() {
-                            { "food", true }
+                            { "food", 1 }
                         })
+                    //new ExtremeGoal(
+                    //    name: "Get food",
+                    //    desiredState: new() {
+                    //        { "food", true }
+                    //    })
                 },
                 actions: new() {
                     new(
                         name: "Walk",
-                        cost: 10,
+                        cost: 6f,
                         executor: GenericExecutor,
+                        preconditions: new() {
+                            { "inCar", false }
+                        },
                         permutationSelectors: new() {
                             { "location", PermutationSelectorGenerators.SelectFromCollection(locations) }
                         },
@@ -67,7 +70,7 @@ namespace Examples {
                     ),
                     new(
                         name: "Drive",
-                        cost: 1,
+                        cost: 1f,
                         preconditions: new() {
                             { "inCar", true }
                         },
@@ -85,9 +88,43 @@ namespace Examples {
                             { "location", "location" }
                         }
                     ),
+                    //new(
+                    //    name: "Drive to work",
+                    //    cost: 2f,
+                    //    preconditions: new() {
+                    //        { "inCar", true }
+                    //    },
+                    //    comparativePreconditions: new() {
+                    //        { "energy", new() { Operator = ComparisonOperator.GreaterThan, Value = 0 } }
+                    //    },
+                    //    executor: GenericExecutor,
+                    //    arithmeticPostconditions: new() {
+                    //        { "energy", -1 }
+                    //    },
+                    //    postconditions: new() {
+                    //        { "location", "work" }
+                    //    }
+                    //),
+                    //new(
+                    //    name: "Drive to store",
+                    //    cost: 2f,
+                    //    preconditions: new() {
+                    //        { "inCar", true }
+                    //    },
+                    //    comparativePreconditions: new() {
+                    //        { "energy", new() { Operator = ComparisonOperator.GreaterThan, Value = 0 } }
+                    //    },
+                    //    executor: GenericExecutor,
+                    //    arithmeticPostconditions: new() {
+                    //        { "energy", -1 }
+                    //    },
+                    //    postconditions: new() {
+                    //        { "location", "store" }
+                    //    }
+                    //),
                     new(
-                        name: "Get in Car",
-                        cost: 1f,
+                        name: "Get in car",
+                        cost: 0.1f,
                         preconditions: new() {
                             { "inCar", false }
                         },
@@ -103,10 +140,28 @@ namespace Examples {
                         executor: GenericExecutor
                     ),
                     new(
+                        name: "Get out of car",
+                        cost: 0.1f,
+                        preconditions: new() {
+                            { "inCar", true }
+                        },
+                        comparativePreconditions: new() {
+                            { "energy", new() { Operator = ComparisonOperator.GreaterThan, Value = 0 } }
+                        },
+                        postconditions: new() {
+                            { "inCar", false }
+                        },
+                        arithmeticPostconditions: new() {
+                            { "energy", -1 }
+                        },
+                        executor: GenericExecutor
+                    ),
+                    new(
                         name: "Work",
-                        cost: 1f,
+                        cost: 6f,
                         preconditions: new() {
                             { "location", "work" },
+                            { "inCar", false }
                         },
                         comparativePreconditions: new() {
                             { "energy", new() { Operator = ComparisonOperator.GreaterThan, Value = 0 } }
@@ -119,9 +174,10 @@ namespace Examples {
                     ),
                     new(
                         name: "Shop",
-                        cost: 1f,
+                        cost: 1.2f,
                         preconditions: new() {
-                            { "location", "store" }
+                            { "location", "store" },
+                            { "inCar", false }
                         },
                         comparativePreconditions: new() {
                             { "energy", new() { Operator = ComparisonOperator.GreaterThan, Value = 0 } },
