@@ -45,12 +45,24 @@ namespace MountainGoap {
             CostSoFar[start] = 0;
             while (frontier.Count > 0) {
                 var current = frontier.Dequeue();
+                if (current.Action != null) {
+                    Console.WriteLine($"evaluating {current.Action.Name}");
+                    if (current.Action.GetParameter("location") is not null) Console.WriteLine($"location: {current.Action.GetParameter("location")}");
+                    var traceback = current;
+                    while (CameFrom[traceback].Action != null) {
+                        Console.WriteLine($"\t\ttraceback: {traceback.Action?.Name}");
+                        traceback = CameFrom[traceback];
+                    }
+                }
                 if (MeetsGoal(current, start)) {
                     FinalPoint = current;
                     break;
                 }
                 foreach (var next in graph.Neighbors(current)) {
+                    Console.WriteLine($"\tneighbor: {next.Action?.Name}");
+                    if (next.Action?.GetParameter("location") is not null) Console.WriteLine($"\tlocation: {next.Action.GetParameter("location")}");
                     float newCost = CostSoFar[current] + next.Cost(current.State);
+                    Console.WriteLine($"\tcost so far is {newCost}");
                     if (!CostSoFar.ContainsKey(next) || newCost < CostSoFar[next]) {
                         CostSoFar[next] = newCost;
                         float priority = newCost + Heuristic(next, goal, current);
@@ -65,9 +77,9 @@ namespace MountainGoap {
             var cost = 0f;
             if (goal is Goal normalGoal) {
                 normalGoal.DesiredState.Select(kvp => kvp.Key).ToList().ForEach(key => {
-                    if (!actionNode.State.ContainsKey(key)) cost += actionNode.Cost(actionNode.State);
-                    else if (actionNode.State[key] == null && actionNode.State[key] != normalGoal.DesiredState[key] ) cost += actionNode.Cost(actionNode.State);
-                    else if (actionNode.State[key] is object obj && !obj.Equals(normalGoal.DesiredState[key])) cost += actionNode.Cost(actionNode.State);
+                    if (!actionNode.State.ContainsKey(key)) cost++;
+                    else if (actionNode.State[key] == null && actionNode.State[key] != normalGoal.DesiredState[key] ) cost++;
+                    else if (actionNode.State[key] is object obj && !obj.Equals(normalGoal.DesiredState[key])) cost++;
                 });
             }
             else if (goal is ExtremeGoal extremeGoal) {
@@ -78,20 +90,21 @@ namespace MountainGoap {
                     }
                     if (!actionNode.State.ContainsKey(kvp.Key)) cost += float.PositiveInfinity;
                     else if (!current.State.ContainsKey(kvp.Key)) cost += float.PositiveInfinity;
-                    else if (kvp.Value && actionNode.State[kvp.Key] is object a && current.State[kvp.Key] is object b && IsHigherThan(a, b)) cost += actionNode.Cost(actionNode.State);
-                    else if (!kvp.Value && actionNode.State[kvp.Key] is object a2 && current.State[kvp.Key] is object b2 && IsLowerThan(a2, b2)) cost += actionNode.Cost(actionNode.State);
+                    else if (kvp.Value && actionNode.State[kvp.Key] is object a && current.State[kvp.Key] is object b && IsHigherThan(a, b)) cost++;
+                    else if (!kvp.Value && actionNode.State[kvp.Key] is object a2 && current.State[kvp.Key] is object b2 && IsLowerThan(a2, b2)) cost++;
                 }
             }
             else if (goal is ComparativeGoal comparativeGoal) {
                 foreach (var kvp in comparativeGoal.DesiredState) {
                     if (!actionNode.State.ContainsKey(kvp.Key)) cost += float.PositiveInfinity;
                     else if (kvp.Value.Operator == ComparisonOperator.Undefined) cost += float.PositiveInfinity;
-                    else if (kvp.Value.Operator == ComparisonOperator.Equals && actionNode.State[kvp.Key] is object obj && obj.Equals(comparativeGoal.DesiredState[kvp.Key].Value)) cost += actionNode.Cost(actionNode.State);
-                    else if (kvp.Value.Operator == ComparisonOperator.LessThan && actionNode.State[kvp.Key] is object a && comparativeGoal.DesiredState[kvp.Key] is object b && IsLowerThan(a, b)) cost += actionNode.Cost(actionNode.State);
-                    else if (kvp.Value.Operator == ComparisonOperator.GreaterThan && actionNode.State[kvp.Key] is object a2 && comparativeGoal.DesiredState[kvp.Key] is object b2 && IsHigherThan(a2, b2)) cost += actionNode.Cost(actionNode.State);
-                    else if (kvp.Value.Operator == ComparisonOperator.LessThanOrEquals && actionNode.State[kvp.Key] is object a3 && comparativeGoal.DesiredState[kvp.Key] is object b3 && IsLowerThanOrEquals(a3, b3)) cost += actionNode.Cost(actionNode.State);
-                    else if (kvp.Value.Operator == ComparisonOperator.GreaterThanOrEquals && actionNode.State[kvp.Key] is object a4 && comparativeGoal.DesiredState[kvp.Key] is object b4 && IsHigherThanOrEquals(a4, b4)) cost += actionNode.Cost(actionNode.State);
+                    else if (kvp.Value.Operator == ComparisonOperator.Equals && actionNode.State[kvp.Key] is object obj && obj.Equals(comparativeGoal.DesiredState[kvp.Key].Value)) cost += actionNode.Cost(current.State);
+                    else if (kvp.Value.Operator == ComparisonOperator.LessThan && actionNode.State[kvp.Key] is object a && comparativeGoal.DesiredState[kvp.Key] is object b && IsLowerThan(a, b)) cost += actionNode.Cost(current.State);
+                    else if (kvp.Value.Operator == ComparisonOperator.GreaterThan && actionNode.State[kvp.Key] is object a2 && comparativeGoal.DesiredState[kvp.Key] is object b2 && IsHigherThan(a2, b2)) cost += actionNode.Cost(current.State);
+                    else if (kvp.Value.Operator == ComparisonOperator.LessThanOrEquals && actionNode.State[kvp.Key] is object a3 && comparativeGoal.DesiredState[kvp.Key] is object b3 && IsLowerThanOrEquals(a3, b3)) cost += actionNode.Cost(current.State);
+                    else if (kvp.Value.Operator == ComparisonOperator.GreaterThanOrEquals && actionNode.State[kvp.Key] is object a4 && comparativeGoal.DesiredState[kvp.Key] is object b4 && IsHigherThanOrEquals(a4, b4)) cost += actionNode.Cost(current.State);
                 }
+                cost /= comparativeGoal.DesiredState.Count;
             }
             return cost;
         }

@@ -35,11 +35,9 @@ namespace MountainGoap {
 #pragma warning disable S3267 // Loops should be simplified with "LINQ" expressions
             foreach (var otherNode in ActionNodes) {
                 if (otherNode.Action is not null && otherNode.Action.IsPossible(node.State)) {
-                    foreach (var permutation in otherNode.Action.GetPermutations(node.State.Copy())) {
-                        var instancedNode = new ActionNode(otherNode.Action, node.State.Copy(), permutation.Copy());
-                        otherNode.Action.ApplyEffects(instancedNode.State);
-                        yield return instancedNode;
-                    }
+                    var newNode = new ActionNode(otherNode.Action.Copy(), node.State.Copy(), otherNode.Parameters.Copy());
+                    newNode.Action?.ApplyEffects(newNode.State);
+                    yield return newNode;
                 }
             }
 #pragma warning restore S3267 // Loops should be simplified with "LINQ" expressions

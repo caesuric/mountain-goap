@@ -14,7 +14,7 @@ namespace Examples {
         /// Runs the demo.
         /// </summary>
         internal static void Run() {
-            _ = new DefaultLogger();
+            //_ = new DefaultLogger();
             var locations = new List<string> { "home", "work", "store" };
             var agent = new Agent(
                 name: "Consumer Agent",
