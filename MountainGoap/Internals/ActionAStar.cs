@@ -45,24 +45,12 @@ namespace MountainGoap {
             CostSoFar[start] = 0;
             while (frontier.Count > 0) {
                 var current = frontier.Dequeue();
-                if (current.Action != null) {
-                    //Console.WriteLine($"evaluating {current.Action.Name}");
-                    //if (current.Action.GetParameter("location") is not null) Console.WriteLine($"location: {current.Action.GetParameter("location")}");
-                    //var traceback = current;
-                    //while (CameFrom[traceback].Action != null) {
-                    //    Console.WriteLine($"\t\ttraceback: {traceback.Action?.Name}");
-                    //    traceback = CameFrom[traceback];
-                    //}
-                }
                 if (MeetsGoal(current, start)) {
                     FinalPoint = current;
                     break;
                 }
                 foreach (var next in graph.Neighbors(current)) {
-                    //Console.WriteLine($"\tneighbor: {next.Action?.Name}");
-                    //if (next.Action?.GetParameter("location") is not null) Console.WriteLine($"\tlocation: {next.Action.GetParameter("location")}");
                     float newCost = CostSoFar[current] + next.Cost(current.State);
-                    //Console.WriteLine($"\tcost so far is {newCost}");
                     if (!CostSoFar.ContainsKey(next) || newCost < CostSoFar[next]) {
                         CostSoFar[next] = newCost;
                         float priority = newCost + Heuristic(next, goal, current);

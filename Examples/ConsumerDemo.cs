@@ -23,7 +23,8 @@ namespace Examples {
                     { "energy", 100 },
                     { "money", 0 },
                     { "inCar", false },
-                    { "location", "home" }
+                    { "location", "home" },
+                    { "justTraveled", false }
                 },
                 goals: new() {
                     new ComparativeGoal(
@@ -36,26 +37,6 @@ namespace Examples {
                                 }
                             }
                         }),
-                    //new ComparativeGoal(
-                    //    name: "Get at least 5 money",
-                    //    desiredState: new() {
-                    //        {
-                    //            "money", new() {
-                    //                Operator = ComparisonOperator.GreaterThanOrEquals,
-                    //                Value = 5
-                    //            }
-                    //        }
-                    //    })
-                    //new Goal(
-                    //    name: "Get 5 food",
-                    //    desiredState: new() {
-                    //        { "food", 5 }
-                    //    })
-                    //new ExtremeGoal(
-                    //    name: "Get food",
-                    //    desiredState: new() {
-                    //        { "food", true }
-                    //    })
                 },
                 actions: new() {
                     new(
@@ -82,7 +63,8 @@ namespace Examples {
                         name: "Drive",
                         cost: 1f,
                         preconditions: new() {
-                            { "inCar", true }
+                            { "inCar", true },
+                            { "justTraveled", false }
                         },
                         comparativePreconditions: new() {
                             { "energy", new() { Operator = ComparisonOperator.GreaterThan, Value = 0 } }
@@ -96,47 +78,17 @@ namespace Examples {
                         },
                         parameterPostconditions: new() {
                             { "location", "location" }
+                        },
+                        postconditions: new() {
+                            { "justTraveled", true }
                         }
                     ),
-                    //new(
-                    //    name: "Drive to work",
-                    //    cost: 2f,
-                    //    preconditions: new() {
-                    //        { "inCar", true }
-                    //    },
-                    //    comparativePreconditions: new() {
-                    //        { "energy", new() { Operator = ComparisonOperator.GreaterThan, Value = 0 } }
-                    //    },
-                    //    executor: GenericExecutor,
-                    //    arithmeticPostconditions: new() {
-                    //        { "energy", -1 }
-                    //    },
-                    //    postconditions: new() {
-                    //        { "location", "work" }
-                    //    }
-                    //),
-                    //new(
-                    //    name: "Drive to store",
-                    //    cost: 2f,
-                    //    preconditions: new() {
-                    //        { "inCar", true }
-                    //    },
-                    //    comparativePreconditions: new() {
-                    //        { "energy", new() { Operator = ComparisonOperator.GreaterThan, Value = 0 } }
-                    //    },
-                    //    executor: GenericExecutor,
-                    //    arithmeticPostconditions: new() {
-                    //        { "energy", -1 }
-                    //    },
-                    //    postconditions: new() {
-                    //        { "location", "store" }
-                    //    }
-                    //),
                     new(
                         name: "Get in car",
                         cost: 1f,
                         preconditions: new() {
-                            { "inCar", false }
+                            { "inCar", false },
+                            { "justTraveled", false }
                         },
                         comparativePreconditions: new() {
                             { "energy", new() { Operator = ComparisonOperator.GreaterThan, Value = 0 } }
@@ -180,6 +132,9 @@ namespace Examples {
                             { "energy", -1 },
                             { "money", 1 }
                         },
+                        postconditions: new() {
+                            { "justTraveled", false }
+                        },
                         executor: GenericExecutor
                     ),
                     new(
@@ -197,6 +152,9 @@ namespace Examples {
                             { "energy", -1 },
                             { "money", -1 },
                             { "food", 1 }
+                        },
+                        postconditions: new() {
+                            { "justTraveled", false }
                         },
                         executor: GenericExecutor
                     )

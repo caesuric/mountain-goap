@@ -32,7 +32,6 @@ namespace MountainGoap {
         /// <param name="node">Node for which to retrieve neighbors.</param>
         /// <returns>The set of action/state combinations that can be executed after the current action/state combination.</returns>
         internal IEnumerable<ActionNode> Neighbors(ActionNode node) {
-#pragma warning disable S3267 // Loops should be simplified with "LINQ" expressions
             foreach (var otherNode in ActionNodes) {
                 if (otherNode.Action is not null && otherNode.Action.IsPossible(node.State)) {
                     var newNode = new ActionNode(otherNode.Action.Copy(), node.State.Copy(), otherNode.Parameters.Copy());
@@ -40,7 +39,6 @@ namespace MountainGoap {
                     yield return newNode;
                 }
             }
-#pragma warning restore S3267 // Loops should be simplified with "LINQ" expressions
         }
     }
 }
