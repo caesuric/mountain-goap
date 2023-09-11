@@ -19,7 +19,7 @@ namespace Examples {
             var agent = new Agent(
                 name: "Consumer Agent",
                 state: new() {
-                    { "food", 4 },
+                    { "food", 0 },
                     { "energy", 100 },
                     { "money", 0 },
                     { "inCar", false },
@@ -35,7 +35,17 @@ namespace Examples {
                                     Value = 5
                                 }
                             }
-                        })
+                        }),
+                    //new ComparativeGoal(
+                    //    name: "Get at least 5 money",
+                    //    desiredState: new() {
+                    //        {
+                    //            "money", new() {
+                    //                Operator = ComparisonOperator.GreaterThanOrEquals,
+                    //                Value = 5
+                    //            }
+                    //        }
+                    //    })
                     //new Goal(
                     //    name: "Get 5 food",
                     //    desiredState: new() {
