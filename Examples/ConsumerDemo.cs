@@ -14,12 +14,12 @@ namespace Examples {
         /// Runs the demo.
         /// </summary>
         internal static void Run() {
-            //_ = new DefaultLogger();
+            _ = new DefaultLogger();
             var locations = new List<string> { "home", "work", "store" };
             var agent = new Agent(
                 name: "Consumer Agent",
                 state: new() {
-                    { "food", 0 },
+                    { "food", 4 },
                     { "energy", 100 },
                     { "money", 0 },
                     { "inCar", false },
