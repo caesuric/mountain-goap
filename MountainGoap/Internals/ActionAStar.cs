@@ -56,6 +56,7 @@ namespace MountainGoap {
                         float priority = newCost + Heuristic(next, goal, current);
                         frontier.Enqueue(next, priority);
                         CameFrom[next] = current;
+                        Agent.TriggerOnEvaluatedActionNode(next, CameFrom);
                     }
                 }
             }

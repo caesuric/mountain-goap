@@ -15,10 +15,32 @@
             Agent.OnPlanningStarted += OnPlanningStarted;
             Agent.OnPlanningFinished += OnPlanningFinished;
             Agent.OnPlanningFinishedForSingleGoal += OnPlanningFinishedForSingleGoal;
+            Agent.OnPlanUpdated += OnPlanUpdated;
+            Agent.OnEvaluatedActionNode += OnEvaluatedActionNode;
             Action.OnBeginExecuteAction += OnBeginExecuteAction;
             Action.OnFinishExecuteAction += OnFinishExecuteAction;
             Sensor.OnSensorRun += OnSensorRun;
             logger = config.CreateLogger();
+        }
+
+        private void OnEvaluatedActionNode(ActionNode node, Dictionary<ActionNode, ActionNode> nodes) {
+            var cameFromList = new List<ActionNode>();
+            var traceback = node;
+            while (nodes.ContainsKey(traceback) && traceback.Action != nodes[traceback].Action) {
+                cameFromList.Add(traceback);
+                traceback = nodes[traceback];
+            }
+            cameFromList.Reverse();
+            logger.Information("Evaluating node {node} with {count} nodes leading to it.", node.Action?.Name, cameFromList.Count - 1);
+        }
+
+        private void OnPlanUpdated(Agent agent, List<Action> actionList) {
+            logger.Information("Agent {agent} has a new plan:", agent.Name);
+            var count = 1;
+            foreach (var action in actionList) {
+                logger.Information("\tStep #{count}: {action}", count, action.Name);
+                count++;
+            }
         }
 
         private void OnAgentActionSequenceCompleted(Agent agent) {

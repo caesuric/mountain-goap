@@ -9,22 +9,7 @@ namespace MountainGoap {
     /// <summary>
     /// Represents an action node in an action graph.
     /// </summary>
-    internal class ActionNode : FastPriorityQueueNode {
-        /// <summary>
-        /// The state of the world for this action node.
-        /// </summary>
-        internal Dictionary<string, object?> State;
-
-        /// <summary>
-        /// Parameters to be passed to the action.
-        /// </summary>
-        internal Dictionary<string, object?> Parameters;
-
-        /// <summary>
-        /// The action to be executed when the world is in the defined <see cref="State"/>.
-        /// </summary>
-        internal Action? Action;
-
+    public class ActionNode : FastPriorityQueueNode {
         /// <summary>
         /// Initializes a new instance of the <see cref="ActionNode"/> class.
         /// </summary>
@@ -38,7 +23,28 @@ namespace MountainGoap {
             Action?.SetParameters(Parameters);
         }
 
+        /// <summary>
+        /// Gets or sets the state of the world for this action node.
+        /// </summary>
+        public Dictionary<string, object?> State { get; set; }
+
+        /// <summary>
+        /// Gets or sets parameters to be passed to the action.
+        /// </summary>
+        public Dictionary<string, object?> Parameters { get; set; }
+
+        /// <summary>
+        /// Gets or sets the action to be executed when the world is in the defined <see cref="State"/>.
+        /// </summary>
+        public Action? Action { get; set; }
+
 #pragma warning disable S3875 // "operator==" should not be overloaded on reference types
+        /// <summary>
+        /// Overrides the equality operator on ActionNodes.
+        /// </summary>
+        /// <param name="node1">First node to be compared.</param>
+        /// <param name="node2">Second node to be compared.</param>
+        /// <returns>True if equal, otherwise false.</returns>
         public static bool operator ==(ActionNode? node1, ActionNode? node2) {
             if (node1 is null) return node2 is null;
             if (node2 is null) return node1 is null;
@@ -47,6 +53,12 @@ namespace MountainGoap {
         }
 #pragma warning restore S3875 // "operator==" should not be overloaded on reference types
 
+        /// <summary>
+        /// Overrides the inequality operator on ActionNodes.
+        /// </summary>
+        /// <param name="node1">First node to be compared.</param>
+        /// <param name="node2">Second node to be compared.</param>
+        /// <returns>True if unequal, otherwise false.</returns>
         public static bool operator !=(ActionNode? node1, ActionNode? node2) {
             if (node1 is null) return node2 is not null;
             if (node2 is null) return node1 is not null;
@@ -61,7 +73,6 @@ namespace MountainGoap {
         }
 
         /// <inheritdoc/>
-#pragma warning disable S2328 // "GetHashCode" should not reference mutable fields
         public override int GetHashCode() {
             var hashCode = 629302477;
             if (Action != null) hashCode = (hashCode * -1521134295) + EqualityComparer<Action>.Default.GetHashCode(Action);
@@ -69,7 +80,6 @@ namespace MountainGoap {
             hashCode = (hashCode * -1521134295) + EqualityComparer<Dictionary<string, object?>>.Default.GetHashCode(State);
             return hashCode;
         }
-#pragma warning restore S2328 // "GetHashCode" should not reference mutable fields
 
         /// <summary>
         /// Cost to traverse this node.

@@ -65,6 +65,16 @@ namespace MountainGoap {
         public static event PlanningFinishedEvent OnPlanningFinished = (agent, goal, utility) => { };
 
         /// <summary>
+        /// Event that fires when a new plan is finalized for the agent.
+        /// </summary>
+        public static event PlanUpdatedEvent OnPlanUpdated = (agent, actionList) => { };
+
+        /// <summary>
+        /// Event that fires when the pathfinder evaluates a single node in the action graph.
+        /// </summary>
+        public static event EvaluatedActionNodeEvent OnEvaluatedActionNode = (node, nodes) => { };
+
+        /// <summary>
         /// Gets or sets the current world state from the agent perspective.
         /// </summary>
         public Dictionary<string, object?> State { get; set; } = new();
@@ -141,6 +151,24 @@ namespace MountainGoap {
         /// <param name="utility">Utility of the plan.</param>
         internal static void TriggerOnPlanningFinished(Agent agent, BaseGoal? goal, float utility) {
             OnPlanningFinished(agent, goal, utility);
+        }
+
+        /// <summary>
+        /// Triggers OnPlanUpdated event.
+        /// </summary>
+        /// <param name="agent">Agent for which the plan was updated.</param>
+        /// <param name="actionList">New action list for the agent.</param>
+        internal static void TriggerOnPlanUpdated(Agent agent, List<Action> actionList) {
+            OnPlanUpdated(agent, actionList);
+        }
+
+        /// <summary>
+        /// Triggers OnEvaluatedActionNode event.
+        /// </summary>
+        /// <param name="node">Action node being evaluated.</param>
+        /// <param name="nodes">List of nodes in the path that led to this point.</param>
+        internal static void TriggerOnEvaluatedActionNode(ActionNode node, Dictionary<ActionNode, ActionNode> nodes) {
+            OnEvaluatedActionNode(node, nodes);
         }
 
         /// <summary>

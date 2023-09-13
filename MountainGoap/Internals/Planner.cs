@@ -57,6 +57,7 @@ namespace MountainGoap {
             }
             actionList.Reverse();
             agent.CurrentActionSequences.Add(actionList);
+            Agent.TriggerOnPlanUpdated(agent, actionList);
         }
     }
 }
