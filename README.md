@@ -301,6 +301,10 @@ The following events are available on agents:
     -   Example usage: `Agent.OnPlanningFinished += (Agent agent, Goal? goal, float utility) => { Console.WriteLine("Agent finished planning."); };`
 -   OnPlanningFinishedForSingleGoal: Called when the agent finishes planning for a single goal.
     -   Example usage: `Agent.OnPlanningFinishedForSingleGoal += (Agent agent, Goal goal, float utility) => { Console.WriteLine("Agent finished planning for a single goal."); };`
+-   OnPlanUpdated: Called when the agent generates a viable action sequence.
+    -   Example usage: `Agent.OnPlanUpdated += (Agent agent, List<Action> actionList) => { Console.WriteLine("Agent generated a viable action sequence."); };`
+-   OnEvaluatedActionNode: Extremely low level debugging tool, called whenever the agent evaluates a potentially viable node in the action graph. The second parameter is a dictionary of all nodes that have been evaluated so far, with the keys as the most recent nodes and the values as the nodes that preceded them. You can use this to reconstruct the chain of actions that led to this point.
+    -   Example usage: `Agent.OnEvaluatedActionNode(ActionNode node, Dictionary<ActionNode, ActionNode> nodes) => { Console.WriteLine("Agent evaluated a node.")}`
 
 ### Action events
 
