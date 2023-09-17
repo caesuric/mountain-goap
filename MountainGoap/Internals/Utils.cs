@@ -75,6 +75,13 @@ namespace MountainGoap {
             return false;
         }
 
+        /// <summary>
+        /// Indicates whether or not a goal is met by an action node.
+        /// </summary>
+        /// <param name="goal">Goal to be met.</param>
+        /// <param name="actionNode">Action node being tested.</param>
+        /// <param name="current">Prior node in the action chain.</param>
+        /// <returns>True if the goal is met, otherwise false.</returns>
         internal static bool MeetsGoal(BaseGoal goal, ActionNode actionNode, ActionNode current) {
             if (goal is Goal normalGoal) {
 #pragma warning disable S3267 // Loops should be simplified with "LINQ" expressions

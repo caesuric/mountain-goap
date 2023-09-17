@@ -145,7 +145,12 @@ namespace MountainGoap {
         /// <param name="currentState">State as it will be when cost is relevant.</param>
         /// <returns>The cost of the action.</returns>
         public float GetCost(Dictionary<string, object?> currentState) {
-            return costCallback(this, currentState);
+            try {
+                return costCallback(this, currentState);
+            }
+            catch {
+                return float.MaxValue;
+            }
         }
 
         /// <summary>
