@@ -13,7 +13,8 @@ namespace MountainGoap {
         /// Makes a plan to achieve the agent's goals.
         /// </summary>
         /// <param name="agent">Agent using the planner.</param>
-        internal static void Plan(Agent agent) {
+        /// <param name="costMaximum">Maximum allowable cost for a plan.</param>
+        internal static void Plan(Agent agent, float costMaximum) {
             Agent.TriggerOnPlanningStarted(agent);
             float bestPlanUtility = 0;
             ActionAStar? astar;
@@ -23,7 +24,7 @@ namespace MountainGoap {
             foreach (var goal in agent.Goals) {
                 ActionGraph graph = new(agent.Actions, agent.State);
                 ActionNode start = new(null, agent.State, new());
-                astar = new(graph, start, goal);
+                astar = new(graph, start, goal, costMaximum);
                 cursor = astar.FinalPoint;
                 if (cursor is not null && astar.CostSoFar[cursor] == 0) Agent.TriggerOnPlanningFinishedForSingleGoal(agent, goal, 0);
                 else if (cursor is not null) Agent.TriggerOnPlanningFinishedForSingleGoal(agent, goal, goal.Weight / astar.CostSoFar[cursor]);

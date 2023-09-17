@@ -37,7 +37,8 @@ namespace MountainGoap {
         /// <param name="graph">Graph to be traversed.</param>
         /// <param name="start">Action from which to start.</param>
         /// <param name="goal">Goal state to be achieved.</param>
-        internal ActionAStar(ActionGraph graph, ActionNode start, BaseGoal goal) {
+        /// <param name="costMaximum">Maximum allowable cost for a plan.</param>
+        internal ActionAStar(ActionGraph graph, ActionNode start, BaseGoal goal, float costMaximum) {
             this.goal = goal;
             FastPriorityQueue<ActionNode> frontier = new(100000);
             frontier.Enqueue(start, 0);
@@ -51,6 +52,7 @@ namespace MountainGoap {
                 }
                 foreach (var next in graph.Neighbors(current)) {
                     float newCost = CostSoFar[current] + next.Cost(current.State);
+                    if (newCost > costMaximum) continue;
                     if (!CostSoFar.ContainsKey(next) || newCost < CostSoFar[next]) {
                         CostSoFar[next] = newCost;
                         float priority = newCost + Heuristic(next, goal, current);
