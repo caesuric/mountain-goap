@@ -22,6 +22,14 @@ namespace MountainGoap {
         internal List<List<Action>> CurrentActionSequences = new();
 
         /// <summary>
+        /// Gets the current action sequences.
+        /// </summary>
+        public List<List<Action>> GetCurrentActionSequences()
+        {
+            return CurrentActionSequences;
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Agent"/> class.
         /// </summary>
         /// <param name="name">Name of the agent.</param>
