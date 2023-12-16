@@ -217,6 +217,8 @@ Action heal = new Action(
 );
 ```
 
+Arithmetic postconditions are meant to be used with [Comparative Goals](#comparative-goals). They don't apply to normal Goals.
+
 #### Parameter Postconditions
 
 **Parameter postconditions** are postconditions that copy one of the parameters passed to the action into the agent state. The structure uses a dictionary of string keys and string values, where the keys are the keys to the parameter value being copied and the values are the state key into which you are copying the value.
