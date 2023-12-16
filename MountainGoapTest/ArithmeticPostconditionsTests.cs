@@ -9,11 +9,11 @@ namespace MountainGoapTest
     public class ArithmeticPostconditionsTests
     {
         [Fact]
-        public void MinimalExampleText()
+        public void MinimalExampleTest()
         {
 
             List<BaseGoal> goals = new List<BaseGoal>(){
-                new Goal(
+                new ComparativeGoal(
                     name: "Goal1",
                     desiredState: new() {
                         { "i", new ComparisonValuePair {
@@ -48,7 +48,8 @@ namespace MountainGoapTest
 
             agent.Step(StepMode.OneAction);
             Assert.Equal(10, agent.State["i"]);
-
+            agent.Step(StepMode.OneAction);
+            Assert.Equal(20, agent.State["i"]);
         }
     }
 }
