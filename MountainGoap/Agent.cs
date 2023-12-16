@@ -19,7 +19,12 @@ namespace MountainGoap {
         /// <summary>
         /// Chains of actions currently being performed by the agent.
         /// </summary>
-        internal List<List<Action>> CurrentActionSequences = new();
+        private List<List<Action>> CurrentActionSequences = new();
+
+        public List<List<Action>> GetCurrentActionSequences()
+        {
+            return CurrentActionSequences;
+        }   
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Agent"/> class.
