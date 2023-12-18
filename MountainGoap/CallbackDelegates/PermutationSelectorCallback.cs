@@ -3,6 +3,7 @@
 // </copyright>
 
 namespace MountainGoap {
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
 
     /// <summary>
@@ -10,5 +11,5 @@ namespace MountainGoap {
     /// </summary>
     /// <param name="state">Current world state.</param>
     /// <returns>A list with each parameter set to be tried for the action.</returns>
-    public delegate List<object> PermutationSelectorCallback(Dictionary<string, object?> state);
+    public delegate List<object> PermutationSelectorCallback(ConcurrentDictionary<string, object?> state);
 }

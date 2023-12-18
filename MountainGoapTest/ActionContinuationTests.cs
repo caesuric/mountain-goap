@@ -1,4 +1,5 @@
 ﻿namespace MountainGoapTest {
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
 
     public class ActionContinuationTests {

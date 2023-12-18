@@ -3,6 +3,7 @@
 // </copyright>
 namespace MountainGoap {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
@@ -144,7 +145,7 @@ namespace MountainGoap {
         /// </summary>
         /// <param name="currentState">State as it will be when cost is relevant.</param>
         /// <returns>The cost of the action.</returns>
-        public float GetCost(Dictionary<string, object?> currentState) {
+        public float GetCost(ConcurrentDictionary<string, object?> currentState) {
             try {
                 return costCallback(this, currentState);
             }
@@ -178,7 +179,7 @@ namespace MountainGoap {
         /// </summary>
         /// <param name="state">The current world state.</param>
         /// <returns>True if the action is possible, otherwise false.</returns>
-        internal bool IsPossible(Dictionary<string, object?> state) {
+        internal bool IsPossible(ConcurrentDictionary<string, object?> state) {
             foreach (var kvp in preconditions) {
                 if (!state.ContainsKey(kvp.Key)) return false;
                 if (state[kvp.Key] == null && state[kvp.Key] != kvp.Value) return false;
@@ -204,7 +205,7 @@ namespace MountainGoap {
         /// </summary>
         /// <param name="state">World state when the action would be performed.</param>
         /// <returns>A list of possible parameter dictionaries that could be used.</returns>
-        internal List<Dictionary<string, object?>> GetPermutations(Dictionary<string, object?> state) {
+        internal List<Dictionary<string, object?>> GetPermutations(ConcurrentDictionary<string, object?> state) {
             List<Dictionary<string, object?>> combinedOutputs = new();
             Dictionary<string, List<object>> outputs = new();
             foreach (var kvp in permutationSelectors) outputs[kvp.Key] = kvp.Value(state);
@@ -232,7 +233,7 @@ namespace MountainGoap {
         /// Applies the effects of the action.
         /// </summary>
         /// <param name="state">World state to which to apply effects.</param>
-        internal void ApplyEffects(Dictionary<string, object?> state) {
+        internal void ApplyEffects(ConcurrentDictionary<string, object?> state) {
             foreach (var kvp in postconditions) state[kvp.Key] = kvp.Value;
             foreach (var kvp in arithmeticPostconditions) {
                 if (!state.ContainsKey(kvp.Key)) continue;
@@ -284,7 +285,7 @@ namespace MountainGoap {
         }
 
 #pragma warning disable S1172 // Unused method parameters should be removed
-        private static float DefaultCostCallback(Action action, Dictionary<string, object?> currentState) {
+        private static float DefaultCostCallback(Action action, ConcurrentDictionary<string, object?> currentState) {
             return action.cost;
         }
 #pragma warning restore S1172 // Unused method parameters should be removed

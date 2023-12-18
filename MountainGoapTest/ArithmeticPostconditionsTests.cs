@@ -12,7 +12,7 @@ namespace MountainGoapTest
         public void MinimalExampleTest()
         {
 
-            List<BaseGoal> goals = new List<BaseGoal>(){
+            List<BaseGoal> goals = new() {
                 new ComparativeGoal(
                     name: "Goal1",
                     desiredState: new() {
@@ -25,7 +25,7 @@ namespace MountainGoapTest
                 ),
             };
 
-            List<MountainGoap.Action> actions = new List<MountainGoap.Action>(){
+            List<MountainGoap.Action> actions = new() {
                 new MountainGoap.Action(
                     name: "Action1",
                     executor: (Agent agent, MountainGoap.Action action) => {
@@ -38,7 +38,7 @@ namespace MountainGoapTest
                 ),
             };
 
-            Agent agent = new Agent(
+            Agent agent = new(
                 goals: goals,
                 actions: actions,
                 state: new() {

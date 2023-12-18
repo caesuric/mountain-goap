@@ -3,11 +3,13 @@
 // </copyright>
 
 namespace MountainGoap {
+    using System.Collections.Concurrent;
+
     /// <summary>
     /// Delegate type for a callback that defines the cost of an action.
     /// </summary>
     /// <param name="action">Action being executed.</param>
     /// <param name="currentState">State as it will be when cost is relevant.</param>
     /// <returns>Cost of the action.</returns>
-    public delegate float CostCallback(Action action, Dictionary<string, object?> currentState);
+    public delegate float CostCallback(Action action, ConcurrentDictionary<string, object?> currentState);
 }

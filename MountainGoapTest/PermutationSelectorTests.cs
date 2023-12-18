@@ -8,7 +8,7 @@
             var selector = PermutationSelectorGenerators.SelectFromCollectionInState<int>("collection");
             var agent = new Agent(
                 name: "sample agent",
-                state: new Dictionary<string, object?> {
+                state: new() {
                     { "collection", collection },
                     { "goalAchieved", false }
                 },

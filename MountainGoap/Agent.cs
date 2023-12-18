@@ -4,6 +4,7 @@
 
 namespace MountainGoap {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Threading;
 
@@ -26,7 +27,7 @@ namespace MountainGoap {
         /// <param name="actions">Actions available to the agent.</param>
         /// <param name="sensors">Sensors available to the agent.</param>
         /// <param name="costMaximum">Maximum cost of an allowable plan.</param>
-        public Agent(string? name = null, Dictionary<string, object?>? state = null, Dictionary<string, object?>? memory = null, List<BaseGoal>? goals = null, List<Action>? actions = null, List<Sensor>? sensors = null, float costMaximum = float.MaxValue) {
+        public Agent(string? name = null, ConcurrentDictionary<string, object?>? state = null, Dictionary<string, object?>? memory = null, List<BaseGoal>? goals = null, List<Action>? actions = null, List<Sensor>? sensors = null, float costMaximum = float.MaxValue) {
             Name = name ?? $"Agent {Guid.NewGuid()}";
             if (state != null) State = state;
             if (memory != null) Memory = memory;
@@ -72,14 +73,14 @@ namespace MountainGoap {
         public static event EvaluatedActionNodeEvent OnEvaluatedActionNode = (node, nodes) => { };
 
         /// <summary>
-        /// Chains of actions currently being performed by the agent.
+        /// Gets the chains of actions currently being performed by the agent.
         /// </summary>
-        public List<List<Action>> CurrentActionSequences { get; set; } = new();
+        public List<List<Action>> CurrentActionSequences { get; } = new();
 
         /// <summary>
         /// Gets or sets the current world state from the agent perspective.
         /// </summary>
-        public Dictionary<string, object?> State { get; set; } = new();
+        public ConcurrentDictionary<string, object?> State { get; set; } = new();
 
         /// <summary>
         /// Gets or sets the memory storage object for the agent.
@@ -104,7 +105,7 @@ namespace MountainGoap {
         /// <summary>
         /// Gets or sets the plan cost maximum for the agent.
         /// </summary>
-        public float CostMaximum { get; set; } = new();
+        public float CostMaximum { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the agent is currently executing one or more actions.

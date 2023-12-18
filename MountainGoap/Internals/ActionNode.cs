@@ -3,6 +3,7 @@
 // </copyright>
 
 namespace MountainGoap {
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using Priority_Queue;
 
@@ -16,7 +17,7 @@ namespace MountainGoap {
         /// <param name="action">Action to be assigned to the node.</param>
         /// <param name="state">State to be assigned to the node.</param>
         /// <param name="parameters">Paramters to be passed to the action in the node.</param>
-        internal ActionNode(Action? action, Dictionary<string, object?> state, Dictionary<string, object?> parameters) {
+        internal ActionNode(Action? action, ConcurrentDictionary<string, object?> state, Dictionary<string, object?> parameters) {
             if (action != null) Action = action.Copy();
             State = state.Copy();
             Parameters = parameters.Copy();
@@ -26,7 +27,7 @@ namespace MountainGoap {
         /// <summary>
         /// Gets or sets the state of the world for this action node.
         /// </summary>
-        public Dictionary<string, object?> State { get; set; }
+        public ConcurrentDictionary<string, object?> State { get; set; }
 
         /// <summary>
         /// Gets or sets parameters to be passed to the action.
@@ -77,7 +78,7 @@ namespace MountainGoap {
             var hashCode = 629302477;
             if (Action != null) hashCode = (hashCode * -1521134295) + EqualityComparer<Action>.Default.GetHashCode(Action);
             else hashCode *= -1521134295;
-            hashCode = (hashCode * -1521134295) + EqualityComparer<Dictionary<string, object?>>.Default.GetHashCode(State);
+            hashCode = (hashCode * -1521134295) + EqualityComparer<ConcurrentDictionary<string, object?>>.Default.GetHashCode(State);
             return hashCode;
         }
 
@@ -86,7 +87,7 @@ namespace MountainGoap {
         /// </summary>
         /// <param name="currentState">Current state after previous node is executed.</param>
         /// <returns>The cost of the action to be executed.</returns>
-        internal float Cost(Dictionary<string, object?> currentState) {
+        internal float Cost(ConcurrentDictionary<string, object?> currentState) {
             if (Action == null) return float.MaxValue;
             return Action.GetCost(currentState);
         }
