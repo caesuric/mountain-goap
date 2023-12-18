@@ -17,19 +17,6 @@ namespace MountainGoap {
         public readonly string Name;
 
         /// <summary>
-        /// Chains of actions currently being performed by the agent.
-        /// </summary>
-        internal List<List<Action>> CurrentActionSequences = new();
-
-        /// <summary>
-        /// Gets the current action sequences.
-        /// </summary>
-        public List<List<Action>> GetCurrentActionSequences()
-        {
-            return CurrentActionSequences;
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="Agent"/> class.
         /// </summary>
         /// <param name="name">Name of the agent.</param>
@@ -83,6 +70,11 @@ namespace MountainGoap {
         /// Event that fires when the pathfinder evaluates a single node in the action graph.
         /// </summary>
         public static event EvaluatedActionNodeEvent OnEvaluatedActionNode = (node, nodes) => { };
+
+        /// <summary>
+        /// Chains of actions currently being performed by the agent.
+        /// </summary>
+        public List<List<Action>> CurrentActionSequences { get; set; } = new();
 
         /// <summary>
         /// Gets or sets the current world state from the agent perspective.
