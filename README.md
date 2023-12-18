@@ -217,6 +217,8 @@ Action heal = new Action(
 );
 ```
 
+Note that [normal Goals](#goals) use simple equality checks and cannot tell that a value is closer or further away from the goal value. If you want to use an arithmetic postcondition and have the library detect that you are moving closer to your goal, use [Comparative Goals](#comparative-goals) or [Extreme Goals](#extreme-goals). Both of these types of numerically based goals will calculate distance from a numeric goal value properly.
+
 #### Parameter Postconditions
 
 **Parameter postconditions** are postconditions that copy one of the parameters passed to the action into the agent state. The structure uses a dictionary of string keys and string values, where the keys are the keys to the parameter value being copied and the values are the state key into which you are copying the value.
