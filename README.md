@@ -217,7 +217,7 @@ Action heal = new Action(
 );
 ```
 
-Arithmetic postconditions are meant to be used with [Comparative Goals](#comparative-goals). They don't apply to normal Goals.
+Note that [normal Goals](#goals) use simple equality checks and cannot tell that a value is closer or further away from the goal value. If you want to use an arithmetic postcondition and have the library detect that you are moving closer to your goal, use [Comparative Goals](#comparative-goals) or [Extreme Goals](#extreme-goals). Both of these types of numerically based goals will calculate distance from a numeric goal properly.
 
 #### Parameter Postconditions
 
