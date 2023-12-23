@@ -75,7 +75,6 @@ namespace MountainGoap {
             return false;
         }
 
-
         /// <summary>
         /// Indicates whether or not a goal is met by an action node.
         /// </summary>
@@ -117,6 +116,5 @@ namespace MountainGoap {
             }
             return true;
         }
-
     }
 }
