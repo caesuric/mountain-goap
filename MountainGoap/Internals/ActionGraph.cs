@@ -3,6 +3,7 @@
 // </copyright>
 
 namespace MountainGoap {
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
 
     /// <summary>
@@ -19,7 +20,7 @@ namespace MountainGoap {
         /// </summary>
         /// <param name="actions">List of actions to include in the graph.</param>
         /// <param name="state">Initial state to be used.</param>
-        internal ActionGraph(List<Action> actions, Dictionary<string, object?> state) {
+        internal ActionGraph(List<Action> actions, ConcurrentDictionary<string, object?> state) {
             foreach (var action in actions) {
                 var permutations = action.GetPermutations(state);
                 foreach (var permutation in permutations) ActionNodes.Add(new(action, state, permutation));
