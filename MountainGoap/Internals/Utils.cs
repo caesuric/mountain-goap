@@ -97,8 +97,8 @@ namespace MountainGoap {
                 foreach (var kvp in extremeGoal.DesiredState) {
                     if (!actionNode.State.ContainsKey(kvp.Key)) return false;
                     else if (!current.State.ContainsKey(kvp.Key)) return false;
-                    else if (kvp.Value && actionNode.State[kvp.Key] is object a && current.State[kvp.Key] is object b && IsLowerThan(a, b)) return false;
-                    else if (!kvp.Value && actionNode.State[kvp.Key] is object a2 && current.State[kvp.Key] is object b2 && IsHigherThan(a2, b2)) return false;
+                    else if (kvp.Value && actionNode.State[kvp.Key] is object a && current.State[kvp.Key] is object b && IsLowerThanOrEquals(a, b)) return false;
+                    else if (!kvp.Value && actionNode.State[kvp.Key] is object a2 && current.State[kvp.Key] is object b2 && IsHigherThanOrEquals(a2, b2)) return false;
                 }
             }
             else if (goal is ComparativeGoal comparativeGoal) {

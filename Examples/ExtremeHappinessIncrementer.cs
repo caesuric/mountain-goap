@@ -19,6 +19,7 @@ namespace Examples {
                 name: "Happiness Agent",
                 state: new() {
                     { "happiness", 0 },
+                    { "health", false },
                 },
                 goals: new() {
                     new ExtremeGoal(
@@ -31,6 +32,9 @@ namespace Examples {
                     new(
                         name: "Seek Happiness",
                         executor: SeekHappinessAction,
+                        preconditions: new() {
+                            { "health", true }
+                        },
                         arithmeticPostconditions: new() {
                             {
                                 "happiness",
@@ -41,13 +45,26 @@ namespace Examples {
                     new(
                         name: "Seek Greater Happiness",
                         executor: SeekGreaterHappinessAction,
+                        preconditions: new() {
+                            { "health", true }
+                        },
                         arithmeticPostconditions: new() {
                             {
                                 "happiness",
                                 2
                             }
                         }
-                    )
+                    ),
+                    new(
+                        name: "Seek Health",
+                        executor: SeekHealth,
+                        postconditions: new() {
+                            {
+                                "health",
+                                true
+                            }
+                        }
+                    ),
                 }
             );
             while (agent.State["happiness"] is int happiness && happiness != 10) {
@@ -63,6 +80,11 @@ namespace Examples {
 
         private static ExecutionStatus SeekGreaterHappinessAction(Agent agent, Action action) {
             Console.WriteLine("Seeking even greater happiness.");
+            return ExecutionStatus.Succeeded;
+        }
+
+        private static ExecutionStatus SeekHealth(Agent agent, Action action) {
+            Console.WriteLine("Seeking health.");
             return ExecutionStatus.Succeeded;
         }
     }
