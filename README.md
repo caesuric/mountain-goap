@@ -26,7 +26,8 @@ Mountain GOAP favors composition over inheritance, allowing you to create agents
     4. [Sensors](#sensors)
     5. [Permutation selectors](#permutation-selectors)
     6. [Cost callbacks](#cost-callbacks)
-    7. [Full API Docs](#full-api-docs)
+    7. [State mutators](#state-mutators)
+    8. [Full API Docs](#full-api-docs)
 3. [Events](#events)
     1. [Agent events](#agent-events)
     2. [Action events](#action-events)
@@ -302,6 +303,24 @@ Action moveToTarget = new Action(
         else return float.MaxValue;
     }
 );
+```
+
+### State Mutators
+
+**State mutators** allow you to mutate the agent state during execution or evaluation of an action. This is useful for actions that have more complex side effects on agent state. For instance, if you have an action that moves the agent to a target, you might want to mutate the agent state to reflect the new position of the agent. You can do this by passing a state mutator to the action constructor:
+
+```csharp
+Action moveToTarget = newAction(
+    executor: (Agent agent, Action action) => {
+        Console.WriteLine("moved to target");
+        return ExecutionStatus.Succeeded;
+    },
+    stateMutator: (action, state) => {
+        if (action.GetParameter("target") is Agent target) {
+            state["position"] = target.State["position"];
+        }
+    }
+)
 ```
 
 ### Full API Docs

@@ -61,6 +61,8 @@ namespace MountainGoap {
         /// </summary>
         private readonly Dictionary<string, string> parameterPostconditions = new();
 
+        private readonly StateMutatorCallback? stateMutator;
+
         /// <summary>
         /// Parameters to be passed to the action.
         /// </summary>
@@ -79,7 +81,8 @@ namespace MountainGoap {
         /// <param name="postconditions">Postconditions applied after the action is successfully executed.</param>
         /// <param name="arithmeticPostconditions">Arithmetic postconditions added to state after the action is successfully executed.</param>
         /// <param name="parameterPostconditions">Parameter postconditions copied to state after the action is successfully executed.</param>
-        public Action(string? name = null, Dictionary<string, PermutationSelectorCallback>? permutationSelectors = null, ExecutorCallback? executor = null, float cost = 1f, CostCallback? costCallback = null, Dictionary<string, object?>? preconditions = null, Dictionary<string, ComparisonValuePair>? comparativePreconditions = null, Dictionary<string, object?>? postconditions = null, Dictionary<string, object>? arithmeticPostconditions = null, Dictionary<string, string>? parameterPostconditions = null) {
+        /// <param name="stateMutator">Callback for modifying state after action execution or evaluation.</param>
+        public Action(string? name = null, Dictionary<string, PermutationSelectorCallback>? permutationSelectors = null, ExecutorCallback? executor = null, float cost = 1f, CostCallback? costCallback = null, Dictionary<string, object?>? preconditions = null, Dictionary<string, ComparisonValuePair>? comparativePreconditions = null, Dictionary<string, object?>? postconditions = null, Dictionary<string, object>? arithmeticPostconditions = null, Dictionary<string, string>? parameterPostconditions = null, StateMutatorCallback? stateMutator = null) {
             if (permutationSelectors == null) this.permutationSelectors = new();
             else this.permutationSelectors = permutationSelectors;
             if (executor == null) this.executor = DefaultExecutorCallback;
@@ -92,6 +95,7 @@ namespace MountainGoap {
             if (postconditions != null) this.postconditions = postconditions;
             if (arithmeticPostconditions != null) this.arithmeticPostconditions = arithmeticPostconditions;
             if (parameterPostconditions != null) this.parameterPostconditions = parameterPostconditions;
+            if (stateMutator != null) this.stateMutator = stateMutator;
         }
 
         /// <summary>
@@ -114,7 +118,7 @@ namespace MountainGoap {
         /// </summary>
         /// <returns>A copy of the action.</returns>
         public Action Copy() {
-            var newAction = new Action(Name, permutationSelectors, executor, cost, costCallback, preconditions.Copy(), comparativePreconditions.Copy(), postconditions.Copy(), arithmeticPostconditions.CopyNonNullable(), parameterPostconditions.Copy()) {
+            var newAction = new Action(Name, permutationSelectors, executor, cost, costCallback, preconditions.Copy(), comparativePreconditions.Copy(), postconditions.Copy(), arithmeticPostconditions.CopyNonNullable(), parameterPostconditions.Copy(), stateMutator) {
                 parameters = parameters.Copy()
             };
             return newAction;
@@ -247,6 +251,7 @@ namespace MountainGoap {
                 if (!parameters.ContainsKey(kvp.Key)) continue;
                 state[kvp.Value] = parameters[kvp.Key];
             }
+            stateMutator?.Invoke(this, state);
         }
 
         /// <summary>
