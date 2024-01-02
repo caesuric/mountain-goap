@@ -25,7 +25,8 @@ Mountain GOAP favors composition over inheritance, allowing you to create agents
         3. [Parameter Postconditions](#parameter-postconditions)
     4. [Sensors](#sensors)
     5. [Permutation selectors](#permutation-selectors)
-    6. [Full API Docs](#full-api-docs)
+    6. [Cost callbacks](#cost-callbacks)
+    7. [Full API Docs](#full-api-docs)
 3. [Events](#events)
     1. [Agent events](#agent-events)
     2. [Action events](#action-events)
@@ -279,7 +280,27 @@ Action myAction = new Action(
 );
 ```
 
-The code above will create an action that when evaluated for execution in an agent plan will be considered once for every pair combination of elements in the "otherAgents" collection of the agent state, one for `target1`, and one for `target2`. In order to take advantage of this feature, you can also calculate variable costs based on action parameters using the `costCallback` argument in the `Action` constructor.
+The code above will create an action that when evaluated for execution in an agent plan will be considered once for every pair combination of elements in the "otherAgents" collection of the agent state, one for `target1`, and one for `target2`. In order to take advantage of this feature, you can also calculate variable costs based on action parameters using the `costCallback` argument in the `Action` constructor. See [cost callbacks](#cost-callbacks) for more information.
+
+### Cost Callbacks
+
+**Cost callbacks** allow you to calculate the cost of an action based on its parameters. This is useful for actions that have variable costs based on the parameters passed to them. For instance, if you have an action that moves the agent to a target, you might want to calculate the cost of the action based on the distance to the target. You can do this by passing a cost callback to the action constructor:
+
+```csharp
+Action moveToTarget = new Action(
+    executor: (Agent agent, Action action) => {
+        Console.WriteLine("moved to target");
+        return ExecutionStatus.Succeeded;
+    },
+    costCallback: (action, state) => {
+        if (action.GetParameter("target") is Agent target) {
+            var distance = GetDistance(this, target);
+            return distance;
+        }
+        else return float.MaxValue;
+    }
+);
+```
 
 ### Full API Docs
 
