@@ -72,7 +72,7 @@ namespace MountainGoap {
         public static event EvaluatedActionNodeEvent OnEvaluatedActionNode = (node, nodes) => { };
 
         /// <summary>
-        /// Chains of actions currently being performed by the agent.
+        /// Gets or sets the chains of actions currently being performed by the agent.
         /// </summary>
         public List<List<Action>> CurrentActionSequences { get; set; } = new();
 
@@ -104,7 +104,7 @@ namespace MountainGoap {
         /// <summary>
         /// Gets or sets the plan cost maximum for the agent.
         /// </summary>
-        public float CostMaximum { get; set; } = new();
+        public float CostMaximum { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the agent is currently executing one or more actions.
@@ -130,6 +130,41 @@ namespace MountainGoap {
             if (!IsBusy) Planner.Plan(this, CostMaximum);
             if (mode == StepMode.OneAction) Execute();
             else if (mode == StepMode.AllActions) while (IsBusy) Execute();
+        }
+
+        /// <summary>
+        /// Clears the current action sequences (also known as plans).
+        /// </summary>
+        public void ClearPlan() {
+            CurrentActionSequences.Clear();
+        }
+
+        /// <summary>
+        /// Makes a plan.
+        /// </summary>
+        public void Plan() {
+            if (!IsBusy && !IsPlanning) {
+                IsPlanning = true;
+                Planner.Plan(this, CostMaximum);
+            }
+        }
+
+        /// <summary>
+        /// Makes a plan asynchronously.
+        /// </summary>
+        public void PlanAsync() {
+            if (!IsBusy && !IsPlanning) {
+                IsPlanning = true;
+                var t = new Thread(new ThreadStart(() => { Planner.Plan(this, CostMaximum); }));
+                t.Start();
+            }
+        }
+
+        /// <summary>
+        /// Executes the current plan.
+        /// </summary>
+        public void ExecutePlan() {
+            if (!IsPlanning) Execute();
         }
 
         /// <summary>

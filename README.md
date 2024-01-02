@@ -84,6 +84,8 @@ When you want your agent to act, just call the following:
 
 What kind of timeframe is represented by a "step" will vary based on your engine. In a turn based game, a step might be one turn. In a realtime engine like Unity, you might call `agent.Step()` on every `Update()` cycle. In a turn-based game you will probably want to call `agent.Step()` on every turn. In the case of turn-based games, you can force at least one action to be taken per turn by calling `agent.Step(mode: StepMode.OneAction)`. If you want the entire action sequence to be completed in one turn, you can call `agent.Step(mode: StepMode.AllActions)`.
 
+For additional granularity, you can also call the functions `agent.Plan()`, `agent.ClearPlan()`, `agent.PlanAsync()`, and `agent.ExecutePlan()`. See the full API docs for additional details.
+
 #### Agent state
 
 The agent stores a dictionary of objects called its **state**. This state can include anything, but simple values work best with [goals](#goals) and [actions](#actions). If you need to reference complex game state, however, this is not a problem -- [sensors](#sensors), covered below, can be used to translate complex values like map states into simpler ones, like booleans. More on that below.
