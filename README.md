@@ -27,7 +27,8 @@ Mountain GOAP favors composition over inheritance, allowing you to create agents
     5. [Permutation selectors](#permutation-selectors)
     6. [Cost callbacks](#cost-callbacks)
     7. [State mutators](#state-mutators)
-    8. [Full API Docs](#full-api-docs)
+    8. [State checkers](#state-checkers)
+    9. [Full API Docs](#full-api-docs)
 3. [Events](#events)
     1. [Agent events](#agent-events)
     2. [Action events](#action-events)
@@ -321,6 +322,27 @@ Action moveToTarget = newAction(
         }
     }
 )
+```
+
+### State Checkers
+
+**State checkers** allow you to check agent state programmatically during execution or evaluation of an action. This is useful for actions that have more complex preconditions than simple equality checks or arithmetic comparisons. For instance, if you have an action that moves the agent to a target, you might want to check that the target is in range. You can do this by passing a state checker to the action constructor:
+
+```csharp
+Action moveToTarget = new Action(
+    executor: (Agent agent, Action action) => {
+        Console.WriteLine("moved to target");
+        return ExecutionStatus.Succeeded;
+    },
+    stateChecker: (action, state) => {
+        if (action.GetParameter("target") is Agent target) {
+            var distance = GetDistance(this, target);
+            if (distance > 10) return false;
+            else return true;
+        }
+        return false;
+    }
+);
 ```
 
 ### Full API Docs
