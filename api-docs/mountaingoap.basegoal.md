@@ -19,21 +19,3 @@ Name of the goal.
 ```csharp
 public string Name;
 ```
-
-## Constructors
-
-### **BaseGoal(String, Single)**
-
-Initializes a new instance of the [BaseGoal](./mountaingoap.basegoal.md) class.
-
-```csharp
-public BaseGoal(string name, float weight)
-```
-
-#### Parameters
-
-`name` [String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
-Name of the goal.
-
-`weight` [Single](https://docs.microsoft.com/en-us/dotnet/api/system.single)<br>
-Weight to give the goal.
