@@ -52,6 +52,11 @@ namespace MountainGoap {
         public static event PlanningStartedEvent OnPlanningStarted = (agent) => { };
 
         /// <summary>
+        /// Event that fires when planning for a single goal starts.
+        /// </summary>
+        public static event PlanningStartedForSingleGoalEvent OnPlanningStartedForSingleGoal = (agent, goal) => { };
+
+        /// <summary>
         /// Event that fires when planning for a single goal finishes.
         /// </summary>
         public static event PlanningFinishedForSingleGoalEvent OnPlanningFinishedForSingleGoal = (agent, goal, utility) => { };
@@ -173,6 +178,15 @@ namespace MountainGoap {
         /// <param name="agent">Agent that started planning.</param>
         internal static void TriggerOnPlanningStarted(Agent agent) {
             OnPlanningStarted(agent);
+        }
+
+        /// <summary>
+        /// Triggers OnPlanningStartedForSingleGoal event.
+        /// </summary>
+        /// <param name="agent">Agent that started planning.</param>
+        /// <param name="goal">Goal for which planning was started.</param>
+        internal static void TriggerOnPlanningStartedForSingleGoal(Agent agent, BaseGoal goal) {
+            OnPlanningStartedForSingleGoal(agent, goal);
         }
 
         /// <summary>

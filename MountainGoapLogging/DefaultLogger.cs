@@ -13,6 +13,7 @@
             Agent.OnAgentActionSequenceCompleted += OnAgentActionSequenceCompleted;
             Agent.OnAgentStep += OnAgentStep;
             Agent.OnPlanningStarted += OnPlanningStarted;
+            Agent.OnPlanningStartedForSingleGoal += OnPlanningStartedForSingleGoal;
             Agent.OnPlanningFinished += OnPlanningFinished;
             Agent.OnPlanningFinishedForSingleGoal += OnPlanningFinishedForSingleGoal;
             Agent.OnPlanUpdated += OnPlanUpdated;
@@ -67,6 +68,9 @@
             else logger.Information("Agent {agent} finished planning with goal {goal}, utility value {utility}.", agent.Name, goal.Name, utility);
         }
 
+        private void OnPlanningStartedForSingleGoal(Agent agent, BaseGoal goal) {
+            logger.Information("Agent {agent} started planning for goal {goal}.", agent.Name, goal.Name);
+        }
         private void OnPlanningFinishedForSingleGoal(Agent agent, BaseGoal goal, float utility) {
             logger.Information("Agent {agent} finished planning for goal {goal}, utility value {utility}.", agent.Name, goal.Name, utility);
         }
