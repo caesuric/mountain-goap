@@ -19,6 +19,10 @@
     "comparative happiness": {
       "commandName": "Project",
       "commandLineArgs": "comparativeHappiness"
+    },
+    "car": {
+      "commandName": "Project",
+      "commandLineArgs": "car"
     }
   }
 }
