@@ -91,7 +91,8 @@ namespace MountainGoap {
         /// <param name="parameterPostconditions">Parameter postconditions copied to state after the action is successfully executed.</param>
         /// <param name="stateMutator">Callback for modifying state after action execution or evaluation.</param>
         /// <param name="stateChecker">Callback for checking state before action execution or evaluation.</param>
-        public Action(string? name = null, Dictionary<string, PermutationSelectorCallback>? permutationSelectors = null, ExecutorCallback? executor = null, float cost = 1f, CostCallback? costCallback = null, Dictionary<string, object?>? preconditions = null, Dictionary<string, ComparisonValuePair>? comparativePreconditions = null, Dictionary<string, object?>? postconditions = null, Dictionary<string, object>? arithmeticPostconditions = null, Dictionary<string, string>? parameterPostconditions = null, StateMutatorCallback? stateMutator = null, StateCheckerCallback? stateChecker = null) {
+        /// <param name="stateCostDeltaMultiplier">Callback for multiplier for delta value to provide delta cost.</param>
+        public Action(string? name = null, Dictionary<string, PermutationSelectorCallback>? permutationSelectors = null, ExecutorCallback? executor = null, float cost = 1f, CostCallback? costCallback = null, Dictionary<string, object?>? preconditions = null, Dictionary<string, ComparisonValuePair>? comparativePreconditions = null, Dictionary<string, object?>? postconditions = null, Dictionary<string, object>? arithmeticPostconditions = null, Dictionary<string, string>? parameterPostconditions = null, StateMutatorCallback? stateMutator = null, StateCheckerCallback? stateChecker = null, StateCostDeltaMultiplierCallback? stateCostDeltaMultiplier = null) {
             if (permutationSelectors == null) this.permutationSelectors = new();
             else this.permutationSelectors = permutationSelectors;
             if (executor == null) this.executor = DefaultExecutorCallback;
@@ -106,7 +107,15 @@ namespace MountainGoap {
             if (parameterPostconditions != null) this.parameterPostconditions = parameterPostconditions;
             if (stateMutator != null) this.stateMutator = stateMutator;
             if (stateChecker != null) this.stateChecker = stateChecker;
+            StateCostDeltaMultiplier = stateCostDeltaMultiplier ?? DefaultStateCostDeltaMultiplier;
         }
+
+        /// <summary>
+        /// Gets or sets multiplier for delta value to provide delta cost.
+        /// </summary>
+        public StateCostDeltaMultiplierCallback? StateCostDeltaMultiplier { get; set; }
+
+        public static float DefaultStateCostDeltaMultiplier(Action? action, string stateKey) => 1f;
 
         /// <summary>
         /// Event that triggers when an action begins executing.
@@ -128,7 +137,7 @@ namespace MountainGoap {
         /// </summary>
         /// <returns>A copy of the action.</returns>
         public Action Copy() {
-            var newAction = new Action(Name, permutationSelectors, executor, cost, costCallback, preconditions.Copy(), comparativePreconditions.Copy(), postconditions.Copy(), arithmeticPostconditions.CopyNonNullable(), parameterPostconditions.Copy(), stateMutator, stateChecker) {
+            var newAction = new Action(Name, permutationSelectors, executor, cost, costCallback, preconditions.Copy(), comparativePreconditions.Copy(), postconditions.Copy(), arithmeticPostconditions.CopyNonNullable(), parameterPostconditions.Copy(), stateMutator, stateChecker, StateCostDeltaMultiplier) {
                 parameters = parameters.Copy()
             };
             return newAction;
