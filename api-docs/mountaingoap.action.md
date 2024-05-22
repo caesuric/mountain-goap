@@ -20,14 +20,28 @@ Name of the action.
 public string Name;
 ```
 
+## Properties
+
+### **StateCostDeltaMultiplier**
+
+Gets or sets multiplier for delta value to provide delta cost.
+
+```csharp
+public StateCostDeltaMultiplierCallback StateCostDeltaMultiplier { get; set; }
+```
+
+#### Property Value
+
+[StateCostDeltaMultiplierCallback](./mountaingoap.statecostdeltamultipliercallback.md)<br>
+
 ## Constructors
 
-### **Action(String, Dictionary&lt;String, PermutationSelectorCallback&gt;, ExecutorCallback, Single, CostCallback, Dictionary&lt;String, Object&gt;, Dictionary&lt;String, ComparisonValuePair&gt;, Dictionary&lt;String, Object&gt;, Dictionary&lt;String, Object&gt;, Dictionary&lt;String, String&gt;, StateMutatorCallback, StateCheckerCallback)**
+### **Action(String, Dictionary&lt;String, PermutationSelectorCallback&gt;, ExecutorCallback, Single, CostCallback, Dictionary&lt;String, Object&gt;, Dictionary&lt;String, ComparisonValuePair&gt;, Dictionary&lt;String, Object&gt;, Dictionary&lt;String, Object&gt;, Dictionary&lt;String, String&gt;, StateMutatorCallback, StateCheckerCallback, StateCostDeltaMultiplierCallback)**
 
 Initializes a new instance of the [Action](./mountaingoap.action.md) class.
 
 ```csharp
-public Action(string name, Dictionary<string, PermutationSelectorCallback> permutationSelectors, ExecutorCallback executor, float cost, CostCallback costCallback, Dictionary<string, object> preconditions, Dictionary<string, ComparisonValuePair> comparativePreconditions, Dictionary<string, object> postconditions, Dictionary<string, object> arithmeticPostconditions, Dictionary<string, string> parameterPostconditions, StateMutatorCallback stateMutator, StateCheckerCallback stateChecker)
+public Action(string name, Dictionary<string, PermutationSelectorCallback> permutationSelectors, ExecutorCallback executor, float cost, CostCallback costCallback, Dictionary<string, object> preconditions, Dictionary<string, ComparisonValuePair> comparativePreconditions, Dictionary<string, object> postconditions, Dictionary<string, object> arithmeticPostconditions, Dictionary<string, string> parameterPostconditions, StateMutatorCallback stateMutator, StateCheckerCallback stateChecker, StateCostDeltaMultiplierCallback stateCostDeltaMultiplier)
 ```
 
 #### Parameters
@@ -68,7 +82,26 @@ Callback for modifying state after action execution or evaluation.
 `stateChecker` [StateCheckerCallback](./mountaingoap.statecheckercallback.md)<br>
 Callback for checking state before action execution or evaluation.
 
+`stateCostDeltaMultiplier` [StateCostDeltaMultiplierCallback](./mountaingoap.statecostdeltamultipliercallback.md)<br>
+Callback for multiplier for delta value to provide delta cost.
+
 ## Methods
+
+### **DefaultStateCostDeltaMultiplier(Action, String)**
+
+```csharp
+public static float DefaultStateCostDeltaMultiplier(Action action, string stateKey)
+```
+
+#### Parameters
+
+`action` [Action](./mountaingoap.action.md)<br>
+
+`stateKey` [String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+
+#### Returns
+
+[Single](https://docs.microsoft.com/en-us/dotnet/api/system.single)<br>
 
 ### **Copy()**
 
