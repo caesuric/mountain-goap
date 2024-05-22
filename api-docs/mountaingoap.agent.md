@@ -24,10 +24,10 @@ public string Name;
 
 ### **CurrentActionSequences**
 
-Gets or sets the chains of actions currently being performed by the agent.
+Gets the chains of actions currently being performed by the agent.
 
 ```csharp
-public List<List<Action>> CurrentActionSequences { get; set; }
+public List<List<Action>> CurrentActionSequences { get; }
 ```
 
 #### Property Value
@@ -39,12 +39,12 @@ public List<List<Action>> CurrentActionSequences { get; set; }
 Gets or sets the current world state from the agent perspective.
 
 ```csharp
-public Dictionary<string, object> State { get; set; }
+public ConcurrentDictionary<string, object> State { get; set; }
 ```
 
 #### Property Value
 
-[Dictionary&lt;String, Object&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2)<br>
+ConcurrentDictionary&lt;String, Object&gt;<br>
 
 ### **Memory**
 
@@ -132,12 +132,12 @@ public bool IsPlanning { get; set; }
 
 ## Constructors
 
-### **Agent(String, Dictionary&lt;String, Object&gt;, Dictionary&lt;String, Object&gt;, List&lt;BaseGoal&gt;, List&lt;Action&gt;, List&lt;Sensor&gt;, Single)**
+### **Agent(String, ConcurrentDictionary&lt;String, Object&gt;, Dictionary&lt;String, Object&gt;, List&lt;BaseGoal&gt;, List&lt;Action&gt;, List&lt;Sensor&gt;, Single)**
 
 Initializes a new instance of the [Agent](./mountaingoap.agent.md) class.
 
 ```csharp
-public Agent(string name, Dictionary<string, object> state, Dictionary<string, object> memory, List<BaseGoal> goals, List<Action> actions, List<Sensor> sensors, float costMaximum)
+public Agent(string name, ConcurrentDictionary<string, object> state, Dictionary<string, object> memory, List<BaseGoal> goals, List<Action> actions, List<Sensor> sensors, float costMaximum)
 ```
 
 #### Parameters
@@ -145,7 +145,7 @@ public Agent(string name, Dictionary<string, object> state, Dictionary<string, o
 `name` [String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
 Name of the agent.
 
-`state` [Dictionary&lt;String, Object&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2)<br>
+`state` ConcurrentDictionary&lt;String, Object&gt;<br>
 Initial agent state.
 
 `memory` [Dictionary&lt;String, Object&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2)<br>

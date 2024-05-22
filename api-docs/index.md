@@ -16,6 +16,8 @@
 
 [ComparisonValuePair](./mountaingoap.comparisonvaluepair.md)
 
+[DictionaryExtensionMethods](./mountaingoap.dictionaryextensionmethods.md)
+
 [ExecutionStatus](./mountaingoap.executionstatus.md)
 
 [ExtremeGoal](./mountaingoap.extremegoal.md)

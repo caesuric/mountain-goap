@@ -150,17 +150,17 @@ Key for the value to be retrieved.
 [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object)<br>
 The value stored at the key specified.
 
-### **GetCost(Dictionary&lt;String, Object&gt;)**
+### **GetCost(ConcurrentDictionary&lt;String, Object&gt;)**
 
 Gets the cost of the action.
 
 ```csharp
-public float GetCost(Dictionary<string, object> currentState)
+public float GetCost(ConcurrentDictionary<string, object> currentState)
 ```
 
 #### Parameters
 
-`currentState` [Dictionary&lt;String, Object&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2)<br>
+`currentState` ConcurrentDictionary&lt;String, Object&gt;<br>
 State as it will be when cost is relevant.
 
 #### Returns
@@ -186,17 +186,17 @@ Agent executing the action.
 [ExecutionStatus](./mountaingoap.executionstatus.md)<br>
 The execution status of the action.
 
-### **IsPossible(Dictionary&lt;String, Object&gt;)**
+### **IsPossible(ConcurrentDictionary&lt;String, Object&gt;)**
 
 Determines whether or not an action is possible.
 
 ```csharp
-internal bool IsPossible(Dictionary<string, object> state)
+internal bool IsPossible(ConcurrentDictionary<string, object> state)
 ```
 
 #### Parameters
 
-`state` [Dictionary&lt;String, Object&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2)<br>
+`state` ConcurrentDictionary&lt;String, Object&gt;<br>
 The current world state.
 
 #### Returns
@@ -204,17 +204,17 @@ The current world state.
 [Boolean](https://docs.microsoft.com/en-us/dotnet/api/system.boolean)<br>
 True if the action is possible, otherwise false.
 
-### **GetPermutations(Dictionary&lt;String, Object&gt;)**
+### **GetPermutations(ConcurrentDictionary&lt;String, Object&gt;)**
 
 Gets all permutations of parameters possible for an action.
 
 ```csharp
-internal List<Dictionary<string, object>> GetPermutations(Dictionary<string, object> state)
+internal List<Dictionary<string, object>> GetPermutations(ConcurrentDictionary<string, object> state)
 ```
 
 #### Parameters
 
-`state` [Dictionary&lt;String, Object&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2)<br>
+`state` ConcurrentDictionary&lt;String, Object&gt;<br>
 World state when the action would be performed.
 
 #### Returns
@@ -222,17 +222,17 @@ World state when the action would be performed.
 [List&lt;Dictionary&lt;String, Object&gt;&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1)<br>
 A list of possible parameter dictionaries that could be used.
 
-### **ApplyEffects(Dictionary&lt;String, Object&gt;)**
+### **ApplyEffects(ConcurrentDictionary&lt;String, Object&gt;)**
 
 Applies the effects of the action.
 
 ```csharp
-internal void ApplyEffects(Dictionary<string, object> state)
+internal void ApplyEffects(ConcurrentDictionary<string, object> state)
 ```
 
 #### Parameters
 
-`state` [Dictionary&lt;String, Object&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2)<br>
+`state` ConcurrentDictionary&lt;String, Object&gt;<br>
 World state to which to apply effects.
 
 ### **SetParameters(Dictionary&lt;String, Object&gt;)**

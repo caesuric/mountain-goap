@@ -17,12 +17,12 @@ Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) 
 Gets or sets the state of the world for this action node.
 
 ```csharp
-public Dictionary<string, object> State { get; set; }
+public ConcurrentDictionary<string, object> State { get; set; }
 ```
 
 #### Property Value
 
-[Dictionary&lt;String, Object&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2)<br>
+ConcurrentDictionary&lt;String, Object&gt;<br>
 
 ### **Parameters**
 
@@ -99,17 +99,17 @@ public int GetHashCode()
 
 [Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
 
-### **Cost(Dictionary&lt;String, Object&gt;)**
+### **Cost(ConcurrentDictionary&lt;String, Object&gt;)**
 
 Cost to traverse this node.
 
 ```csharp
-internal float Cost(Dictionary<string, object> currentState)
+internal float Cost(ConcurrentDictionary<string, object> currentState)
 ```
 
 #### Parameters
 
-`currentState` [Dictionary&lt;String, Object&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2)<br>
+`currentState` ConcurrentDictionary&lt;String, Object&gt;<br>
 Current state after previous node is executed.
 
 #### Returns
