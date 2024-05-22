@@ -53,6 +53,11 @@ namespace MountainGoap {
         public static event PlanningStartedEvent OnPlanningStarted = (agent) => { };
 
         /// <summary>
+        /// Event that fires when planning for a single goal starts.
+        /// </summary>
+        public static event PlanningStartedForSingleGoalEvent OnPlanningStartedForSingleGoal = (agent, goal) => { };
+
+        /// <summary>
         /// Event that fires when planning for a single goal finishes.
         /// </summary>
         public static event PlanningFinishedForSingleGoalEvent OnPlanningFinishedForSingleGoal = (agent, goal, utility) => { };
@@ -134,11 +139,55 @@ namespace MountainGoap {
         }
 
         /// <summary>
+        /// Clears the current action sequences (also known as plans).
+        /// </summary>
+        public void ClearPlan() {
+            CurrentActionSequences.Clear();
+        }
+
+        /// <summary>
+        /// Makes a plan.
+        /// </summary>
+        public void Plan() {
+            if (!IsBusy && !IsPlanning) {
+                IsPlanning = true;
+                Planner.Plan(this, CostMaximum);
+            }
+        }
+
+        /// <summary>
+        /// Makes a plan asynchronously.
+        /// </summary>
+        public void PlanAsync() {
+            if (!IsBusy && !IsPlanning) {
+                IsPlanning = true;
+                var t = new Thread(new ThreadStart(() => { Planner.Plan(this, CostMaximum); }));
+                t.Start();
+            }
+        }
+
+        /// <summary>
+        /// Executes the current plan.
+        /// </summary>
+        public void ExecutePlan() {
+            if (!IsPlanning) Execute();
+        }
+
+        /// <summary>
         /// Triggers OnPlanningStarted event.
         /// </summary>
         /// <param name="agent">Agent that started planning.</param>
         internal static void TriggerOnPlanningStarted(Agent agent) {
             OnPlanningStarted(agent);
+        }
+
+        /// <summary>
+        /// Triggers OnPlanningStartedForSingleGoal event.
+        /// </summary>
+        /// <param name="agent">Agent that started planning.</param>
+        /// <param name="goal">Goal for which planning was started.</param>
+        internal static void TriggerOnPlanningStartedForSingleGoal(Agent agent, BaseGoal goal) {
+            OnPlanningStartedForSingleGoal(agent, goal);
         }
 
         /// <summary>

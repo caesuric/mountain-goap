@@ -10,23 +10,31 @@ public class ComparisonValuePair
 
 Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [ComparisonValuePair](./mountaingoap.comparisonvaluepair.md)
 
-## Fields
+## Properties
 
 ### **Value**
 
-Value to be compared against.
+Gets or sets the value to be compared against.
 
 ```csharp
-public object Value;
+public object Value { get; set; }
 ```
+
+#### Property Value
+
+[Object](https://docs.microsoft.com/en-us/dotnet/api/system.object)<br>
 
 ### **Operator**
 
-Operator to be used for comparison.
+Gets or sets the operator to be used for comparison.
 
 ```csharp
-public ComparisonOperator Operator;
+public ComparisonOperator Operator { get; set; }
 ```
+
+#### Property Value
+
+[ComparisonOperator](./mountaingoap.comparisonoperator.md)<br>
 
 ## Constructors
 

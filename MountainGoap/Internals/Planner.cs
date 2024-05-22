@@ -22,6 +22,7 @@ namespace MountainGoap {
             ActionAStar? bestAstar = null;
             BaseGoal? bestGoal = null;
             foreach (var goal in agent.Goals) {
+                Agent.TriggerOnPlanningStartedForSingleGoal(agent, goal);
                 ActionGraph graph = new(agent.Actions, agent.State);
                 ActionNode start = new(null, agent.State, new());
                 astar = new(graph, start, goal, costMaximum);

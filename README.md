@@ -25,7 +25,10 @@ Mountain GOAP favors composition over inheritance, allowing you to create agents
         3. [Parameter Postconditions](#parameter-postconditions)
     4. [Sensors](#sensors)
     5. [Permutation selectors](#permutation-selectors)
-    6. [Full API Docs](#full-api-docs)
+    6. [Cost callbacks](#cost-callbacks)
+    7. [State mutators](#state-mutators)
+    8. [State checkers](#state-checkers)
+    9. [Full API Docs](#full-api-docs)
 3. [Events](#events)
     1. [Agent events](#agent-events)
     2. [Action events](#action-events)
@@ -82,6 +85,8 @@ When you want your agent to act, just call the following:
 `agent.Step();`
 
 What kind of timeframe is represented by a "step" will vary based on your engine. In a turn based game, a step might be one turn. In a realtime engine like Unity, you might call `agent.Step()` on every `Update()` cycle. In a turn-based game you will probably want to call `agent.Step()` on every turn. In the case of turn-based games, you can force at least one action to be taken per turn by calling `agent.Step(mode: StepMode.OneAction)`. If you want the entire action sequence to be completed in one turn, you can call `agent.Step(mode: StepMode.AllActions)`.
+
+For additional granularity, you can also call the functions `agent.Plan()`, `agent.ClearPlan()`, `agent.PlanAsync()`, and `agent.ExecutePlan()`. See the full API docs for additional details.
 
 #### Agent state
 
@@ -279,7 +284,66 @@ Action myAction = new Action(
 );
 ```
 
-The code above will create an action that when evaluated for execution in an agent plan will be considered once for every pair combination of elements in the "otherAgents" collection of the agent state, one for `target1`, and one for `target2`. In order to take advantage of this feature, you can also calculate variable costs based on action parameters using the `costCallback` argument in the `Action` constructor.
+The code above will create an action that when evaluated for execution in an agent plan will be considered once for every pair combination of elements in the "otherAgents" collection of the agent state, one for `target1`, and one for `target2`. In order to take advantage of this feature, you can also calculate variable costs based on action parameters using the `costCallback` argument in the `Action` constructor. See [cost callbacks](#cost-callbacks) for more information.
+
+### Cost Callbacks
+
+**Cost callbacks** allow you to calculate the cost of an action based on its parameters. This is useful for actions that have variable costs based on the parameters passed to them. For instance, if you have an action that moves the agent to a target, you might want to calculate the cost of the action based on the distance to the target. You can do this by passing a cost callback to the action constructor:
+
+```csharp
+Action moveToTarget = new Action(
+    executor: (Agent agent, Action action) => {
+        Console.WriteLine("moved to target");
+        return ExecutionStatus.Succeeded;
+    },
+    costCallback: (action, state) => {
+        if (action.GetParameter("target") is Agent target) {
+            var distance = GetDistance(this, target);
+            return distance;
+        }
+        else return float.MaxValue;
+    }
+);
+```
+
+### State Mutators
+
+**State mutators** allow you to mutate the agent state during execution or evaluation of an action. This is useful for actions that have more complex side effects on agent state. For instance, if you have an action that moves the agent to a target, you might want to mutate the agent state to reflect the new position of the agent. You can do this by passing a state mutator to the action constructor:
+
+```csharp
+Action moveToTarget = newAction(
+    executor: (Agent agent, Action action) => {
+        Console.WriteLine("moved to target");
+        return ExecutionStatus.Succeeded;
+    },
+    stateMutator: (action, state) => {
+        if (action.GetParameter("target") is Agent target) {
+            state["position"] = target.State["position"];
+        }
+    }
+)
+```
+
+### State Checkers
+
+**State checkers** allow you to check agent state programmatically during execution or evaluation of an action. This is useful for actions that have more complex preconditions than simple equality checks or arithmetic comparisons. For instance, if you have an action that moves the agent to a target, you might want to check that the target is in range. You can do this by passing a state checker to the action constructor:
+
+```csharp
+Action moveToTarget = new Action(
+    executor: (Agent agent, Action action) => {
+        Console.WriteLine("moved to target");
+        return ExecutionStatus.Succeeded;
+    },
+    stateChecker: (action, state) => {
+        if (action.GetParameter("target") is Agent target) {
+            var distance = GetDistance(this, target);
+            if (distance > 10) return false;
+            else return true;
+        }
+        return false;
+    }
+);
+```
 
 ### Full API Docs
 

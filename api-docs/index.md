@@ -4,6 +4,8 @@
 
 [Action](./mountaingoap.action.md)
 
+[ActionNode](./mountaingoap.actionnode.md)
+
 [Agent](./mountaingoap.agent.md)
 
 [BaseGoal](./mountaingoap.basegoal.md)
