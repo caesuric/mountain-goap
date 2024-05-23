@@ -2,6 +2,7 @@
     using MountainGoap;
     using Serilog;
     using Serilog.Core;
+    using System.Collections.Concurrent;
 
     public class DefaultLogger {
         private readonly Logger logger;
@@ -24,7 +25,7 @@
             logger = config.CreateLogger();
         }
 
-        private void OnEvaluatedActionNode(ActionNode node, Dictionary<ActionNode, ActionNode> nodes) {
+        private void OnEvaluatedActionNode(ActionNode node, ConcurrentDictionary<ActionNode, ActionNode> nodes) {
             var cameFromList = new List<ActionNode>();
             var traceback = node;
             while (nodes.ContainsKey(traceback) && traceback.Action != nodes[traceback].Action) {

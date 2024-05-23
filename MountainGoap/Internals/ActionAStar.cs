@@ -4,7 +4,7 @@
 
 namespace MountainGoap {
     using System;
-    using System.Collections.Generic;
+    using System.Collections.Concurrent;
     using Priority_Queue;
 
     /// <summary>
@@ -19,12 +19,12 @@ namespace MountainGoap {
         /// <summary>
         /// Cost so far to get to each node.
         /// </summary>
-        internal readonly Dictionary<ActionNode, float> CostSoFar = new();
+        internal readonly ConcurrentDictionary<ActionNode, float> CostSoFar = new();
 
         /// <summary>
         /// Dictionary giving the path from start to goal.
         /// </summary>
-        internal readonly Dictionary<ActionNode, ActionNode> CameFrom = new();
+        internal readonly ConcurrentDictionary<ActionNode, ActionNode> CameFrom = new();
 
         /// <summary>
         /// Goal state that AStar is trying to achieve.

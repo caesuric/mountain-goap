@@ -224,7 +224,7 @@ namespace MountainGoap {
         /// </summary>
         /// <param name="node">Action node being evaluated.</param>
         /// <param name="nodes">List of nodes in the path that led to this point.</param>
-        internal static void TriggerOnEvaluatedActionNode(ActionNode node, Dictionary<ActionNode, ActionNode> nodes) {
+        internal static void TriggerOnEvaluatedActionNode(ActionNode node, ConcurrentDictionary<ActionNode, ActionNode> nodes) {
             OnEvaluatedActionNode(node, nodes);
         }
 
