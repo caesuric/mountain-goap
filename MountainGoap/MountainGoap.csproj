@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-	<VersionPrefix>1.0.0</VersionPrefix>
+	<VersionPrefix>1.0.1</VersionPrefix>
 	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	<Description>A simple GOAP (Goal Oriented Action Planning) library.</Description>
 	<Copyright>MIT licensed 2022</Copyright>
