@@ -27,7 +27,8 @@ namespace MountainGoap {
         /// <param name="actions">Actions available to the agent.</param>
         /// <param name="sensors">Sensors available to the agent.</param>
         /// <param name="costMaximum">Maximum cost of an allowable plan.</param>
-        public Agent(string? name = null, ConcurrentDictionary<string, object?>? state = null, Dictionary<string, object?>? memory = null, List<BaseGoal>? goals = null, List<Action>? actions = null, List<Sensor>? sensors = null, float costMaximum = float.MaxValue) {
+        /// <param name="stepMaximum">Maximum steps in an allowable plan.</param>
+        public Agent(string? name = null, ConcurrentDictionary<string, object?>? state = null, Dictionary<string, object?>? memory = null, List<BaseGoal>? goals = null, List<Action>? actions = null, List<Sensor>? sensors = null, float costMaximum = float.MaxValue, int stepMaximum = int.MaxValue) {
             Name = name ?? $"Agent {Guid.NewGuid()}";
             if (state != null) State = state;
             if (memory != null) Memory = memory;
@@ -35,6 +36,7 @@ namespace MountainGoap {
             if (actions != null) Actions = actions;
             if (sensors != null) Sensors = sensors;
             CostMaximum = costMaximum;
+            StepMaximum = stepMaximum;
         }
 
         /// <summary>
@@ -113,6 +115,11 @@ namespace MountainGoap {
         public float CostMaximum { get; set; }
 
         /// <summary>
+        /// Gets or sets the step maximum for the agent.
+        /// </summary>
+        public int StepMaximum { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the agent is currently executing one or more actions.
         /// </summary>
         public bool IsBusy { get; set; } = false;
@@ -133,7 +140,7 @@ namespace MountainGoap {
                 StepAsync();
                 return;
             }
-            if (!IsBusy) Planner.Plan(this, CostMaximum);
+            if (!IsBusy) Planner.Plan(this, CostMaximum, StepMaximum);
             if (mode == StepMode.OneAction) Execute();
             else if (mode == StepMode.AllActions) while (IsBusy) Execute();
         }
@@ -151,7 +158,7 @@ namespace MountainGoap {
         public void Plan() {
             if (!IsBusy && !IsPlanning) {
                 IsPlanning = true;
-                Planner.Plan(this, CostMaximum);
+                Planner.Plan(this, CostMaximum, StepMaximum);
             }
         }
 
@@ -161,7 +168,7 @@ namespace MountainGoap {
         public void PlanAsync() {
             if (!IsBusy && !IsPlanning) {
                 IsPlanning = true;
-                var t = new Thread(new ThreadStart(() => { Planner.Plan(this, CostMaximum); }));
+                var t = new Thread(new ThreadStart(() => { Planner.Plan(this, CostMaximum, StepMaximum); }));
                 t.Start();
             }
         }
@@ -234,7 +241,7 @@ namespace MountainGoap {
         private void StepAsync() {
             if (!IsBusy && !IsPlanning) {
                 IsPlanning = true;
-                var t = new Thread(new ThreadStart(() => { Planner.Plan(this, CostMaximum); }));
+                var t = new Thread(new ThreadStart(() => { Planner.Plan(this, CostMaximum, StepMaximum); }));
                 t.Start();
             }
             else if (!IsPlanning) Execute();

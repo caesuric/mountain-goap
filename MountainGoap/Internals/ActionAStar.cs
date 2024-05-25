@@ -22,6 +22,11 @@ namespace MountainGoap {
         internal readonly ConcurrentDictionary<ActionNode, float> CostSoFar = new();
 
         /// <summary>
+        /// Steps so far to get to each node.
+        /// </summary>
+        internal readonly ConcurrentDictionary<ActionNode, int> StepsSoFar = new();
+
+        /// <summary>
         /// Dictionary giving the path from start to goal.
         /// </summary>
         internal readonly ConcurrentDictionary<ActionNode, ActionNode> CameFrom = new();
@@ -38,12 +43,14 @@ namespace MountainGoap {
         /// <param name="start">Action from which to start.</param>
         /// <param name="goal">Goal state to be achieved.</param>
         /// <param name="costMaximum">Maximum allowable cost for a plan.</param>
-        internal ActionAStar(ActionGraph graph, ActionNode start, BaseGoal goal, float costMaximum) {
+        /// <param name="stepMaximum">Maximum allowable steps for a plan.</param>
+        internal ActionAStar(ActionGraph graph, ActionNode start, BaseGoal goal, float costMaximum, int stepMaximum) {
             this.goal = goal;
             FastPriorityQueue<ActionNode> frontier = new(100000);
             frontier.Enqueue(start, 0);
             CameFrom[start] = start;
             CostSoFar[start] = 0;
+            StepsSoFar[start] = 0;
             while (frontier.Count > 0) {
                 var current = frontier.Dequeue();
                 if (MeetsGoal(current, start)) {
@@ -52,7 +59,8 @@ namespace MountainGoap {
                 }
                 foreach (var next in graph.Neighbors(current)) {
                     float newCost = CostSoFar[current] + next.Cost(current.State);
-                    if (newCost > costMaximum) continue;
+                    int newStepCount = StepsSoFar[current] + 1;
+                    if (newCost > costMaximum || newStepCount > stepMaximum) continue;
                     if (!CostSoFar.ContainsKey(next) || newCost < CostSoFar[next]) {
                         CostSoFar[next] = newCost;
                         float priority = newCost + Heuristic(next, goal, current);
