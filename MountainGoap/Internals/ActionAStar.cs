@@ -63,6 +63,7 @@ namespace MountainGoap {
                     if (newCost > costMaximum || newStepCount > stepMaximum) continue;
                     if (!CostSoFar.ContainsKey(next) || newCost < CostSoFar[next]) {
                         CostSoFar[next] = newCost;
+                        StepsSoFar[next] = newStepCount;
                         float priority = newCost + Heuristic(next, goal, current);
                         frontier.Enqueue(next, priority);
                         CameFrom[next] = current;
