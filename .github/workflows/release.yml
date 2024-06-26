@@ -25,7 +25,7 @@ jobs:
         run: dotnet build -c Release --no-restore
       - name: Test
         run: dotnet test --verbosity normal
-      - name: Zip
+      - name: Zip Sync
         run: zip -j mountain-goap-${{ github.ref_name }}.zip MountainGoap/bin/Release/netstandard2.1/MountainGoap.*
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
@@ -33,7 +33,20 @@ jobs:
           prerelease: true
           files: |
             mountain-goap-${{ github.ref_name }}.zip
-      - name: Package for NuGet
-        run: dotnet pack -c Release -o . MountainGoap/MountainGoap.csproj
-      - name: Publish to NuGet
-        run: dotnet nuget push *.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
+      - name: Package Sync for NuGet
+        run: dotnet pack -c Release -o ./sync MountainGoap/MountainGoap.csproj
+      - name: Publish Sync to NuGet
+        run: dotnet nuget push ./sync/*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
+        
+      - name: Zip Async
+        run: zip -j mountain-async-goap-${{ github.ref_name }}.zip MountainGoap.Async/bin/Release/netstandard2.1/MountainGoap.*
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: true
+          files: |
+            mountain-async-goap-${{ github.ref_name }}.zip
+      - name: Package Async for NuGet
+        run: dotnet pack -c Release -o ./async MountainGoap.Async/MountainGoap.Async.csproj
+      - name: Publish Async to NuGet
+        run: dotnet nuget push ./async/*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json

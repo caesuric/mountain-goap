@@ -8,7 +8,7 @@
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
 	<VersionPrefix>1.1.1</VersionPrefix>
 	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	<Description>A simple GOAP (Goal Oriented Action Planning) library.</Description>
+	<Description>A simple Async GOAP (Goal Oriented Action Planning) library.</Description>
 	<Copyright>MIT licensed 2022</Copyright>
 	<PackageProjectUrl>https://github.com/caesuric/mountain-goap</PackageProjectUrl>
 	<PackageIcon>logo.png</PackageIcon>
