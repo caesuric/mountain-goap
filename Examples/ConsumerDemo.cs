@@ -13,8 +13,7 @@ namespace Examples {
         /// <summary>
         /// Runs the demo.
         /// </summary>
-        /// <returns>Async Task.</returns>
-        internal static async Task Run() {
+        internal static void Run() {
             _ = new DefaultLogger();
             var locations = new List<string> { "home", "work", "store" };
             var agent = new Agent(
@@ -160,11 +159,11 @@ namespace Examples {
                         executor: GenericExecutor
                     )
                 });
-            while (agent.State["food"] is int food && food < 5) await agent.StepAsync();
+            while (agent.State["food"] is int food && food < 5) agent.Step();
         }
 
-        private static Task<ExecutionStatus> GenericExecutor(Agent agent, Action action) {
-            return Task.FromResult(ExecutionStatus.Succeeded);
+        private static ExecutionStatus GenericExecutor(Agent agent, Action action) {
+            return ExecutionStatus.Succeeded;
         }
     }
 }

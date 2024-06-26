@@ -33,16 +33,15 @@ namespace MountainGoap {
         /// <summary>
         /// Event that triggers when a sensor runs.
         /// </summary>
-        public static event SensorRunEvent OnSensorRun = (agent, sensor) => Task.CompletedTask;
+        public static event SensorRunEvent OnSensorRun = (agent, sensor) => { };
 
         /// <summary>
         /// Runs the sensor during a game loop.
         /// </summary>
         /// <param name="agent">Agent for which the sensor is being run.</param>
-        /// <returns>Async Task.</returns>
-        public async Task Run(Agent agent) {
-            await OnSensorRun(agent, this);
-            await runCallback(agent);
+        public void Run(Agent agent) {
+            OnSensorRun(agent, this);
+            runCallback(agent);
         }
     }
 }

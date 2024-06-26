@@ -11,6 +11,5 @@ namespace MountainGoap {
     /// <param name="agent">Agent executing the action.</param>
     /// <param name="action">Action being executed.</param>
     /// <param name="parameters">Parameters to the action being executed.</param>
-    /// <returns>Async Task.</returns>
-    public delegate Task BeginExecuteActionEvent(Agent agent, Action action, Dictionary<string, object?> parameters);
+    public delegate void BeginExecuteActionEvent(Agent agent, Action action, Dictionary<string, object?> parameters);
 }

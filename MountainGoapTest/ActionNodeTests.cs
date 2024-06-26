@@ -1,11 +1,9 @@
-﻿using System.Threading.Tasks;
-
-namespace MountainGoapTest {
+﻿namespace MountainGoapTest {
     using System.Collections.Generic;
 
     public class AgentTests {
         [Fact]
-        public async Task ItHandlesInitialNullStateValuesCorrectly() {
+        public void ItHandlesInitialNullStateValuesCorrectly() {
             var agent = new Agent(
                 state: new() {
                     { "key", null }
@@ -26,17 +24,17 @@ namespace MountainGoapTest {
                             { "key", "non-null value" }
                         },
                         executor: (Agent agent, Action action) => {
-                            return Task.FromResult(ExecutionStatus.Succeeded);
+                            return ExecutionStatus.Succeeded;
                         }
                     )
                 }
             );
-            await agent.StepAsync(StepMode.OneAction);
+            agent.Step(StepMode.OneAction);
             Assert.NotNull(agent.State["key"]);
         }
 
         [Fact]
-        public async Task ItHandlesNullGoalsCorrectly() {
+        public void ItHandlesNullGoalsCorrectly() {
             var agent = new Agent(
                 state: new() {
                     { "key", "non-null value" }
@@ -57,17 +55,17 @@ namespace MountainGoapTest {
                             { "key", null }
                         },
                         executor: (Agent agent, Action action) => {
-                            return Task.FromResult(ExecutionStatus.Succeeded);
+                            return ExecutionStatus.Succeeded;
                         }
                     )
                 }
             );
-            await agent.StepAsync(StepMode.OneAction);
+            agent.Step(StepMode.OneAction);
             Assert.Null(agent.State["key"]);
         }
 
         [Fact]
-        public async Task ItHandlesNonNullStateValuesCorrectly() {
+        public void ItHandlesNonNullStateValuesCorrectly() {
             var agent = new Agent(
                 state: new() {
                     { "key", "value" }
@@ -88,19 +86,19 @@ namespace MountainGoapTest {
                             { "key", "new value" }
                         },
                         executor: (Agent agent, Action action) => {
-                            return Task.FromResult(ExecutionStatus.Succeeded);
+                            return ExecutionStatus.Succeeded;
                         }
                     )
                 }
             );
-            await agent.StepAsync(StepMode.OneAction);
+            agent.Step(StepMode.OneAction);
             object? value = agent.State["key"];
             Assert.NotNull(value);
             if (value is not null) Assert.Equal("new value", (string)value);
         }
 
         [Fact]
-        public async Task ItExecutesOneActionInOneActionStepMode() {
+        public void ItExecutesOneActionInOneActionStepMode() {
             var actionCount = 0;
             var agent = new Agent(
                 state: new() {
@@ -123,17 +121,17 @@ namespace MountainGoapTest {
                         },
                         executor: (Agent agent, Action action) => {
                             actionCount++;
-                            return Task.FromResult(ExecutionStatus.Succeeded);
+                            return ExecutionStatus.Succeeded;
                         }
                     )
                 }
             );
-            await agent.StepAsync(StepMode.OneAction);
+            agent.Step(StepMode.OneAction);
             Assert.Equal(1, actionCount);
         }
 
         [Fact]
-        public async Task ItExecutesAllActionsInAllActionsStepMode() {
+        public void ItExecutesAllActionsInAllActionsStepMode() {
             var actionCount = 0;
             var agent = new Agent(
                 state: new() {
@@ -156,7 +154,7 @@ namespace MountainGoapTest {
                         },
                         executor: (Agent agent, Action action) => {
                             actionCount++;
-                            return Task.FromResult(ExecutionStatus.Succeeded);
+                            return ExecutionStatus.Succeeded;
                         }
                     ),
                     new Action(
@@ -168,12 +166,12 @@ namespace MountainGoapTest {
                         },
                         executor: (Agent agent, Action action) => {
                             actionCount++;
-                            return Task.FromResult(ExecutionStatus.Succeeded);
+                            return ExecutionStatus.Succeeded;
                         }
                     )
                 }
             );
-            await agent.StepAsync(StepMode.AllActions);
+            agent.Step(StepMode.AllActions);
             Assert.Equal(2, actionCount);
         }
     }

@@ -10,6 +10,5 @@ namespace MountainGoap {
     /// </summary>
     /// <param name="node">Node being evaluated.</param>
     /// <param name="nodes">All nodes in the plan being evaluated.</param>
-    /// <returns>Async Task.</returns>
-    public delegate Task EvaluatedActionNodeEvent(ActionNode node, ConcurrentDictionary<ActionNode, ActionNode> nodes);
+    public delegate void EvaluatedActionNodeEvent(ActionNode node, ConcurrentDictionary<ActionNode, ActionNode> nodes);
 }

@@ -14,7 +14,7 @@ namespace MountainGoap {
         /// <summary>
         /// Final point at which the calculation arrived.
         /// </summary>
-        internal ActionNode? FinalPoint { get; private set; } = null;
+        internal readonly ActionNode? FinalPoint = null;
 
         /// <summary>
         /// Cost so far to get to each node.
@@ -34,7 +34,7 @@ namespace MountainGoap {
         /// <summary>
         /// Goal state that AStar is trying to achieve.
         /// </summary>
-        private BaseGoal goal;
+        private readonly BaseGoal goal;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActionAStar"/> class.
@@ -44,8 +44,7 @@ namespace MountainGoap {
         /// <param name="goal">Goal state to be achieved.</param>
         /// <param name="costMaximum">Maximum allowable cost for a plan.</param>
         /// <param name="stepMaximum">Maximum allowable steps for a plan.</param>
-        /// <returns>Async Task</returns>
-        internal async Task InitAsync(ActionGraph graph, ActionNode start, BaseGoal goal, float costMaximum, int stepMaximum) {
+        internal ActionAStar(ActionGraph graph, ActionNode start, BaseGoal goal, float costMaximum, int stepMaximum) {
             this.goal = goal;
             FastPriorityQueue<ActionNode> frontier = new(100000);
             frontier.Enqueue(start, 0);
@@ -58,16 +57,14 @@ namespace MountainGoap {
                     FinalPoint = current;
                     break;
                 }
-                await foreach (var next in graph.NeighborsAsync(current)) {
-                    float newCost = CostSoFar[current] + await next.CostAsync(current.State);
+                foreach (var next in graph.Neighbors(current)) {
+                    float newCost = CostSoFar[current] + next.Cost(current.State);
                     int newStepCount = StepsSoFar[current] + 1;
                     if (newCost > costMaximum || newStepCount > stepMaximum) continue;
                     if (!CostSoFar.ContainsKey(next) || newCost < CostSoFar[next]) {
                         CostSoFar[next] = newCost;
                         StepsSoFar[next] = newStepCount;
-                        var task = HeuristicAsync(next, goal, current);
-                        task.Wait();
-                        float priority = newCost + task.Result;
+                        float priority = newCost + Heuristic(next, goal, current);
                         frontier.Enqueue(next, priority);
                         CameFrom[next] = current;
                         Agent.TriggerOnEvaluatedActionNode(next, CameFrom);
@@ -76,7 +73,7 @@ namespace MountainGoap {
             }
         }
 
-        private static async Task<float> HeuristicAsync(ActionNode actionNode, BaseGoal goal, ActionNode current) {
+        private static float Heuristic(ActionNode actionNode, BaseGoal goal, ActionNode current) {
             var cost = 0f;
             if (goal is Goal normalGoal) {
                 normalGoal.DesiredState.Select(kvp => kvp.Key).ToList().ForEach(key => {
@@ -88,7 +85,7 @@ namespace MountainGoap {
             else if (goal is ExtremeGoal extremeGoal) {
                 foreach (var kvp in extremeGoal.DesiredState) {
                     var valueDiff = 0f;
-                    var valueDiffMultiplier = await (actionNode?.Action?.StateCostDeltaMultiplier ?? Action.DefaultStateCostDeltaMultiplier).Invoke(actionNode?.Action, kvp.Key);
+                    var valueDiffMultiplier = (actionNode?.Action?.StateCostDeltaMultiplier ?? Action.DefaultStateCostDeltaMultiplier).Invoke(actionNode?.Action, kvp.Key);
                     if (actionNode.State.ContainsKey(kvp.Key) && actionNode.State[kvp.Key] == null) {
                         cost += float.PositiveInfinity;
                         continue;
@@ -103,7 +100,7 @@ namespace MountainGoap {
             else if (goal is ComparativeGoal comparativeGoal) {
                 foreach (var kvp in comparativeGoal.DesiredState) {
                     var valueDiff2 = 0f;
-                    var valueDiffMultiplier = await (actionNode?.Action?.StateCostDeltaMultiplier ?? Action.DefaultStateCostDeltaMultiplier).Invoke(actionNode?.Action, kvp.Key);
+                    var valueDiffMultiplier = (actionNode?.Action?.StateCostDeltaMultiplier ?? Action.DefaultStateCostDeltaMultiplier).Invoke(actionNode?.Action, kvp.Key);
                     if (actionNode.State.ContainsKey(kvp.Key) && comparativeGoal.DesiredState.ContainsKey(kvp.Key)) valueDiff2 = Math.Abs(Convert.ToSingle(actionNode.State[kvp.Key]) - Convert.ToSingle(current.State[kvp.Key]));
                     if (!actionNode.State.ContainsKey(kvp.Key)) cost += float.PositiveInfinity;
                     else if (!current.State.ContainsKey(kvp.Key)) cost += float.PositiveInfinity;

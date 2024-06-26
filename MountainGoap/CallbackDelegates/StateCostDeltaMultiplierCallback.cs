@@ -9,5 +9,5 @@ namespace MountainGoap {
     /// <param name="action">Action being executed or evaluated.</param>
     /// <param name="stateKey">Key to provide multiplier for</param>
     /// <returns>Multiplier for the delta value to get delta cost</returns>
-    public delegate Task<float> StateCostDeltaMultiplierCallback(Action? action, string stateKey);
+    public delegate float StateCostDeltaMultiplierCallback(Action? action, string stateKey);
 }

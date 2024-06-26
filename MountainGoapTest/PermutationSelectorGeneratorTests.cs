@@ -1,30 +1,28 @@
-﻿using System.Threading.Tasks;
-
-namespace MountainGoapTest {
+﻿namespace MountainGoapTest {
     using System.Collections.Concurrent;
     using System.Collections.Generic;
 
     public class PermutationSelectorGeneratorTests {
         [Fact]
-        public async Task ItSelectsFromACollection() {
+        public void ItSelectsFromACollection() {
             var collection = new List<int> { 1, 2, 3 };
             var selector = PermutationSelectorGenerators.SelectFromCollection(collection);
-            List<object> permutations = await selector(new ConcurrentDictionary<string, object?>());
+            List<object> permutations = selector(new ConcurrentDictionary<string, object?>());
             Assert.Equal(3, permutations.Count);
         }
 
         [Fact]
-        public async Task ItSelectsFromACollectionInState() {
+        public void ItSelectsFromACollectionInState() {
             var collection = new List<int> { 1, 2, 3 };
             var selector = PermutationSelectorGenerators.SelectFromCollectionInState<int>("collection");
-            List<object> permutations = await selector(new ConcurrentDictionary<string, object?> { { "collection", collection } });
+            List<object> permutations = selector(new ConcurrentDictionary<string, object?> { { "collection", collection } });
             Assert.Equal(3, permutations.Count);
         }
 
         [Fact]
-        public async Task ItSelectsFromAnIntegerRange() {
+        public void ItSelectsFromAnIntegerRange() {
             var selector = PermutationSelectorGenerators.SelectFromIntegerRange(1, 4);
-            List<object> permutations = await selector(new ConcurrentDictionary<string, object?>());
+            List<object> permutations = selector(new ConcurrentDictionary<string, object?>());
             Assert.Equal(3, permutations.Count);
         }
     }

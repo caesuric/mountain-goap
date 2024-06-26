@@ -10,6 +10,6 @@ namespace MountainGoap {
     /// Delegate type for a callback that defines a list of all possible parameter states for the given state.
     /// </summary>
     /// <param name="state">Current world state.</param>
-    /// <returns>Task of list with each parameter set to be tried for the action.</returns>
-    public delegate Task<List<object>> PermutationSelectorCallback(ConcurrentDictionary<string, object?> state);
+    /// <returns>A list with each parameter set to be tried for the action.</returns>
+    public delegate List<object> PermutationSelectorCallback(ConcurrentDictionary<string, object?> state);
 }

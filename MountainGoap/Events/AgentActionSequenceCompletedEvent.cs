@@ -7,6 +7,5 @@ namespace MountainGoap {
     /// Delegate type for a listener to the event that fires when an agent completes an action sequence.
     /// </summary>
     /// <param name="agent">Agent executing the action sequence.</param>
-    /// <returns>Async Task.</returns>
-    public delegate Task AgentActionSequenceCompletedEvent(Agent agent);
+    public delegate void AgentActionSequenceCompletedEvent(Agent agent);
 }

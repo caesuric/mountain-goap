@@ -116,17 +116,17 @@ namespace MountainGoap {
         /// </summary>
         public StateCostDeltaMultiplierCallback? StateCostDeltaMultiplier { get; set; }
 
-        public static Task<float> DefaultStateCostDeltaMultiplier(Action? action, string stateKey) => Task.FromResult(1f);
+        public static float DefaultStateCostDeltaMultiplier(Action? action, string stateKey) => 1f;
 
         /// <summary>
         /// Event that triggers when an action begins executing.
         /// </summary>
-        public static event BeginExecuteActionEvent OnBeginExecuteAction = (agent, action, parameters) => Task.CompletedTask;
+        public static event BeginExecuteActionEvent OnBeginExecuteAction = (agent, action, parameters) => { };
 
         /// <summary>
         /// Event that triggers when an action finishes executing.
         /// </summary>
-        public static event FinishExecuteActionEvent OnFinishExecuteAction = (agent, action, status, parameters) => Task.CompletedTask;
+        public static event FinishExecuteActionEvent OnFinishExecuteAction = (agent, action, status, parameters) => { };
 
         /// <summary>
         /// Gets or sets the execution status of the action.
@@ -168,9 +168,9 @@ namespace MountainGoap {
         /// </summary>
         /// <param name="currentState">State as it will be when cost is relevant.</param>
         /// <returns>The cost of the action.</returns>
-        public async Task<float> GetCostAsync(ConcurrentDictionary<string, object?> currentState) {
+        public float GetCost(ConcurrentDictionary<string, object?> currentState) {
             try {
-                return await costCallback(this, currentState);
+                return costCallback(this, currentState);
             }
             catch {
                 return float.MaxValue;
@@ -182,17 +182,19 @@ namespace MountainGoap {
         /// </summary>
         /// <param name="agent">Agent executing the action.</param>
         /// <returns>The execution status of the action.</returns>
-        internal async Task<ExecutionStatus> ExecuteAsync(Agent agent) {
-            await OnBeginExecuteAction(agent, this, parameters);
-            if (await IsPossibleAsync(agent.State)) {
-                var newState = await executor(agent, this);
+        internal ExecutionStatus Execute(Agent agent) {
+            OnBeginExecuteAction(agent, this, parameters);
+            if (IsPossible(agent.State)) {
+                var newState = executor(agent, this);
                 if (newState == ExecutionStatus.Succeeded) ApplyEffects(agent.State);
                 ExecutionStatus = newState;
-                await OnFinishExecuteAction(agent, this, ExecutionStatus, parameters);
+                OnFinishExecuteAction(agent, this, ExecutionStatus, parameters);
                 return newState;
             }
-            await OnFinishExecuteAction(agent, this, ExecutionStatus.NotPossible, parameters);
-            return ExecutionStatus.NotPossible;
+            else {
+                OnFinishExecuteAction(agent, this, ExecutionStatus.NotPossible, parameters);
+                return ExecutionStatus.NotPossible;
+            }
         }
 
         /// <summary>
@@ -200,7 +202,7 @@ namespace MountainGoap {
         /// </summary>
         /// <param name="state">The current world state.</param>
         /// <returns>True if the action is possible, otherwise false.</returns>
-        internal async Task<bool> IsPossibleAsync(ConcurrentDictionary<string, object?> state) {
+        internal bool IsPossible(ConcurrentDictionary<string, object?> state) {
             foreach (var kvp in preconditions) {
                 if (!state.ContainsKey(kvp.Key)) return false;
                 if (state[kvp.Key] == null && state[kvp.Key] != kvp.Value) return false;
@@ -212,14 +214,13 @@ namespace MountainGoap {
                 if (state[kvp.Key] == null) return false;
                 if (state[kvp.Key] is object obj && kvp.Value.Value is object obj2) {
                     if (kvp.Value.Operator == ComparisonOperator.LessThan && !Utils.IsLowerThan(obj, obj2)) return false;
-                    if (kvp.Value.Operator == ComparisonOperator.GreaterThan && !Utils.IsHigherThan(obj, obj2)) return false;
-                    if (kvp.Value.Operator == ComparisonOperator.LessThanOrEquals && !Utils.IsLowerThanOrEquals(obj, obj2)) return false;
-                    if (kvp.Value.Operator == ComparisonOperator.GreaterThanOrEquals && !Utils.IsHigherThanOrEquals(obj, obj2)) return false;
+                    else if (kvp.Value.Operator == ComparisonOperator.GreaterThan && !Utils.IsHigherThan(obj, obj2)) return false;
+                    else if (kvp.Value.Operator == ComparisonOperator.LessThanOrEquals && !Utils.IsLowerThanOrEquals(obj, obj2)) return false;
+                    else if (kvp.Value.Operator == ComparisonOperator.GreaterThanOrEquals && !Utils.IsHigherThanOrEquals(obj, obj2)) return false;
                 }
                 else return false;
             }
-            if (stateChecker != null && await stateChecker.Invoke(this, state) == false) 
-                return false;
+            if (stateChecker?.Invoke(this, state) == false) return false;
             return true;
         }
 
@@ -228,10 +229,10 @@ namespace MountainGoap {
         /// </summary>
         /// <param name="state">World state when the action would be performed.</param>
         /// <returns>A list of possible parameter dictionaries that could be used.</returns>
-        internal async Task<List<Dictionary<string, object?>>> GetPermutations(ConcurrentDictionary<string, object?> state) {
+        internal List<Dictionary<string, object?>> GetPermutations(ConcurrentDictionary<string, object?> state) {
             List<Dictionary<string, object?>> combinedOutputs = new();
             Dictionary<string, List<object>> outputs = new();
-            foreach (var kvp in permutationSelectors) outputs[kvp.Key] = await kvp.Value(state);
+            foreach (var kvp in permutationSelectors) outputs[kvp.Key] = kvp.Value(state);
             var permutationParameters = outputs.Keys.ToList();
             List<int> indices = new();
             List<int> counts = new();
@@ -304,8 +305,14 @@ namespace MountainGoap {
         /// <param name="agent">Agent executing the action.</param>
         /// <param name="action">Action to be executed.</param>
         /// <returns>A Failed status, since the action cannot execute without a callback.</returns>
-        private static Task<ExecutionStatus> DefaultExecutorCallback(Agent agent, Action action) => Task.FromResult(ExecutionStatus.Failed);
+        private static ExecutionStatus DefaultExecutorCallback(Agent agent, Action action) {
+            return ExecutionStatus.Failed;
+        }
 
-        private static Task<float> DefaultCostCallback(Action action, ConcurrentDictionary<string, object?> currentState) => Task.FromResult(action.cost);
+#pragma warning disable S1172 // Unused method parameters should be removed
+        private static float DefaultCostCallback(Action action, ConcurrentDictionary<string, object?> currentState) {
+            return action.cost;
+        }
+#pragma warning restore S1172 // Unused method parameters should be removed
     }
 }

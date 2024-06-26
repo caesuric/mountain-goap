@@ -13,8 +13,7 @@ namespace Examples {
         /// <summary>
         /// Runs the demo.
         /// </summary>
-        /// <returns>Async Task.</returns>
-        internal static async Task Run() {
+        internal static void Run() {
             _ = new DefaultLogger();
             Agent agent = new(
                 name: "Happiness Agent",
@@ -69,24 +68,24 @@ namespace Examples {
                 }
             );
             while (agent.State["happiness"] is int happiness && happiness != 10) {
-                await agent.StepAsync();
+                agent.Step();
                 Console.WriteLine($"NEW HAPPINESS IS {agent.State["happiness"]}");
             }
         }
 
-        private static Task<ExecutionStatus> SeekHappinessAction(Agent agent, Action action) {
+        private static ExecutionStatus SeekHappinessAction(Agent agent, Action action) {
             Console.WriteLine("Seeking happiness.");
-            return Task.FromResult(ExecutionStatus.Succeeded);
+            return ExecutionStatus.Succeeded;
         }
 
-        private static Task<ExecutionStatus> SeekGreaterHappinessAction(Agent agent, Action action) {
+        private static ExecutionStatus SeekGreaterHappinessAction(Agent agent, Action action) {
             Console.WriteLine("Seeking even greater happiness.");
-            return Task.FromResult(ExecutionStatus.Succeeded);
+            return ExecutionStatus.Succeeded;
         }
 
-        private static Task<ExecutionStatus> SeekHealth(Agent agent, Action action) {
+        private static ExecutionStatus SeekHealth(Agent agent, Action action) {
             Console.WriteLine("Seeking health.");
-            return Task.FromResult(ExecutionStatus.Succeeded);
+            return ExecutionStatus.Succeeded;
         }
     }
 }
