@@ -10,5 +10,6 @@ namespace MountainGoap {
     /// </summary>
     /// <param name="action">Action being executed or evaluated.</param>
     /// <param name="currentState">State as it will be when the action is executed or evaluated.</param>
-    public delegate void StateMutatorCallback(Action action, ConcurrentDictionary<string, object?> currentState);
+    /// <returns>Async Task.</returns>
+    public delegate Task StateMutatorCallback(Action action, ConcurrentDictionary<string, object?> currentState);
 }

@@ -88,7 +88,7 @@ namespace Examples {
             return output;
         }
 
-        private static void SeeFoodSensorHandler(Agent agent) {
+        private static Task SeeFoodSensorHandler(Agent agent) {
             if (agent.State["position"] is Vector2 agentPosition && agent.State["foodPositions"] is List<Vector2> foodPositions) {
                 var foodPosition = GetFoodInRange(agentPosition, foodPositions, 5f);
                 if (foodPosition != null) agent.State["canSeeFood"] = true;
@@ -97,9 +97,10 @@ namespace Examples {
                     agent.State["eatingFood"] = false;
                 }
             }
+            return Task.CompletedTask;
         }
 
-        private static void FoodProximitySensorHandler(Agent agent) {
+        private static Task FoodProximitySensorHandler(Agent agent) {
             if (agent.State["position"] is Vector2 agentPosition && agent.State["foodPositions"] is List<Vector2> foodPositions) {
                 var foodPosition = GetFoodInRange(agentPosition, foodPositions, 1f);
                 if (foodPosition != null) agent.State["nearFood"] = true;
@@ -108,9 +109,10 @@ namespace Examples {
                     agent.State["eatingFood"] = false;
                 }
             }
+            return Task.CompletedTask;
         }
 
-        private static ExecutionStatus LookForFoodExecutor(Agent agent, Action action) {
+        private static Task<ExecutionStatus> LookForFoodExecutor(Agent agent, Action action) {
             if (agent.State["position"] is Vector2 position) {
                 position.X += Rng.Next(-1, 2);
                 position.X = Math.Clamp(position.X, 0, RpgExample.MaxX - 1);
@@ -118,28 +120,28 @@ namespace Examples {
                 position.Y = Math.Clamp(position.Y, 0, RpgExample.MaxY - 1);
                 agent.State["position"] = position;
             }
-            if (agent.State["canSeeFood"] is bool canSeeFood && canSeeFood) return ExecutionStatus.Succeeded;
-            return ExecutionStatus.Failed;
+            if (agent.State["canSeeFood"] is bool canSeeFood && canSeeFood) return Task.FromResult(ExecutionStatus.Succeeded);
+            return Task.FromResult(ExecutionStatus.Failed);
         }
 
-        private static ExecutionStatus GoToFoodExecutor(Agent agent, Action action) {
+        private static Task<ExecutionStatus> GoToFoodExecutor(Agent agent, Action action) {
             if (action.GetParameter("target") is Vector2 foodPosition && agent.State["position"] is Vector2 position) {
                 position = RpgUtils.MoveTowardsOtherPosition(position, foodPosition);
                 agent.State["position"] = position;
-                if (RpgUtils.InDistance(position, foodPosition, 1f)) return ExecutionStatus.Succeeded;
+                if (RpgUtils.InDistance(position, foodPosition, 1f)) return Task.FromResult(ExecutionStatus.Succeeded);
             }
-            return ExecutionStatus.Failed;
+            return Task.FromResult(ExecutionStatus.Failed);
         }
 
-        private static ExecutionStatus EatExecutor(Agent agent, Action action) {
+        private static Task<ExecutionStatus> EatExecutor(Agent agent, Action action) {
             if (agent.State["foodPositions"] is List<Vector2> foodPositions && agent.State["position"] is Vector2 position) {
                 var foodPosition = GetFoodInRange(position, foodPositions, 1f);
                 if (foodPosition != null) {
                     foodPositions.Remove((Vector2)foodPosition);
-                    return ExecutionStatus.Succeeded;
+                    return Task.FromResult(ExecutionStatus.Succeeded);
                 }
             }
-            return ExecutionStatus.Failed;
+            return Task.FromResult(ExecutionStatus.Failed);
         }
     }
 }

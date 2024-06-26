@@ -9,7 +9,7 @@ namespace MountainGoapTest
     public class ArithmeticPostconditionsTests
     {
         [Fact]
-        public void MinimalExampleTest()
+        public async Task MinimalExampleTest()
         {
 
             List<BaseGoal> goals = new() {
@@ -29,7 +29,7 @@ namespace MountainGoapTest
                 new MountainGoap.Action(
                     name: "Action1",
                     executor: (Agent agent, MountainGoap.Action action) => {
-                        return ExecutionStatus.Succeeded;
+                        return Task.FromResult(ExecutionStatus.Succeeded);
                     },
                     arithmeticPostconditions: new Dictionary<string, object> {
                         { "i", 10 }
@@ -46,9 +46,9 @@ namespace MountainGoapTest
                 }
             );
 
-            agent.Step(StepMode.OneAction);
+            await agent.StepAsync(StepMode.OneAction);
             Assert.Equal(10, agent.State["i"]);
-            agent.Step(StepMode.OneAction);
+            await agent.StepAsync(StepMode.OneAction);
             Assert.Equal(20, agent.State["i"]);
         }
     }

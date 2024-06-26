@@ -1,6 +1,6 @@
 <img src="https://github.com/caesuric/mountain-goap/raw/main/logo.png" alt="Mountain GOAP logo" title="Mountain GOAP" align="right" height="180" />
 
-# Mountain GOAP
+# Async Mountain GOAP
 
 Generic C# GOAP (Goal Oriented Action Planning) library for creating AI agents to be used in games. GOAP is a type of an AI system for games popularized by [the F.E.A.R. AI paper](https://alumni.media.mit.edu/~jorkin/gdc2006_orkin_jeff_fear.pdf). GOAP agents use A\* pathfinding to plan paths through a series of sequential actions, creating action sequences that allow the agent to achieve its goals.
 

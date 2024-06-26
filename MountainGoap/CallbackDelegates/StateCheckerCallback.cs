@@ -11,5 +11,5 @@ namespace MountainGoap {
     /// <param name="action">Action being executed or evaluated.</param>
     /// <param name="currentState">State as it will be when the action is executed or evaluated.</param>
     /// <returns>True if the state is okay for executing the action, otherwise false.</returns>
-    public delegate bool StateCheckerCallback(Action action, ConcurrentDictionary<string, object?> currentState);
+    public delegate Task<bool> StateCheckerCallback(Action action, ConcurrentDictionary<string, object?> currentState);
 }

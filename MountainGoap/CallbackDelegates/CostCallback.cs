@@ -11,5 +11,5 @@ namespace MountainGoap {
     /// <param name="action">Action being executed.</param>
     /// <param name="currentState">State as it will be when cost is relevant.</param>
     /// <returns>Cost of the action.</returns>
-    public delegate float CostCallback(Action action, ConcurrentDictionary<string, object?> currentState);
+    public delegate Task<float> CostCallback(Action action, ConcurrentDictionary<string, object?> currentState);
 }

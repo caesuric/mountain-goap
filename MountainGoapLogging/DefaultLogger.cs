@@ -25,7 +25,7 @@
             logger = config.CreateLogger();
         }
 
-        private void OnEvaluatedActionNode(ActionNode node, ConcurrentDictionary<ActionNode, ActionNode> nodes) {
+        private Task OnEvaluatedActionNode(ActionNode node, ConcurrentDictionary<ActionNode, ActionNode> nodes) {
             var cameFromList = new List<ActionNode>();
             var traceback = node;
             while (nodes.ContainsKey(traceback) && traceback.Action != nodes[traceback].Action) {
@@ -34,54 +34,65 @@
             }
             cameFromList.Reverse();
             logger.Information("Evaluating node {node} with {count} nodes leading to it.", node.Action?.Name, cameFromList.Count - 1);
+            return Task.CompletedTask;
         }
 
-        private void OnPlanUpdated(Agent agent, List<Action> actionList) {
+        private Task OnPlanUpdated(Agent agent, List<Action> actionList) {
             logger.Information("Agent {agent} has a new plan:", agent.Name);
             var count = 1;
             foreach (var action in actionList) {
                 logger.Information("\tStep #{count}: {action}", count, action.Name);
                 count++;
             }
+            return Task.CompletedTask;
         }
 
-        private void OnAgentActionSequenceCompleted(Agent agent) {
+        private Task OnAgentActionSequenceCompleted(Agent agent) {
             logger.Information("Agent {agent} completed action sequence.", agent.Name);
+            return Task.CompletedTask;
         }
 
-        private void OnAgentStep(Agent agent) {
+        private Task OnAgentStep(Agent agent) {
             logger.Information("Agent {agent} is working.", agent.Name);
+            return Task.CompletedTask;
         }
 
-        private void OnBeginExecuteAction(Agent agent, Action action, Dictionary<string, object?> parameters) {
+        private Task OnBeginExecuteAction(Agent agent, Action action, Dictionary<string, object?> parameters) {
             logger.Information("Agent {agent} began executing action {action}.", agent.Name, action.Name);
-            if (parameters.Count == 0) return;
+            if (parameters.Count == 0) return Task.CompletedTask;
             logger.Information("\tAction parameters:");
             foreach (var kvp in parameters) logger.Information("\t\t{key}: {value}", kvp.Key, kvp.Value);
+            return Task.CompletedTask;
         }
 
-        private void OnFinishExecuteAction(Agent agent, Action action, ExecutionStatus status, Dictionary<string, object?> parameters) {
+        private Task OnFinishExecuteAction(Agent agent, Action action, ExecutionStatus status, Dictionary<string, object?> parameters) {
             logger.Information("Agent {agent} finished executing action {action} with status {status}.", agent.Name, action.Name, status);
+            return Task.CompletedTask;
         }
 
-        private void OnPlanningFinished(Agent agent, BaseGoal? goal, float utility) {
+        private Task OnPlanningFinished(Agent agent, BaseGoal? goal, float utility) {
             if (goal is null) logger.Warning("Agent {agent} finished planning and found no possible goal.", agent.Name);
             else logger.Information("Agent {agent} finished planning with goal {goal}, utility value {utility}.", agent.Name, goal.Name, utility);
+            return Task.CompletedTask;
         }
 
-        private void OnPlanningStartedForSingleGoal(Agent agent, BaseGoal goal) {
+        private Task OnPlanningStartedForSingleGoal(Agent agent, BaseGoal goal) {
             logger.Information("Agent {agent} started planning for goal {goal}.", agent.Name, goal.Name);
+            return Task.CompletedTask;
         }
-        private void OnPlanningFinishedForSingleGoal(Agent agent, BaseGoal goal, float utility) {
+        private Task OnPlanningFinishedForSingleGoal(Agent agent, BaseGoal goal, float utility) {
             logger.Information("Agent {agent} finished planning for goal {goal}, utility value {utility}.", agent.Name, goal.Name, utility);
+            return Task.CompletedTask;
         }
 
-        private void OnPlanningStarted(Agent agent) {
+        private Task OnPlanningStarted(Agent agent) {
             logger.Information("Agent {agent} started planning.", agent.Name);
+            return Task.CompletedTask;
         }
 
-        private void OnSensorRun(Agent agent, Sensor sensor) {
+        private Task OnSensorRun(Agent agent, Sensor sensor) {
             logger.Information("Agent {agent} ran sensor {sensor}.", agent.Name, sensor.Name);
+            return Task.CompletedTask;
         }
     }
 }

@@ -42,42 +42,42 @@ namespace MountainGoap {
         /// <summary>
         /// Event that fires when the agent executes a step of work.
         /// </summary>
-        public static event AgentStepEvent OnAgentStep = (agent) => { };
+        public static event AgentStepEvent OnAgentStep = (agent) => Task.CompletedTask;
 
         /// <summary>
         /// Event that fires when an action sequence completes.
         /// </summary>
-        public static event AgentActionSequenceCompletedEvent OnAgentActionSequenceCompleted = (agent) => { };
+        public static event AgentActionSequenceCompletedEvent OnAgentActionSequenceCompleted = (agent) => Task.CompletedTask;
 
         /// <summary>
         /// Event that fires when planning begins.
         /// </summary>
-        public static event PlanningStartedEvent OnPlanningStarted = (agent) => { };
+        public static event PlanningStartedEvent OnPlanningStarted = (agent) => Task.CompletedTask;
 
         /// <summary>
         /// Event that fires when planning for a single goal starts.
         /// </summary>
-        public static event PlanningStartedForSingleGoalEvent OnPlanningStartedForSingleGoal = (agent, goal) => { };
+        public static event PlanningStartedForSingleGoalEvent OnPlanningStartedForSingleGoal = (agent, goal) => Task.CompletedTask;
 
         /// <summary>
         /// Event that fires when planning for a single goal finishes.
         /// </summary>
-        public static event PlanningFinishedForSingleGoalEvent OnPlanningFinishedForSingleGoal = (agent, goal, utility) => { };
+        public static event PlanningFinishedForSingleGoalEvent OnPlanningFinishedForSingleGoal = (agent, goal, utility) => Task.CompletedTask;
 
         /// <summary>
         /// Event that fires when planning finishes.
         /// </summary>
-        public static event PlanningFinishedEvent OnPlanningFinished = (agent, goal, utility) => { };
+        public static event PlanningFinishedEvent OnPlanningFinished = (agent, goal, utility) => Task.CompletedTask;
 
         /// <summary>
         /// Event that fires when a new plan is finalized for the agent.
         /// </summary>
-        public static event PlanUpdatedEvent OnPlanUpdated = (agent, actionList) => { };
+        public static event PlanUpdatedEvent OnPlanUpdated = (agent, actionList) => Task.CompletedTask;
 
         /// <summary>
         /// Event that fires when the pathfinder evaluates a single node in the action graph.
         /// </summary>
-        public static event EvaluatedActionNodeEvent OnEvaluatedActionNode = (node, nodes) => { };
+        public static event EvaluatedActionNodeEvent OnEvaluatedActionNode = (node, nodes) => Task.CompletedTask;
 
         /// <summary>
         /// Gets the chains of actions currently being performed by the agent.
@@ -133,16 +133,17 @@ namespace MountainGoap {
         /// You should call this every time your game state updates.
         /// </summary>
         /// <param name="mode">Mode to be used for executing the step of work.</param>
-        public void Step(StepMode mode = StepMode.Default) {
-            OnAgentStep(this);
+        /// <returns>Async Plan.</returns>
+        public async Task StepAsync(StepMode mode = StepMode.Default) {
+            await OnAgentStep(this);
             foreach (var sensor in Sensors) sensor.Run(this);
             if (mode == StepMode.Default) {
-                StepAsync();
+                await InnerStepAsync();
                 return;
             }
-            if (!IsBusy) Planner.Plan(this, CostMaximum, StepMaximum);
-            if (mode == StepMode.OneAction) Execute();
-            else if (mode == StepMode.AllActions) while (IsBusy) Execute();
+            if (!IsBusy) await Planner.PlanAsync(this, CostMaximum, StepMaximum);
+            if (mode == StepMode.OneAction) await ExecuteAsync();
+            else if (mode == StepMode.AllActions) while (IsBusy) await ExecuteAsync();
         }
 
         /// <summary>
@@ -153,39 +154,33 @@ namespace MountainGoap {
         }
 
         /// <summary>
-        /// Makes a plan.
-        /// </summary>
-        public void Plan() {
-            if (!IsBusy && !IsPlanning) {
-                IsPlanning = true;
-                Planner.Plan(this, CostMaximum, StepMaximum);
-            }
-        }
-
-        /// <summary>
         /// Makes a plan asynchronously.
         /// </summary>
-        public void PlanAsync() {
+        /// <returns>Async Plan.</returns>
+        public async Task PlanAsync() {
             if (!IsBusy && !IsPlanning) {
                 IsPlanning = true;
-                var t = new Thread(new ThreadStart(() => { Planner.Plan(this, CostMaximum, StepMaximum); }));
-                t.Start();
+                await Planner.PlanAsync(this, CostMaximum, StepMaximum);
+                IsPlanning = false;
             }
         }
 
         /// <summary>
         /// Executes the current plan.
         /// </summary>
-        public void ExecutePlan() {
-            if (!IsPlanning) Execute();
+        /// <returns>Async Plan.</returns>
+        public Task ExecutePlanAsync() {
+            if (!IsPlanning) return ExecuteAsync();
+            return Task.CompletedTask;
         }
 
         /// <summary>
         /// Triggers OnPlanningStarted event.
         /// </summary>
         /// <param name="agent">Agent that started planning.</param>
-        internal static void TriggerOnPlanningStarted(Agent agent) {
-            OnPlanningStarted(agent);
+        /// <returns>Async Plan.</returns>
+        internal static async Task TriggerOnPlanningStarted(Agent agent) {
+            await OnPlanningStarted(agent);
         }
 
         /// <summary>
@@ -193,8 +188,9 @@ namespace MountainGoap {
         /// </summary>
         /// <param name="agent">Agent that started planning.</param>
         /// <param name="goal">Goal for which planning was started.</param>
-        internal static void TriggerOnPlanningStartedForSingleGoal(Agent agent, BaseGoal goal) {
-            OnPlanningStartedForSingleGoal(agent, goal);
+        /// <returns>Async Plan.</returns>
+        internal static async Task TriggerOnPlanningStartedForSingleGoal(Agent agent, BaseGoal goal) {
+            await OnPlanningStartedForSingleGoal(agent, goal);
         }
 
         /// <summary>
@@ -203,8 +199,9 @@ namespace MountainGoap {
         /// <param name="agent">Agent that finished planning.</param>
         /// <param name="goal">Goal for which planning was completed.</param>
         /// <param name="utility">Utility of the plan.</param>
-        internal static void TriggerOnPlanningFinishedForSingleGoal(Agent agent, BaseGoal goal, float utility) {
-            OnPlanningFinishedForSingleGoal(agent, goal, utility);
+        /// <returns>Async Plan.</returns>
+        internal static async Task TriggerOnPlanningFinishedForSingleGoal(Agent agent, BaseGoal goal, float utility) {
+            await OnPlanningFinishedForSingleGoal(agent, goal, utility);
         }
 
         /// <summary>
@@ -213,8 +210,9 @@ namespace MountainGoap {
         /// <param name="agent">Agent that finished planning.</param>
         /// <param name="goal">Goal that was selected.</param>
         /// <param name="utility">Utility of the plan.</param>
-        internal static void TriggerOnPlanningFinished(Agent agent, BaseGoal? goal, float utility) {
-            OnPlanningFinished(agent, goal, utility);
+        /// <returns>Async Plan.</returns>
+        internal static async Task TriggerOnPlanningFinished(Agent agent, BaseGoal? goal, float utility) {
+            await OnPlanningFinished(agent, goal, utility);
         }
 
         /// <summary>
@@ -222,8 +220,9 @@ namespace MountainGoap {
         /// </summary>
         /// <param name="agent">Agent for which the plan was updated.</param>
         /// <param name="actionList">New action list for the agent.</param>
-        internal static void TriggerOnPlanUpdated(Agent agent, List<Action> actionList) {
-            OnPlanUpdated(agent, actionList);
+        /// <returns>Async Plan.</returns>
+        internal static async Task TriggerOnPlanUpdated(Agent agent, List<Action> actionList) {
+            await OnPlanUpdated(agent, actionList);
         }
 
         /// <summary>
@@ -231,38 +230,39 @@ namespace MountainGoap {
         /// </summary>
         /// <param name="node">Action node being evaluated.</param>
         /// <param name="nodes">List of nodes in the path that led to this point.</param>
-        internal static void TriggerOnEvaluatedActionNode(ActionNode node, ConcurrentDictionary<ActionNode, ActionNode> nodes) {
-            OnEvaluatedActionNode(node, nodes);
+        /// <returns>Async Plan.</returns>
+        internal static async Task TriggerOnEvaluatedActionNode(ActionNode node, ConcurrentDictionary<ActionNode, ActionNode> nodes) {
+            await OnEvaluatedActionNode(node, nodes);
         }
 
         /// <summary>
         /// Executes an asynchronous step of agent work.
         /// </summary>
-        private void StepAsync() {
+        private async Task InnerStepAsync() {
             if (!IsBusy && !IsPlanning) {
                 IsPlanning = true;
-                var t = new Thread(new ThreadStart(() => { Planner.Plan(this, CostMaximum, StepMaximum); }));
-                t.Start();
+                await Planner.PlanAsync(this, CostMaximum, StepMaximum);
+                IsPlanning = false;
             }
-            else if (!IsPlanning) Execute();
+            else if (!IsPlanning) await ExecuteAsync();
         }
 
         /// <summary>
         /// Executes the current action sequences.
         /// </summary>
-        private void Execute() {
+        private async Task ExecuteAsync() {
             if (CurrentActionSequences.Count > 0) {
                 List<List<Action>> cullableSequences = new();
                 foreach (var sequence in CurrentActionSequences) {
                     if (sequence.Count > 0) {
-                        var executionStatus = sequence[0].Execute(this);
+                        var executionStatus = await sequence[0].ExecuteAsync(this);
                         if (executionStatus != ExecutionStatus.Executing) sequence.RemoveAt(0);
                     }
                     else cullableSequences.Add(sequence);
                 }
                 foreach (var sequence in cullableSequences) {
                     CurrentActionSequences.Remove(sequence);
-                    OnAgentActionSequenceCompleted(this);
+                    await OnAgentActionSequenceCompleted(this);
                 }
             }
             else IsBusy = false;

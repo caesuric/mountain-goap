@@ -8,5 +8,6 @@ namespace MountainGoap {
     /// </summary>
     /// <param name="agent">Agent doing the planning.</param>
     /// <param name="goal">Goal for which planning was started.</param>
-    public delegate void PlanningStartedForSingleGoalEvent(Agent agent, BaseGoal goal);
+    /// <returns>Async Task.</returns>
+    public delegate Task PlanningStartedForSingleGoalEvent(Agent agent, BaseGoal goal);
 }

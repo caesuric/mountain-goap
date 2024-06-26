@@ -24,7 +24,8 @@ namespace Examples {
         /// <summary>
         /// Runs the demo.
         /// </summary>
-        internal static void Run() {
+        /// <returns>Async Task.</returns>
+        internal static async Task Run() {
             _ = new DefaultLogger(logToConsole: false, loggingFile: "rpg-example.log");
             Random random = new();
             List<Agent> agents = new();
@@ -39,10 +40,10 @@ namespace Examples {
                 agents.Add(monster);
             }
             for (int i = 0; i < 600; i++) {
-                foreach (var agent in agents) agent.Step(mode: StepMode.OneAction);
+                foreach (var agent in agents) await agent.StepAsync(mode: StepMode.OneAction);
                 ProcessDeaths(agents);
                 PrintGrid(agents, foodPositions);
-                Thread.Sleep(200);
+                await Task.Delay(200);
             }
         }
 

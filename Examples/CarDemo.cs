@@ -13,7 +13,8 @@ namespace Examples {
         /// <summary>
         /// Runs the demo.
         /// </summary>
-        internal static void Run() {
+        /// <returns>Async Task.</returns>
+        internal static async Task Run() {
             _ = new DefaultLogger();
             var agent = new Agent(
                 name: "Driving Agent",
@@ -65,15 +66,15 @@ namespace Examples {
                         executor: GetInCarExecutor
                     )
                 });
-            while (agent.State["distanceTraveled"] is int distance && distance < 50) agent.Step();
+            while (agent.State["distanceTraveled"] is int distance && distance < 50) await agent.StepAsync();
         }
 
-        private static ExecutionStatus TravelExecutor(Agent agent, Action action) {
-            return ExecutionStatus.Succeeded;
+        private static Task<ExecutionStatus> TravelExecutor(Agent agent, Action action) {
+            return Task.FromResult(ExecutionStatus.Succeeded);
         }
 
-        private static ExecutionStatus GetInCarExecutor(Agent agent, Action action) {
-            return ExecutionStatus.Succeeded;
+        private static Task<ExecutionStatus> GetInCarExecutor(Agent agent, Action action) {
+            return Task.FromResult(ExecutionStatus.Succeeded);
         }
     }
 }

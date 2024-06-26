@@ -7,5 +7,6 @@ namespace MountainGoap {
     /// Delegate type for a callback that runs a sensor during a game loop.
     /// </summary>
     /// <param name="agent">Agent using the sensor.</param>
-    public delegate void SensorRunCallback(Agent agent);
+    /// <returns>Async Task.</returns>
+    public delegate Task SensorRunCallback(Agent agent);
 }

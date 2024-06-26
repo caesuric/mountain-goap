@@ -8,5 +8,6 @@ namespace MountainGoap {
     /// </summary>
     /// <param name="agent">Agent running the sensor.</param>
     /// <param name="sensor">Sensor that is about to run.</param>
-    public delegate void SensorRunEvent(Agent agent, Sensor sensor);
+    /// <returns>Async Task.</returns>
+    public delegate Task SensorRunEvent(Agent agent, Sensor sensor);
 }

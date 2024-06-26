@@ -15,21 +15,24 @@ namespace MountainGoap {
         /// <param name="agent">Agent using the planner.</param>
         /// <param name="costMaximum">Maximum allowable cost for a plan.</param>
         /// <param name="stepMaximum">Maximum allowable steps for a plan.</param>
-        internal static void Plan(Agent agent, float costMaximum, int stepMaximum) {
-            Agent.TriggerOnPlanningStarted(agent);
+        /// <returns>Async Task.</returns>
+        internal static async Task PlanAsync(Agent agent, float costMaximum, int stepMaximum) {
+            await Agent.TriggerOnPlanningStarted(agent);
             float bestPlanUtility = 0;
             ActionAStar? astar;
             ActionNode? cursor;
             ActionAStar? bestAstar = null;
             BaseGoal? bestGoal = null;
             foreach (var goal in agent.Goals) {
-                Agent.TriggerOnPlanningStartedForSingleGoal(agent, goal);
-                ActionGraph graph = new(agent.Actions, agent.State);
-                ActionNode start = new(null, agent.State, new());
-                astar = new(graph, start, goal, costMaximum, stepMaximum);
+                await Agent.TriggerOnPlanningStartedForSingleGoal(agent, goal);
+                var graph = new ActionGraph();
+                await graph.InitAsync(agent.Actions, agent.State);
+                var start = new ActionNode(null, agent.State, new());
+                astar = new ActionAStar();
+                await astar.InitAsync(graph, start, goal, costMaximum, stepMaximum);
                 cursor = astar.FinalPoint;
-                if (cursor is not null && astar.CostSoFar[cursor] == 0) Agent.TriggerOnPlanningFinishedForSingleGoal(agent, goal, 0);
-                else if (cursor is not null) Agent.TriggerOnPlanningFinishedForSingleGoal(agent, goal, goal.Weight / astar.CostSoFar[cursor]);
+                if (cursor is not null && astar.CostSoFar[cursor] == 0) await Agent.TriggerOnPlanningFinishedForSingleGoal(agent, goal, 0);
+                else if (cursor is not null) await Agent.TriggerOnPlanningFinishedForSingleGoal(agent, goal, goal.Weight / astar.CostSoFar[cursor]);
                 if (cursor is not null && cursor.Action is not null && astar.CostSoFar.ContainsKey(cursor) && goal.Weight / astar.CostSoFar[cursor] > bestPlanUtility) {
                     bestPlanUtility = goal.Weight / astar.CostSoFar[cursor];
                     bestAstar = astar;
@@ -37,11 +40,11 @@ namespace MountainGoap {
                 }
             }
             if (bestPlanUtility > 0 && bestAstar is not null && bestGoal is not null && bestAstar.FinalPoint is not null) {
-                UpdateAgentActionList(bestAstar.FinalPoint, bestAstar, agent);
+                await UpdateAgentActionListAsync(bestAstar.FinalPoint, bestAstar, agent);
                 agent.IsBusy = true;
-                Agent.TriggerOnPlanningFinished(agent, bestGoal, bestPlanUtility);
+                await Agent.TriggerOnPlanningFinished(agent, bestGoal, bestPlanUtility);
             }
-            else Agent.TriggerOnPlanningFinished(agent, null, 0);
+            else await Agent.TriggerOnPlanningFinished(agent, null, 0);
             agent.IsPlanning = false;
         }
 
@@ -51,7 +54,7 @@ namespace MountainGoap {
         /// <param name="start">Starting node.</param>
         /// <param name="astar">AStar object used to calculate plan.</param>
         /// <param name="agent">Agent that will implement the plan.</param>
-        private static void UpdateAgentActionList(ActionNode start, ActionAStar astar, Agent agent) {
+        private static async Task UpdateAgentActionListAsync(ActionNode start, ActionAStar astar, Agent agent) {
             ActionNode? cursor = start;
             List<Action> actionList = new();
             while (cursor != null && cursor.Action != null && astar.CameFrom.ContainsKey(cursor)) {
@@ -60,7 +63,7 @@ namespace MountainGoap {
             }
             actionList.Reverse();
             agent.CurrentActionSequences.Add(actionList);
-            Agent.TriggerOnPlanUpdated(agent, actionList);
+            await Agent.TriggerOnPlanUpdated(agent, actionList);
         }
     }
 }

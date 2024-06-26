@@ -7,5 +7,6 @@ namespace MountainGoap {
     /// Delegate type for a listener to the event that fires when an agent begins planning.
     /// </summary>
     /// <param name="agent">Agent doing the planning.</param>
-    public delegate void PlanningStartedEvent(Agent agent);
+    /// <returns>Async Task.</returns>
+    public delegate Task PlanningStartedEvent(Agent agent);
 }

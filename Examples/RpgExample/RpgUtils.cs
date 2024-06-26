@@ -58,10 +58,10 @@ namespace Examples {
         /// </summary>
         /// <param name="state">State for the agent running the selector.</param>
         /// <returns>List of all enemies on the map.</returns>
-        internal static List<object> EnemyPermutations(ConcurrentDictionary<string, object?> state) {
+        internal static Task<List<object>> EnemyPermutations(ConcurrentDictionary<string, object?> state) {
             var enemies = new List<object>();
-            if (state["agents"] is not List<Agent> agents || state["faction"] is not string faction) return enemies;
-            return agents.Where((agent) => agent.State["faction"] is string faction2 && faction2 != faction).ToList<object>();
+            if (state["agents"] is not List<Agent> agents || state["faction"] is not string faction) return Task.FromResult(enemies);
+            return Task.FromResult(agents.Where((agent) => agent.State["faction"] is string faction2 && faction2 != faction).ToList<object>());
         }
 
         /// <summary>
@@ -69,11 +69,11 @@ namespace Examples {
         /// </summary>
         /// <param name="state">State for the agent running the selector.</param>
         /// <returns>List of all food positions on the map.</returns>
-        internal static List<object> FoodPermutations(ConcurrentDictionary<string, object?> state) {
+        internal static Task<List<object>> FoodPermutations(ConcurrentDictionary<string, object?> state) {
             var foodPositions = new List<object>();
-            if (state["foodPositions"] is not List<Vector2> sourcePositions) return foodPositions;
+            if (state["foodPositions"] is not List<Vector2> sourcePositions) return Task.FromResult(foodPositions);
             foreach (var position in sourcePositions) foodPositions.Add(position);
-            return foodPositions;
+            return Task.FromResult(foodPositions);
         }
 
         /// <summary>
@@ -81,11 +81,11 @@ namespace Examples {
         /// </summary>
         /// <param name="state">Current agent state.</param>
         /// <returns>List of all possible starting positions for a move action.</returns>
-        internal static List<object> StartingPositionPermutations(ConcurrentDictionary<string, object?> state) {
+        internal static Task<List<object>> StartingPositionPermutations(ConcurrentDictionary<string, object?> state) {
             var startingPositions = new List<object>();
-            if (state["position"] is not Vector2 position) return startingPositions;
+            if (state["position"] is not Vector2 position) return Task.FromResult(startingPositions);
             startingPositions.Add(position);
-            return startingPositions;
+            return Task.FromResult(startingPositions);
         }
 
         /// <summary>
@@ -95,10 +95,10 @@ namespace Examples {
         /// <param name="state">State as it will be when cost is relevant.</param>
         /// <returns>The cost of the action.</returns>
 #pragma warning disable IDE0060 // Remove unused parameter
-        internal static float GoToEnemyCost(Action action, ConcurrentDictionary<string, object?> state) {
-            if (action.GetParameter("startingPosition") is not Vector2 startingPosition || action.GetParameter("target") is not Agent target) return float.MaxValue;
-            if (target.State["position"] is not Vector2 targetPosition) return float.MaxValue;
-            return Distance(startingPosition, targetPosition);
+        internal static Task<float> GoToEnemyCost(Action action, ConcurrentDictionary<string, object?> state) {
+            if (action.GetParameter("startingPosition") is not Vector2 startingPosition || action.GetParameter("target") is not Agent target) return Task.FromResult(float.MaxValue);
+            if (target.State["position"] is not Vector2 targetPosition) return Task.FromResult(float.MaxValue);
+            return Task.FromResult(Distance(startingPosition, targetPosition));
         }
 #pragma warning restore IDE0060 // Remove unused parameter
 
@@ -109,9 +109,9 @@ namespace Examples {
         /// /// <param name="state">State as it will be when cost is relevant.</param>
         /// <returns>The cost of the action.</returns>
 #pragma warning disable IDE0060 // Remove unused parameter
-        internal static float GoToFoodCost(Action action, ConcurrentDictionary<string, object?> state) {
-            if (action.GetParameter("startingPosition") is not Vector2 startingPosition || action.GetParameter("target") is not Vector2 targetPosition) return float.MaxValue;
-            return Distance(startingPosition, targetPosition);
+        internal static Task<float> GoToFoodCost(Action action, ConcurrentDictionary<string, object?> state) {
+            if (action.GetParameter("startingPosition") is not Vector2 startingPosition || action.GetParameter("target") is not Vector2 targetPosition) return Task.FromResult(float.MaxValue);
+            return Task.FromResult(Distance(startingPosition, targetPosition));
         }
 #pragma warning restore IDE0060 // Remove unused parameter
 

@@ -87,9 +87,9 @@ namespace MountainGoap {
         /// </summary>
         /// <param name="currentState">Current state after previous node is executed.</param>
         /// <returns>The cost of the action to be executed.</returns>
-        internal float Cost(ConcurrentDictionary<string, object?> currentState) {
+        internal async Task<float> CostAsync(ConcurrentDictionary<string, object?> currentState) {
             if (Action == null) return float.MaxValue;
-            return Action.GetCost(currentState);
+            return await Action.GetCostAsync(currentState);
         }
 
         private bool StateMatches(ActionNode otherNode) {

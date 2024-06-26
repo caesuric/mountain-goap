@@ -1,10 +1,12 @@
-﻿namespace MountainGoapTest {
+﻿using System.Threading.Tasks;
+
+namespace MountainGoapTest {
     using System.Collections.Concurrent;
     using System.Collections.Generic;
 
     public class ActionContinuationTests {
         [Fact]
-        public void ItCanContinueActions() {
+        public async Task ItCanContinueActions() {
             var timesExecuted = 0;
             var agent = new Agent(
                 state: new() {
@@ -30,23 +32,23 @@
                             timesExecuted++;
                             if (agent.State["progress"] is int progress && progress < 3) {
                                 agent.State["progress"] = progress + 1;
-                                return ExecutionStatus.Executing;
+                                return Task.FromResult(ExecutionStatus.Executing);
                             }
-                            else return ExecutionStatus.Succeeded;
+                            else return Task.FromResult(ExecutionStatus.Succeeded);
                         }
                     )
                 }
             );
-            agent.Step(StepMode.OneAction);
+            await agent.StepAsync(StepMode.OneAction);
             if (agent.State["key"] is bool value) Assert.False(value);
             else Assert.False(true);
-            agent.Step(StepMode.OneAction);
+            await agent.StepAsync(StepMode.OneAction);
             if (agent.State["key"] is bool value2) Assert.False(value2);
             else Assert.False(true);
-            agent.Step(StepMode.OneAction);
+            await agent.StepAsync(StepMode.OneAction);
             if (agent.State["key"] is bool value3) Assert.False(value3);
             else Assert.False(true);
-            agent.Step(StepMode.OneAction);
+            await agent.StepAsync(StepMode.OneAction);
             if (agent.State["key"] is bool value4) Assert.True(value4);
             else Assert.False(true);
             Assert.Equal(4, timesExecuted);

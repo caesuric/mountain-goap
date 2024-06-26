@@ -79,42 +79,44 @@ namespace Examples {
             return agent;
         }
 
-        private static void SeeEnemiesSensorHandler(Agent agent) {
+        private static Task SeeEnemiesSensorHandler(Agent agent) {
             if (agent.State["agents"] is List<Agent> agents) {
                 var agent2 = RpgUtils.GetEnemyInRange(agent, agents, 5f);
                 if (agent2 != null) agent.State["canSeeEnemies"] = true;
                 else agent.State["canSeeEnemies"] = false;
             }
+            return Task.CompletedTask;
         }
 
-        private static void EnemyProximitySensorHandler(Agent agent) {
+        private static Task EnemyProximitySensorHandler(Agent agent) {
             if (agent.State["agents"] is List<Agent> agents) {
                 var agent2 = RpgUtils.GetEnemyInRange(agent, agents, 1f);
                 if (agent2 != null) agent.State["nearEnemy"] = true;
                 else agent.State["nearEnemy"] = false;
             }
+            return Task.CompletedTask;
         }
 
-        private static ExecutionStatus KillNearbyEnemyExecutor(Agent agent, Action action) {
+        private static Task<ExecutionStatus> KillNearbyEnemyExecutor(Agent agent, Action action) {
             if (agent.State["agents"] is List<Agent> agents) {
                 var agent2 = RpgUtils.GetEnemyInRange(agent, agents, 1f);
                 if (agent2 != null && agent2.State["hp"] is int hp) {
                     hp--;
                     agent2.State["hp"] = hp;
-                    if (hp <= 0) return ExecutionStatus.Succeeded;
+                    if (hp <= 0) return Task.FromResult(ExecutionStatus.Succeeded);
                 }
             }
-            return ExecutionStatus.Failed;
+            return Task.FromResult(ExecutionStatus.Failed);
         }
 
-        private static ExecutionStatus GoToEnemyExecutor(Agent agent, Action action) {
-            if (action.GetParameter("target") is not Agent target) return ExecutionStatus.Failed;
+        private static Task<ExecutionStatus> GoToEnemyExecutor(Agent agent, Action action) {
+            if (action.GetParameter("target") is not Agent target) return Task.FromResult(ExecutionStatus.Failed);
             if (agent.State["position"] is Vector2 pos1 && target.State["position"] is Vector2 pos2) {
                 var newPos = RpgUtils.MoveTowardsOtherPosition(pos1, pos2);
                 agent.State["position"] = newPos;
-                if (RpgUtils.InDistance(newPos, pos2, 1f)) return ExecutionStatus.Succeeded;
+                if (RpgUtils.InDistance(newPos, pos2, 1f)) return Task.FromResult(ExecutionStatus.Succeeded);
             }
-            return ExecutionStatus.Failed;
+            return Task.FromResult(ExecutionStatus.Failed);
         }
     }
 }
