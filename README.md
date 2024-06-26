@@ -66,7 +66,7 @@ Clone the repo and copy the code in the MountainGoap folder to your repo.
 
 ### Using the library after installation
 
-No matter which method of installation you use, you can access MountainGoap by using the `MountainGoap` namespace as a prefix to the library classes, or by including the following line in your code:
+No matter which method of installation you use, you can access MountainGoap by using the `MountainGoap` or `MountainGoap.Async` namespace as a prefix to the library classes, or by including the following line in your code:
 
 ```csharp
 using MountainGoap;

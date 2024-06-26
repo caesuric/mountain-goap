@@ -1,0 +1,28 @@
+{
+  "profiles": {
+    "rpg": {
+      "commandName": "Project",
+      "commandLineArgs": "rpg"
+    },
+    "happiness": {
+      "commandName": "Project",
+      "commandLineArgs": "happiness"
+    },
+    "arithmetic happiness": {
+      "commandName": "Project",
+      "commandLineArgs": "arithmeticHappiness"
+    },
+    "extreme happiness": {
+      "commandName": "Project",
+      "commandLineArgs": "extremeHappiness"
+    },
+    "comparative happiness": {
+      "commandName": "Project",
+      "commandLineArgs": "comparativeHappiness"
+    },
+    "car": {
+      "commandName": "Project",
+      "commandLineArgs": "car"
+    }
+  }
+}
