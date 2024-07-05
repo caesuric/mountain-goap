@@ -24,5 +24,38 @@ namespace MountainGoap {
             : base(name, weight) {
             DesiredState = desiredState ?? new();
         }
+
+        public override bool MeetsGoal(ActionNode actionNode, ActionNode current)
+        {
+            if (actionNode.Action == null) return false;
+            foreach (var kvp in DesiredState) {
+                if (!actionNode.State.ContainsKey(kvp.Key)) return false;
+                else if (!current.State.ContainsKey(kvp.Key)) return false;
+                else if (kvp.Value && actionNode.State[kvp.Key] is object a && current.State[kvp.Key] is object b && Utils.IsLowerThanOrEquals(a, b)) return false;
+                else if (!kvp.Value && actionNode.State[kvp.Key] is object a2 && current.State[kvp.Key] is object b2 && Utils.IsHigherThanOrEquals(a2, b2)) return false;
+            }
+
+            return true;
+        }
+
+        public override float Heuristic(ActionNode actionNode, BaseGoal goal, ActionNode current)
+        {
+            var cost = 1f;
+            foreach (var kvp in DesiredState) {
+                var valueDiff = 0f;
+                var valueDiffMultiplier = (actionNode?.Action?.StateCostDeltaMultiplier ?? Action.DefaultStateCostDeltaMultiplier).Invoke(actionNode?.Action, kvp.Key);
+                if (actionNode.State.ContainsKey(kvp.Key) && actionNode.State[kvp.Key] == null) {
+                    cost += float.PositiveInfinity;
+                    continue;
+                }
+                if (actionNode.State.ContainsKey(kvp.Key) && DesiredState.ContainsKey(kvp.Key)) valueDiff = Convert.ToSingle(actionNode.State[kvp.Key]) - Convert.ToSingle(current.State[kvp.Key]);
+                if (!actionNode.State.ContainsKey(kvp.Key)) cost += float.PositiveInfinity;
+                else if (!current.State.ContainsKey(kvp.Key)) cost += float.PositiveInfinity;
+                else if (!kvp.Value && actionNode.State[kvp.Key] is object a && current.State[kvp.Key] is object b && Utils.IsLowerThanOrEquals(a, b)) cost += valueDiff * valueDiffMultiplier;
+                else if (kvp.Value && actionNode.State[kvp.Key] is object a2 && current.State[kvp.Key] is object b2 && Utils.IsHigherThanOrEquals(a2, b2)) cost -= valueDiff * valueDiffMultiplier;
+            }
+
+            return cost;
+        }
     }
 }

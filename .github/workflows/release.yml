@@ -1,18 +1,18 @@
-name: Release
+name: .NET
+name: Build and Test
 
 on:
   push:
-    tags:
-      - "v*"
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
-  tagged-release:
-    name: "Tagged Release"
-    runs-on: "ubuntu-latest"
+  build:
+
+    runs-on: ubuntu-latest
     permissions:
       contents: write
-    environment: "Actions Environment"
-
     steps:
       - uses: actions/checkout@v3
       - name: Setup .NET
@@ -22,18 +22,7 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
-        run: dotnet build -c Release --no-restore
+        run: dotnet build --no-restore
       - name: Test
-        run: dotnet test --verbosity normal
-      - name: Zip
-        run: zip -j mountain-goap-${{ github.ref_name }}.zip MountainGoap/bin/Release/netstandard2.1/MountainGoap.*
-      - uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          prerelease: true
-          files: |
-            mountain-goap-${{ github.ref_name }}.zip
-      - name: Package for NuGet
-        run: dotnet pack -c Release -o . MountainGoap/MountainGoap.csproj
-      - name: Publish to NuGet
-        run: dotnet nuget push *.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
+        run: dotnet test --no-build --verbosity normal
+

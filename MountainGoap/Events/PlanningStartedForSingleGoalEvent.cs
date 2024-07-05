@@ -8,5 +8,5 @@ namespace MountainGoap {
     /// </summary>
     /// <param name="agent">Agent doing the planning.</param>
     /// <param name="goal">Goal for which planning was started.</param>
-    public delegate void PlanningStartedForSingleGoalEvent(Agent agent, BaseGoal goal);
+    public delegate void PlanningStartedForSingleGoalEvent(IAgent agent, BaseGoal goal);
 }

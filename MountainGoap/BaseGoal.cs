@@ -28,5 +28,16 @@ namespace MountainGoap {
             Name = name ?? $"Goal {Guid.NewGuid()}";
             Weight = weight;
         }
+
+        /// <summary>
+        /// Indicates whether or not a goal is met by an action node.
+        /// </summary>
+        /// <param name="goal">Goal to be met.</param>
+        /// <param name="actionNode">Action node being tested.</param>
+        /// <param name="current">Prior node in the action chain.</param>
+        /// <returns>True if the goal is met, otherwise false.</returns>
+        public abstract bool MeetsGoal(ActionNode actionNode, ActionNode current);
+
+        public abstract float Heuristic(ActionNode actionNode, BaseGoal goal, ActionNode current);
     }
 }

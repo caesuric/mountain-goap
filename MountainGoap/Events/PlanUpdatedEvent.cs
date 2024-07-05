@@ -8,5 +8,5 @@ namespace MountainGoap {
     /// </summary>
     /// <param name="agent">Agent executing the step of work.</param>
     /// <param name="plan">Plan determined to be optimal for the agent.</param>
-    public delegate void PlanUpdatedEvent(Agent agent, List<Action> plan);
+    public delegate void PlanUpdatedEvent(IAgent agent, List<IAction> plan);
 }

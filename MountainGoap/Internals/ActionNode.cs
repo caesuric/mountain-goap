@@ -17,7 +17,7 @@ namespace MountainGoap {
         /// <param name="action">Action to be assigned to the node.</param>
         /// <param name="state">State to be assigned to the node.</param>
         /// <param name="parameters">Paramters to be passed to the action in the node.</param>
-        internal ActionNode(Action? action, ConcurrentDictionary<string, object?> state, Dictionary<string, object?> parameters) {
+        internal ActionNode(IAction? action, ConcurrentDictionary<string, object?> state, Dictionary<string, object?> parameters) {
             if (action != null) Action = action.Copy();
             State = state.Copy();
             Parameters = parameters.Copy();
@@ -37,7 +37,7 @@ namespace MountainGoap {
         /// <summary>
         /// Gets or sets the action to be executed when the world is in the defined <see cref="State"/>.
         /// </summary>
-        public Action? Action { get; set; }
+        public IAction? Action { get; set; }
 
 #pragma warning disable S3875 // "operator==" should not be overloaded on reference types
         /// <summary>
@@ -76,7 +76,8 @@ namespace MountainGoap {
         /// <inheritdoc/>
         public override int GetHashCode() {
             var hashCode = 629302477;
-            if (Action != null) hashCode = (hashCode * -1521134295) + EqualityComparer<Action>.Default.GetHashCode(Action);
+            if (Action is Action a) hashCode = (hashCode * -1521134295) + EqualityComparer<Action>.Default.GetHashCode(a);
+            if (Action is ActionAsync a2) hashCode = (hashCode * -1521134295) + EqualityComparer<ActionAsync>.Default.GetHashCode(a2);
             else hashCode *= -1521134295;
             hashCode = (hashCode * -1521134295) + EqualityComparer<ConcurrentDictionary<string, object?>>.Default.GetHashCode(State);
             return hashCode;

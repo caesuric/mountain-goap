@@ -15,7 +15,7 @@ namespace MountainGoap {
         /// <param name="agent">Agent using the planner.</param>
         /// <param name="costMaximum">Maximum allowable cost for a plan.</param>
         /// <param name="stepMaximum">Maximum allowable steps for a plan.</param>
-        internal static void Plan(Agent agent, float costMaximum, int stepMaximum) {
+        internal static void Plan(IAgent agent, float costMaximum, int stepMaximum, int maxStepDepth = 2000) {
             Agent.TriggerOnPlanningStarted(agent);
             float bestPlanUtility = 0;
             ActionAStar? astar;
@@ -24,9 +24,9 @@ namespace MountainGoap {
             BaseGoal? bestGoal = null;
             foreach (var goal in agent.Goals) {
                 Agent.TriggerOnPlanningStartedForSingleGoal(agent, goal);
-                ActionGraph graph = new(agent.Actions, agent.State);
+                ActionGraph graph = new(agent.ActionList, agent.State);
                 ActionNode start = new(null, agent.State, new());
-                astar = new(graph, start, goal, costMaximum, stepMaximum);
+                astar = new(graph, start, goal, maxStepDepth, costMaximum, stepMaximum);
                 cursor = astar.FinalPoint;
                 if (cursor is not null && astar.CostSoFar[cursor] == 0) Agent.TriggerOnPlanningFinishedForSingleGoal(agent, goal, 0);
                 else if (cursor is not null) Agent.TriggerOnPlanningFinishedForSingleGoal(agent, goal, goal.Weight / astar.CostSoFar[cursor]);
@@ -51,15 +51,15 @@ namespace MountainGoap {
         /// <param name="start">Starting node.</param>
         /// <param name="astar">AStar object used to calculate plan.</param>
         /// <param name="agent">Agent that will implement the plan.</param>
-        private static void UpdateAgentActionList(ActionNode start, ActionAStar astar, Agent agent) {
+        private static void UpdateAgentActionList(ActionNode start, ActionAStar astar, IAgent agent) {
             ActionNode? cursor = start;
-            List<Action> actionList = new();
+            List<IAction> actionList = new();
             while (cursor != null && cursor.Action != null && astar.CameFrom.ContainsKey(cursor)) {
                 actionList.Add(cursor.Action);
                 cursor = astar.CameFrom[cursor];
             }
             actionList.Reverse();
-            agent.CurrentActionSequences.Add(actionList);
+            agent.AddCurrentActionSequences(actionList);
             Agent.TriggerOnPlanUpdated(agent, actionList);
         }
     }

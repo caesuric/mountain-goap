@@ -11,11 +11,12 @@ namespace MountainGoap {
     /// <summary>
     /// GOAP agent.
     /// </summary>
-    public class Agent {
+    public class Agent : IAgent
+    {
         /// <summary>
         /// Name of the agent.
         /// </summary>
-        public readonly string Name;
+        public string Name { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Agent"/> class.
@@ -104,6 +105,8 @@ namespace MountainGoap {
         /// </summary>
         public List<Action> Actions { get; set; } = new();
 
+        public List<IAction> ActionList => Actions.OfType<IAction>().ToList();
+
         /// <summary>
         /// Gets or sets the sensors available to the agent.
         /// </summary>
@@ -128,6 +131,11 @@ namespace MountainGoap {
         /// Gets or sets a value indicating whether the agent is currently planning.
         /// </summary>
         public bool IsPlanning { get; set; } = false;
+
+        public void AddCurrentActionSequences(List<IAction> actionList)
+        {
+            CurrentActionSequences.Add(actionList.OfType<Action>().ToList());
+        }
 
         /// <summary>
         /// You should call this every time your game state updates.
@@ -184,7 +192,7 @@ namespace MountainGoap {
         /// Triggers OnPlanningStarted event.
         /// </summary>
         /// <param name="agent">Agent that started planning.</param>
-        internal static void TriggerOnPlanningStarted(Agent agent) {
+        internal static void TriggerOnPlanningStarted(IAgent agent) {
             OnPlanningStarted(agent);
         }
 
@@ -193,7 +201,7 @@ namespace MountainGoap {
         /// </summary>
         /// <param name="agent">Agent that started planning.</param>
         /// <param name="goal">Goal for which planning was started.</param>
-        internal static void TriggerOnPlanningStartedForSingleGoal(Agent agent, BaseGoal goal) {
+        internal static void TriggerOnPlanningStartedForSingleGoal(IAgent agent, BaseGoal goal) {
             OnPlanningStartedForSingleGoal(agent, goal);
         }
 
@@ -203,7 +211,7 @@ namespace MountainGoap {
         /// <param name="agent">Agent that finished planning.</param>
         /// <param name="goal">Goal for which planning was completed.</param>
         /// <param name="utility">Utility of the plan.</param>
-        internal static void TriggerOnPlanningFinishedForSingleGoal(Agent agent, BaseGoal goal, float utility) {
+        internal static void TriggerOnPlanningFinishedForSingleGoal(IAgent agent, BaseGoal goal, float utility) {
             OnPlanningFinishedForSingleGoal(agent, goal, utility);
         }
 
@@ -213,7 +221,7 @@ namespace MountainGoap {
         /// <param name="agent">Agent that finished planning.</param>
         /// <param name="goal">Goal that was selected.</param>
         /// <param name="utility">Utility of the plan.</param>
-        internal static void TriggerOnPlanningFinished(Agent agent, BaseGoal? goal, float utility) {
+        internal static void TriggerOnPlanningFinished(IAgent agent, BaseGoal? goal, float utility) {
             OnPlanningFinished(agent, goal, utility);
         }
 
@@ -222,7 +230,7 @@ namespace MountainGoap {
         /// </summary>
         /// <param name="agent">Agent for which the plan was updated.</param>
         /// <param name="actionList">New action list for the agent.</param>
-        internal static void TriggerOnPlanUpdated(Agent agent, List<Action> actionList) {
+        internal static void TriggerOnPlanUpdated(IAgent agent, List<IAction> actionList) {
             OnPlanUpdated(agent, actionList);
         }
 
@@ -231,7 +239,8 @@ namespace MountainGoap {
         /// </summary>
         /// <param name="node">Action node being evaluated.</param>
         /// <param name="nodes">List of nodes in the path that led to this point.</param>
-        internal static void TriggerOnEvaluatedActionNode(ActionNode node, ConcurrentDictionary<ActionNode, ActionNode> nodes) {
+        internal static void TriggerOnEvaluatedActionNode(ActionNode node, ConcurrentDictionary<ActionNode, ActionNode> nodes)
+        {
             OnEvaluatedActionNode(node, nodes);
         }
 

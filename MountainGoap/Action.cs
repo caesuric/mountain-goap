@@ -8,14 +8,83 @@ namespace MountainGoap {
     using System.Linq;
     using System.Reflection;
 
+    public interface IAction
+    {
+        public string Name { get; set; }
+        
+        /// <summary>
+        /// Gets or sets multiplier for delta value to provide delta cost.
+        /// </summary>
+        StateCostDeltaMultiplierCallback? StateCostDeltaMultiplier { get; set; }
+
+        /// <summary>
+        /// Gets or sets the execution status of the action.
+        /// </summary>
+        ExecutionStatus ExecutionStatus { get; set; }
+
+        /// <summary>
+        /// Makes a copy of the action.
+        /// </summary>
+        /// <returns>A copy of the action.</returns>
+        IAction Copy();
+
+        /// <summary>
+        /// Sets a parameter to the action.
+        /// </summary>
+        /// <param name="key">Key to be set.</param>
+        /// <param name="value">Value to be set.</param>
+        void SetParameter(string key, object value);
+
+        /// <summary>
+        /// Gets a parameter to the action.
+        /// </summary>
+        /// <param name="key">Key for the value to be retrieved.</param>
+        /// <returns>The value stored at the key specified.</returns>
+        object? GetParameter(string key);
+
+        /// <summary>
+        /// Gets the cost of the action.
+        /// </summary>
+        /// <param name="currentState">State as it will be when cost is relevant.</param>
+        /// <returns>The cost of the action.</returns>
+        float GetCost(ConcurrentDictionary<string, object?> currentState);
+
+        /// <summary>
+        /// Determines whether or not an action is possible.
+        /// </summary>
+        /// <param name="state">The current world state.</param>
+        /// <returns>True if the action is possible, otherwise false.</returns>
+        bool IsPossible(ConcurrentDictionary<string, object?> state);
+
+        /// <summary>
+        /// Gets all permutations of parameters possible for an action.
+        /// </summary>
+        /// <param name="state">World state when the action would be performed.</param>
+        /// <returns>A list of possible parameter dictionaries that could be used.</returns>
+        List<Dictionary<string, object?>> GetPermutations(ConcurrentDictionary<string, object?> state);
+
+        /// <summary>
+        /// Applies the effects of the action.
+        /// </summary>
+        /// <param name="state">World state to which to apply effects.</param>
+        void ApplyEffects(ConcurrentDictionary<string, object?> state);
+
+        /// <summary>
+        /// Sets all parameters to the action.
+        /// </summary>
+        /// <param name="parameters">Dictionary of parameters to be passed to the action.</param>
+        void SetParameters(Dictionary<string, object?> parameters);
+    }
+
     /// <summary>
     /// Represents an action in a GOAP system.
     /// </summary>
-    public class Action {
+    public class Action : IAction
+    {
         /// <summary>
         /// Name of the action.
         /// </summary>
-        public readonly string Name;
+        public string Name { get; set; }
 
         /// <summary>
         /// Cost of the action.
@@ -116,7 +185,7 @@ namespace MountainGoap {
         /// </summary>
         public StateCostDeltaMultiplierCallback? StateCostDeltaMultiplier { get; set; }
 
-        public static float DefaultStateCostDeltaMultiplier(Action? action, string stateKey) => 1f;
+        public static float DefaultStateCostDeltaMultiplier(IAction? action, string stateKey) => 1f;
 
         /// <summary>
         /// Event that triggers when an action begins executing.
@@ -131,13 +200,13 @@ namespace MountainGoap {
         /// <summary>
         /// Gets or sets the execution status of the action.
         /// </summary>
-        internal ExecutionStatus ExecutionStatus { get; set; } = ExecutionStatus.NotYetExecuted;
+        public ExecutionStatus ExecutionStatus { get; set; } = ExecutionStatus.NotYetExecuted;
 
         /// <summary>
         /// Makes a copy of the action.
         /// </summary>
         /// <returns>A copy of the action.</returns>
-        public Action Copy() {
+        public IAction Copy() {
             var newAction = new Action(Name, permutationSelectors, executor, cost, costCallback, preconditions.Copy(), comparativePreconditions.Copy(), postconditions.Copy(), arithmeticPostconditions.CopyNonNullable(), parameterPostconditions.Copy(), stateMutator, stateChecker, StateCostDeltaMultiplier) {
                 parameters = parameters.Copy()
             };
@@ -202,7 +271,7 @@ namespace MountainGoap {
         /// </summary>
         /// <param name="state">The current world state.</param>
         /// <returns>True if the action is possible, otherwise false.</returns>
-        internal bool IsPossible(ConcurrentDictionary<string, object?> state) {
+        public bool IsPossible(ConcurrentDictionary<string, object?> state) {
             foreach (var kvp in preconditions) {
                 if (!state.ContainsKey(kvp.Key)) return false;
                 if (state[kvp.Key] == null && state[kvp.Key] != kvp.Value) return false;
@@ -229,7 +298,7 @@ namespace MountainGoap {
         /// </summary>
         /// <param name="state">World state when the action would be performed.</param>
         /// <returns>A list of possible parameter dictionaries that could be used.</returns>
-        internal List<Dictionary<string, object?>> GetPermutations(ConcurrentDictionary<string, object?> state) {
+        public List<Dictionary<string, object?>> GetPermutations(ConcurrentDictionary<string, object?> state) {
             List<Dictionary<string, object?>> combinedOutputs = new();
             Dictionary<string, List<object>> outputs = new();
             foreach (var kvp in permutationSelectors) outputs[kvp.Key] = kvp.Value(state);
@@ -257,7 +326,7 @@ namespace MountainGoap {
         /// Applies the effects of the action.
         /// </summary>
         /// <param name="state">World state to which to apply effects.</param>
-        internal void ApplyEffects(ConcurrentDictionary<string, object?> state) {
+        public void ApplyEffects(ConcurrentDictionary<string, object?> state) {
             foreach (var kvp in postconditions) state[kvp.Key] = kvp.Value;
             foreach (var kvp in arithmeticPostconditions) {
                 if (!state.ContainsKey(kvp.Key)) continue;
@@ -279,7 +348,7 @@ namespace MountainGoap {
         /// Sets all parameters to the action.
         /// </summary>
         /// <param name="parameters">Dictionary of parameters to be passed to the action.</param>
-        internal void SetParameters(Dictionary<string, object?> parameters) {
+        public void SetParameters(Dictionary<string, object?> parameters) {
             this.parameters = parameters;
         }
 

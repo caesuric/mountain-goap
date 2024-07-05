@@ -2,6 +2,8 @@
 // Copyright (c) Chris Muller. All rights reserved.
 // </copyright>
 
+using System.Collections.Concurrent;
+
 namespace MountainGoap {
     using System.Collections.Concurrent;
 
