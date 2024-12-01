@@ -4,10 +4,18 @@
 
 namespace MountainGoap {
     /// <summary>
-    /// Delegate type for a callback that defines a list of all possible parameter states for the given state.
+    /// Delegate type for a callback that performs an action.
     /// </summary>
     /// <param name="agent">Agent executing the action.</param>
     /// <param name="action">Action being executed.</param>
     /// <returns>New execution status of the action.</returns>
     public delegate ExecutionStatus ExecutorCallback(Agent agent, Action action);
+
+    /// <summary>
+    /// Delegate type for a callback that performs an action as a Task.
+    /// </summary>
+    /// <param name="agent">Agent executing the action.</param>
+    /// <param name="action">Action being executed.</param>
+    /// <returns>New execution status of the action.</returns>
+    public delegate Task<ExecutionStatus> ExecutorAsTaskCallback(Agent agent, Action action);
 }

@@ -13,4 +13,14 @@ namespace MountainGoap {
     /// <param name="status">Execution status of the action.</param>
     /// <param name="parameters">Parameters to the action being executed.</param>
     public delegate void FinishExecuteActionEvent(Agent agent, Action action, ExecutionStatus status, Dictionary<string, object?> parameters);
+
+    /// <summary>
+    /// Delegate type for a listener to the event that fires when an action finishes executing as a task.
+    /// </summary>
+    /// <param name="agent">Agent executing the action.</param>
+    /// <param name="action">Action being executed.</param>
+    /// <param name="status">Execution status of the action.</param>
+    /// <param name="parameters">Parameters to the action being executed.</param>
+    /// <returns>A Task for an asynchronous operation.</returns>
+    public delegate Task FinishExecuteActionAsTaskEvent(Agent agent, Action action, ExecutionStatus status, Dictionary<string, object?> parameters);
 }

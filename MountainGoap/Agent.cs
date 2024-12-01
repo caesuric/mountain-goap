@@ -45,9 +45,19 @@ namespace MountainGoap {
         public static event AgentStepEvent OnAgentStep = (agent) => { };
 
         /// <summary>
+        /// Event that fires when the agent executes a step of work as a Task.
+        /// </summary>
+        public static event AgentStepAsTaskEvent OnAgentStepAsTask = (agent) => Task.CompletedTask;
+
+        /// <summary>
         /// Event that fires when an action sequence completes.
         /// </summary>
         public static event AgentActionSequenceCompletedEvent OnAgentActionSequenceCompleted = (agent) => { };
+
+        /// <summary>
+        /// Event that fires when an action sequence completes as a Task.
+        /// </summary>
+        public static event AgentActionSequenceCompletedAsTaskEvent OnAgentActionSequenceCompletedAsTask = (agent) => Task.CompletedTask;
 
         /// <summary>
         /// Event that fires when planning begins.
@@ -146,6 +156,23 @@ namespace MountainGoap {
         }
 
         /// <summary>
+        /// Steps forward as a Task for async purposes.
+        /// </summary>
+        /// <param name="mode">Mode to use for the step operation.</param>
+        /// <returns>A Task for async operations.</returns>
+        public async Task StepAsTask(StepMode mode = StepMode.Default) {
+            await OnAgentStepAsTask(this);
+            foreach (var sensor in Sensors) await sensor.RunAsTask(this);
+            if (mode == StepMode.Default) {
+                await StepAsyncAsTask();
+                return;
+            }
+            if (!IsBusy) await Task.Run(() => Planner.Plan(this, CostMaximum, StepMaximum));
+            if (mode == StepMode.OneAction) await ExecuteAsTask();
+            else if (mode == StepMode.AllActions) while (IsBusy) await ExecuteAsTask();
+        }
+
+        /// <summary>
         /// Clears the current action sequences (also known as plans).
         /// </summary>
         public void ClearPlan() {
@@ -174,10 +201,28 @@ namespace MountainGoap {
         }
 
         /// <summary>
+        /// Plans as a Task for async purposes.
+        /// </summary>
+        /// <returns>A completed Task.</returns>
+        public Task PlanAsTask() {
+            if (!IsPlanning) return ExecuteAsTask();
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
         /// Executes the current plan.
         /// </summary>
         public void ExecutePlan() {
             if (!IsPlanning) Execute();
+        }
+
+        /// <summary>
+        /// Executes plan as a Task for async purposes.
+        /// </summary>
+        /// <returns>A completed Task.</returns>
+        public Task ExecutePlanAsTask() {
+            if (!IsPlanning) return ExecutePlanAsTask();
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -245,6 +290,33 @@ namespace MountainGoap {
                 t.Start();
             }
             else if (!IsPlanning) Execute();
+        }
+
+        private async Task StepAsyncAsTask() {
+            if (!IsBusy && !IsPlanning) {
+                IsPlanning = true;
+                await Task.Run(() => Planner.Plan(this, CostMaximum, StepMaximum));
+                IsPlanning = false;
+            }
+            else if (!IsPlanning) await ExecuteAsTask();
+        }
+
+        private async Task ExecuteAsTask() {
+            if (CurrentActionSequences.Count > 0) {
+                List<List<Action>> cullableSequences = new();
+                foreach (var sequence in CurrentActionSequences) {
+                    if (sequence.Count > 0) {
+                        var executionStatus = await sequence[0].ExecuteAsTask(this);
+                        if (executionStatus != ExecutionStatus.Executing) sequence.RemoveAt(0);
+                    }
+                    else cullableSequences.Add(sequence);
+                }
+                foreach (var sequence in cullableSequences) {
+                    CurrentActionSequences.Remove(sequence);
+                    await OnAgentActionSequenceCompletedAsTask(this);
+                }
+            }
+            else IsBusy = false;
         }
 
         /// <summary>

@@ -33,6 +33,11 @@ namespace MountainGoap {
         private readonly ExecutorCallback executor;
 
         /// <summary>
+        /// The executor callback for the action as a Task.
+        /// </summary>
+        private readonly ExecutorAsTaskCallback executorAsTask;
+
+        /// <summary>
         /// The cost callback for the action.
         /// </summary>
         private readonly CostCallback costCallback;
@@ -83,6 +88,7 @@ namespace MountainGoap {
         /// <param name="name">Name for the action, for eventing and logging purposes.</param>
         /// <param name="permutationSelectors">The permutation selector callback for the action's parameters.</param>
         /// <param name="executor">The executor callback for the action.</param>
+        /// <param name="executorAsTask">The executor callback for the action as a Task.</param>
         /// <param name="cost">Cost of the action.</param>
         /// <param name="costCallback">Callback for determining the cost of the action.</param>
         /// <param name="preconditions">Preconditions required in the world state in order for the action to occur.</param>
@@ -93,11 +99,13 @@ namespace MountainGoap {
         /// <param name="stateMutator">Callback for modifying state after action execution or evaluation.</param>
         /// <param name="stateChecker">Callback for checking state before action execution or evaluation.</param>
         /// <param name="stateCostDeltaMultiplier">Callback for multiplier for delta value to provide delta cost.</param>
-        public Action(string? name = null, Dictionary<string, PermutationSelectorCallback>? permutationSelectors = null, ExecutorCallback? executor = null, float cost = 1f, CostCallback? costCallback = null, Dictionary<string, object?>? preconditions = null, Dictionary<string, ComparisonValuePair>? comparativePreconditions = null, Dictionary<string, object?>? postconditions = null, Dictionary<string, object>? arithmeticPostconditions = null, Dictionary<string, string>? parameterPostconditions = null, StateMutatorCallback? stateMutator = null, StateCheckerCallback? stateChecker = null, StateCostDeltaMultiplierCallback? stateCostDeltaMultiplier = null) {
+        public Action(string? name = null, Dictionary<string, PermutationSelectorCallback>? permutationSelectors = null, ExecutorCallback? executor = null, float cost = 1f, CostCallback? costCallback = null, Dictionary<string, object?>? preconditions = null, Dictionary<string, ComparisonValuePair>? comparativePreconditions = null, Dictionary<string, object?>? postconditions = null, Dictionary<string, object>? arithmeticPostconditions = null, Dictionary<string, string>? parameterPostconditions = null, StateMutatorCallback? stateMutator = null, StateCheckerCallback? stateChecker = null, StateCostDeltaMultiplierCallback? stateCostDeltaMultiplier = null, ExecutorAsTaskCallback? executorAsTask = null) {
             if (permutationSelectors == null) this.permutationSelectors = new();
             else this.permutationSelectors = permutationSelectors;
             if (executor == null) this.executor = DefaultExecutorCallback;
             else this.executor = executor;
+            if (executorAsTask == null) this.executorAsTask = DefaultExecutorAsTaskCallback;
+            else this.executorAsTask = executorAsTask;
             Name = name ?? $"Action {Guid.NewGuid()} ({this.executor.GetMethodInfo().Name})";
             this.cost = cost;
             this.costCallback = costCallback ?? DefaultCostCallback;
@@ -124,9 +132,19 @@ namespace MountainGoap {
         public static event BeginExecuteActionEvent OnBeginExecuteAction = (agent, action, parameters) => { };
 
         /// <summary>
+        /// Event that triggers when an action begins executing as a task.
+        /// </summary>
+        public static event BeginExecuteActionAsTaskEvent OnBeginExecuteActionAsTask = (agent, action, parameters) => Task.CompletedTask;
+
+        /// <summary>
         /// Event that triggers when an action finishes executing.
         /// </summary>
         public static event FinishExecuteActionEvent OnFinishExecuteAction = (agent, action, status, parameters) => { };
+
+        /// <summary>
+        /// Event that triggers when an action finishes executing as a task.
+        /// </summary>
+        public static event FinishExecuteActionAsTaskEvent OnFinishExecuteActionAsTask = (agent, action, status, parameters) => Task.CompletedTask;
 
         /// <summary>
         /// Gets or sets the execution status of the action.
@@ -193,6 +211,26 @@ namespace MountainGoap {
             }
             else {
                 OnFinishExecuteAction(agent, this, ExecutionStatus.NotPossible, parameters);
+                return ExecutionStatus.NotPossible;
+            }
+        }
+
+        /// <summary>
+        /// Executes a step of work for the agent as a task.
+        /// </summary>
+        /// <param name="agent">Agent executing the action.</param>
+        /// <returns>A Task with the execution status of the action.</returns>
+        internal async Task<ExecutionStatus> ExecuteAsTask(Agent agent) {
+            await OnBeginExecuteActionAsTask(agent, this, parameters);
+            if (IsPossible(agent.State)) {
+                var newState = await executorAsTask(agent, this);
+                if (newState == ExecutionStatus.Succeeded) ApplyEffects(agent.State);
+                ExecutionStatus = newState;
+                await OnFinishExecuteActionAsTask(agent, this, ExecutionStatus, parameters);
+                return newState;
+            }
+            else {
+                await OnFinishExecuteActionAsTask(agent, this, ExecutionStatus.NotPossible, parameters);
                 return ExecutionStatus.NotPossible;
             }
         }
@@ -307,6 +345,16 @@ namespace MountainGoap {
         /// <returns>A Failed status, since the action cannot execute without a callback.</returns>
         private static ExecutionStatus DefaultExecutorCallback(Agent agent, Action action) {
             return ExecutionStatus.Failed;
+        }
+
+        /// <summary>
+        /// Default executor callback to be used if no callback is passed in.
+        /// </summary>
+        /// <param name="agent">Agent executing the action.</param>
+        /// <param name="action">Action to be executed.</param>
+        /// <returns>A Task with a Failed status, since the action cannot execute without a callback.</returns>
+        private static Task<ExecutionStatus> DefaultExecutorAsTaskCallback(Agent agent, Action action) {
+            return Task.FromResult(ExecutionStatus.Failed);
         }
 
 #pragma warning disable S1172 // Unused method parameters should be removed
