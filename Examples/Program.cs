@@ -43,6 +43,10 @@
             consumerCommand.SetHandler(() => {
                 RunConsumerDemo();
             });
+            var hashIssueCommand = new Command("hashIssue", "Run the hash issue debug output.");
+            hashIssueCommand.SetHandler(() => {
+                HashIssue.Run();
+            });
             var cmd = new RootCommand {
                 happinessIncrementerCommand,
                 rpgCommand,
@@ -50,7 +54,8 @@
                 extremeHappinessIncrementerCommand,
                 comparativeHappinessIncrementerCommand,
                 carCommand,
-                consumerCommand
+                consumerCommand,
+                hashIssueCommand,
             };
             return await cmd.InvokeAsync(args);
         }

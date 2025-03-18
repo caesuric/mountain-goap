@@ -112,13 +112,6 @@ namespace MountainGoap {
         }
 
         /// <summary>
-        /// Gets or sets multiplier for delta value to provide delta cost.
-        /// </summary>
-        public StateCostDeltaMultiplierCallback? StateCostDeltaMultiplier { get; set; }
-
-        public static float DefaultStateCostDeltaMultiplier(Action? action, string stateKey) => 1f;
-
-        /// <summary>
         /// Event that triggers when an action begins executing.
         /// </summary>
         public static event BeginExecuteActionEvent OnBeginExecuteAction = (agent, action, parameters) => { };
@@ -129,9 +122,22 @@ namespace MountainGoap {
         public static event FinishExecuteActionEvent OnFinishExecuteAction = (agent, action, status, parameters) => { };
 
         /// <summary>
+        /// Gets or sets multiplier for delta value to provide delta cost.
+        /// </summary>
+        public StateCostDeltaMultiplierCallback? StateCostDeltaMultiplier { get; set; }
+
+        /// <summary>
         /// Gets or sets the execution status of the action.
         /// </summary>
         internal ExecutionStatus ExecutionStatus { get; set; } = ExecutionStatus.NotYetExecuted;
+
+        /// <summary>
+        /// Default delta value multiplier to use if no callback is passed in.
+        /// </summary>
+        /// <param name="action">Action for which delta value is being calculated.</param>
+        /// <param name="stateKey">Relevant state key.</param>
+        /// <returns>Always returns 1f.</returns>
+        public static float DefaultStateCostDeltaMultiplier(Action? action, string stateKey) => 1f;
 
         /// <summary>
         /// Makes a copy of the action.
@@ -142,6 +148,30 @@ namespace MountainGoap {
                 parameters = parameters.Copy()
             };
             return newAction;
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj) {
+            if (obj is not Action item) return false;
+            return this == item;
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode() {
+            var hash = 17;
+            hash = (hash * 23) + cost.GetHashCode();
+            hash = (hash * 23) + permutationSelectors.GetHashCode();
+            hash = (hash * 23) + executor.GetHashCode();
+            hash = (hash * 23) + costCallback.GetHashCode();
+            hash = (hash * 23) + (stateMutator?.GetHashCode() ?? 0);
+            hash = (hash * 23) + (stateChecker?.GetHashCode() ?? 0);
+            hash = (hash * 23) + (StateCostDeltaMultiplier?.GetHashCode() ?? 0);
+            hash = (hash * 23) + Utils.GetDictionaryHash(preconditions);
+            hash = (hash * 23) + Utils.GetDictionaryHash(comparativePreconditions);
+            hash = (hash * 23) + Utils.GetDictionaryHash(postconditions);
+            hash = (hash * 23) + Utils.GetDictionaryHash(arithmeticPostconditions);
+            hash = (hash * 23) + Utils.GetDictionaryHash(parameterPostconditions);
+            return hash;
         }
 
         /// <summary>

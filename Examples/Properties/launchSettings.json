@@ -23,6 +23,10 @@
     "car": {
       "commandName": "Project",
       "commandLineArgs": "car"
+    },
+    "hash issue": {
+      "commandName": "Project",
+      "commandLineArgs": "hashIssue"
     }
   }
 }
