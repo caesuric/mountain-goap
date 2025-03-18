@@ -116,5 +116,21 @@ namespace MountainGoap {
             }
             return true;
         }
+
+        /// <summary>
+        /// Gets the hash code for a dictionary based on its contents.
+        /// </summary>
+        /// <typeparam name="TK">Generic key type.</typeparam>
+        /// <typeparam name="TV">Generic value type.</typeparam>
+        /// <param name="dict">Dictionary for which hash code is to be gotten.</param>
+        /// <returns>Semi-unique value based on dictionary contents.</returns>
+        internal static int GetDictionaryHash<TK, TV>(IDictionary<TK, TV> dict) {
+            var hash = 17;
+            foreach (var kvp in dict) {
+                hash = (hash * 23) + (kvp.Key?.GetHashCode() ?? 0);
+                hash = (hash * 23) + (kvp.Value?.GetHashCode() ?? 0);
+            }
+            return hash;
+        }
     }
 }

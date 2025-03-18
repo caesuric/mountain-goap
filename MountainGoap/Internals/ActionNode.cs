@@ -75,11 +75,10 @@ namespace MountainGoap {
 
         /// <inheritdoc/>
         public override int GetHashCode() {
-            var hashCode = 629302477;
-            if (Action != null) hashCode = (hashCode * -1521134295) + EqualityComparer<Action>.Default.GetHashCode(Action);
-            else hashCode *= -1521134295;
-            hashCode = (hashCode * -1521134295) + EqualityComparer<ConcurrentDictionary<string, object?>>.Default.GetHashCode(State);
-            return hashCode;
+            var hash = 17;
+            hash = (hash * 23) + Action?.GetHashCode() ?? 0;
+            hash = (hash * 23) + Utils.GetDictionaryHash(State);
+            return hash;
         }
 
         /// <summary>
